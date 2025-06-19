@@ -31,10 +31,14 @@
     }
 
     h1 {
-      font-size: clamp(2em, 8vw, 3em); /* Responsive font size */
-      margin-bottom: 20px;
+      font-size: clamp(2.5em, 8vw, 4em);
+      margin-bottom: 30px;
     }
-    
+
+    h2 {
+      font-size: 2em;
+    }
+
     button {
       font-family: inherit;
       border: none;
@@ -42,75 +46,72 @@
       cursor: pointer;
       transition: background-color 0.2s, transform 0.1s;
       -webkit-tap-highlight-color: transparent;
+      font-size: 1.8em;
     }
 
     button:active {
-        transform: scale(0.95);
+      transform: scale(0.95);
     }
 
     .home-button {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background-color: var(--home-button-bg);
-        color: var(--primary-color);
-        font-size: 1.2em;
-        padding: 10px 20px;
-        border-radius: var(--border-radius);
-        border: 2px solid var(--border-color);
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: var(--home-button-bg);
+      color: var(--primary-color);
+      font-size: 1.4em;
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      border: 2px solid var(--border-color);
     }
 
     .home-button:hover {
-        background-color: var(--home-button-hover-bg);
+      background-color: var(--home-button-hover-bg);
     }
 
     .menu-button {
       background: var(--button-bg);
       border: var(--border-width) solid var(--border-color);
       border-radius: var(--border-radius);
-      padding: 20px;
-      margin: 15px;
-      font-size: clamp(1em, 4vw, 1.5em);
+      padding: 25px;
+      margin: 20px;
+      font-size: 2em;
     }
 
     .menu-button:hover {
       background: var(--button-hover-bg);
     }
 
-    .score {
-      font-size: 1.5em;
-      margin-bottom: 10px;
+    .letter {
+      background: var(--button-bg);
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
+      width: 90px;
+      height: 90px;
+      font-size: 3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px;
     }
 
-    .stars {
+    .letter.selected {
+      background-color: var(--button-selected-bg);
+    }
+
+    .blend-box,
+    .letters-wrapper,
+    .drag-letter-bank,
+    .drop-area {
       display: flex;
       justify-content: center;
-      margin-bottom: 10px;
-      height: 2em;
-    }
-
-    .star {
-      font-size: 2em;
-      margin: 0 5px;
-    }
-
-    #prompt {
-      font-size: clamp(1.2em, 5vw, 2em);
-      margin-bottom: 20px;
-      min-height: 1.2em;
-    }
-
-    .blend-box {
-      display: flex;
-      flex-direction: column; /* Changed for letter sets */
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
+      gap: 20px;
       margin-bottom: 20px;
     }
-    
+
     .blend-box.horizontal {
-        flex-direction: row; /* For blending mode */
+      flex-direction: row;
     }
 
     .letter-set-container {
@@ -122,44 +123,14 @@
     }
 
     .letter-set-title {
-      font-size: 1.5em;
-      color: var(--secondary-color);
-      margin-bottom: 15px;
-    }
-    
-    .letters-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-
-    .letter {
-      background: var(--button-bg);
-      border: var(--border-width) solid var(--border-color);
-      border-radius: var(--border-radius);
-      width: 70px;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2em;
-    }
-    
-    .letter.selected {
-      background-color: var(--button-selected-bg);
-    }
-
-    .letter:hover,
-    .word-choice:hover {
-      background: var(--button-hover-bg);
+      font-size: 1.8em;
+      margin-bottom: 10px;
     }
 
     .blended-word {
       font-size: 3em;
       font-weight: bold;
       margin: 20px 0;
-      color: var(--primary-color);
       letter-spacing: 0.1em;
       min-height: 1.5em;
     }
@@ -168,8 +139,8 @@
       display: flex;
       justify-content: center;
       gap: 20px;
-      margin-bottom: 20px;
       flex-wrap: wrap;
+      margin-bottom: 20px;
     }
 
     .word-choice {
@@ -177,24 +148,39 @@
       border: var(--border-width) solid var(--border-color);
       border-radius: var(--border-radius);
       padding: 30px;
-      font-size: 2em;
+      font-size: 2.5em;
     }
 
-    .reset-button {
+    .drop-area {
+      min-height: 100px;
+      border: 3px dashed #999;
+      padding: 20px;
+      border-radius: 15px;
+      background-color: #fff;
+      font-size: 2.5em;
+    }
+
+    .reset-button, .play-again {
       background: var(--button-bg);
       border: var(--border-width) solid var(--border-color);
       border-radius: var(--border-radius);
       padding: 15px 25px;
-      font-size: 1.5em;
-      margin-bottom: 20px;
+      font-size: 1.8em;
+      margin-top: 20px;
     }
 
-    .reset-button:hover {
-      background: var(--button-hover-bg);
+    .play-again {
+      background-color: var(--correct-bg);
+      color: white;
+    }
+
+    .reset-button:hover,
+    .play-again:hover {
+      background-color: var(--button-hover-bg);
     }
 
     .feedback {
-      font-size: 2em;
+      font-size: 2.2em;
       margin-top: 30px;
       font-weight: bold;
       min-height: 1.5em;
@@ -205,33 +191,22 @@
       margin-left: 0.2em;
     }
 
-    .play-again {
-      background: var(--correct-bg);
-      color: white;
-      border-radius: var(--border-radius);
-      padding: 20px 30px;
-      font-size: 1.2em;
-      margin-top: 30px;
-    }
-
-    .play-again:hover {
-      background: var(--correct-hover-bg);
-    }
-    
     .hidden {
-        display: none;
+      display: none;
     }
   </style>
 </head>
 <body>
   <button id="homeBtn" class="home-button hidden">🏠 Home</button>
-
   <h1>🦁 Sound Safari</h1>
+
   <div id="menu">
     <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
     <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
+    <button class="menu-button" id="dragLettersBtn">🧱 Free Build: Drag Letters</button>
   </div>
 
+  <!-- Original Game Area -->
   <div id="gameArea" class="hidden">
     <div class="score" id="score">Score: 0</div>
     <div class="stars" id="stars"></div>
@@ -243,21 +218,31 @@
     <div class="feedback" id="feedback"></div>
   </div>
 
+  <!-- Game Complete -->
   <div id="gameComplete" class="hidden">
     <h2>🏆 Well done!</h2>
     <p id="finalMessage"></p>
     <button class="play-again" id="playAgainBtn">Play Again</button>
   </div>
 
+  <!-- New Drag Area -->
+  <div id="dragSection" class="hidden">
+    <h2>🧱 Build a Word</h2>
+    <p>Drag letters into the box to build a word</p>
+    <div class="drag-letter-bank" id="dragLetterBank"></div>
+    <div class="drop-area" id="dropArea" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <button class="reset-button" onclick="clearDropArea()">🔄 Clear</button>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- DOM ELEMENTS ---
       const elements = {
         menu: document.getElementById('menu'),
         gameArea: document.getElementById('gameArea'),
         homeBtn: document.getElementById('homeBtn'),
         learnLettersBtn: document.getElementById('learnLettersBtn'),
         blendWordsBtn: document.getElementById('blendWordsBtn'),
+        dragLettersBtn: document.getElementById('dragLettersBtn'),
         scoreDisplay: document.getElementById('score'),
         starsDisplay: document.getElementById('stars'),
         prompt: document.getElementById('prompt'),
@@ -269,9 +254,11 @@
         gameComplete: document.getElementById('gameComplete'),
         finalMessage: document.getElementById('finalMessage'),
         playAgainBtn: document.getElementById('playAgainBtn'),
+        dragSection: document.getElementById('dragSection'),
+        dragLetterBank: document.getElementById('dragLetterBank'),
+        dropArea: document.getElementById('dropArea'),
       };
 
-      // --- GAME DATA & STATE ---
       const letterSets = {
         'Set 1': ['s', 'a', 't', 'p'],
         'Set 2': ['i', 'n', 'm', 'd'],
@@ -279,11 +266,15 @@
         'Set 4': ['ck', 'e', 'u', 'r'],
         'Set 5': ['h', 'b', 'f', 'ff', 'l', 'll', 'ss']
       };
+
       const satpinWordsList = [
-        { word: 'sat', emoji: '🪑' }, { word: 'pin', emoji: '📌' }, { word: 'pat', emoji: '👏' }, { word: 'tap', emoji: '🚰' },
-        { word: 'nap', emoji: '😴' }, { word: 'sip', emoji: '🥤' }, { word: 'tip', emoji: '💡' }, { word: 'tan', emoji: '🌞' },
-        { word: 'pit', emoji: '🕳️' }, { word: 'pan', emoji: '🍳' }
+        { word: 'sat', emoji: '🪑' }, { word: 'pin', emoji: '📌' }, { word: 'pat', emoji: '👏' },
+        { word: 'tap', emoji: '🚰' }, { word: 'nap', emoji: '😴' }, { word: 'sip', emoji: '🥤' },
+        { word: 'tip', emoji: '💡' }, { word: 'tan', emoji: '🌞' }, { word: 'pit', emoji: '🕳️' },
+        { word: 'pan', emoji: '🍳' }
       ];
+
+      const dragLetters = ['s', 'a', 't', 'p', 'i', 'n', 'm', 'd'];
 
       const gameState = {
         score: 0,
@@ -295,25 +286,31 @@
         mode: ''
       };
 
-      // --- EVENT LISTENERS ---
       elements.learnLettersBtn.addEventListener('click', () => startGame('letters'));
       elements.blendWordsBtn.addEventListener('click', () => startGame('words'));
-      elements.homeBtn.addEventListener('click', goHome);
+      elements.playAgainBtn.addEventListener('click', () => startGame(gameState.mode));
       elements.resetBtn.addEventListener('click', () => {
         gameState.blended = '';
         elements.blendText.textContent = '';
       });
-      elements.playAgainBtn.addEventListener('click', () => startGame(gameState.mode));
 
-      // --- NAVIGATION ---
+      elements.homeBtn.addEventListener('click', goHome);
+      elements.dragLettersBtn.addEventListener('click', () => {
+        elements.menu.classList.add('hidden');
+        elements.dragSection.classList.remove('hidden');
+        elements.homeBtn.classList.remove('hidden');
+        setupDraggableLetters();
+      });
+
       function goHome() {
         elements.gameArea.classList.add('hidden');
         elements.gameComplete.classList.add('hidden');
+        elements.dragSection.classList.add('hidden');
         elements.homeBtn.classList.add('hidden');
         elements.menu.classList.remove('hidden');
+        clearDropArea();
       }
 
-      // --- GAME LOGIC ---
       function startGame(mode) {
         gameState.mode = mode;
         gameState.score = 0;
@@ -321,6 +318,7 @@
         gameState.currentWords = [...satpinWordsList];
 
         elements.menu.classList.add('hidden');
+        elements.dragSection.classList.add('hidden');
         elements.gameComplete.classList.add('hidden');
         elements.homeBtn.classList.remove('hidden');
         elements.gameArea.classList.remove('hidden');
@@ -329,11 +327,8 @@
         updateScore();
         updateStars();
 
-        if (mode === 'letters') {
-          setupLearnMode();
-        } else {
-          setupBlendMode();
-        }
+        if (mode === 'letters') setupLearnMode();
+        else setupBlendMode();
       }
 
       function updateScore() {
@@ -343,13 +338,13 @@
       function updateStars() {
         elements.starsDisplay.innerHTML = Array(gameState.stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join('');
       }
-      
+
       function clearBoard() {
-          elements.feedback.textContent = '';
-          elements.blendText.textContent = '';
-          elements.blendBox.innerHTML = '';
-          elements.wordChoices.innerHTML = '';
-          gameState.blended = ''; // FIX: Reset blended word string
+        elements.feedback.textContent = '';
+        elements.blendText.textContent = '';
+        elements.blendBox.innerHTML = '';
+        elements.wordChoices.innerHTML = '';
+        gameState.blended = '';
       }
 
       function setupLearnMode() {
@@ -363,27 +358,23 @@
         elements.blendBox.classList.remove('horizontal');
 
         for (const setName in letterSets) {
-            const setContainer = document.createElement('div');
-            setContainer.className = 'letter-set-container';
-
-            const setTitle = document.createElement('h3');
-            setTitle.className = 'letter-set-title';
-            setTitle.textContent = setName;
-            setContainer.appendChild(setTitle);
-
-            const lettersWrapper = document.createElement('div');
-            lettersWrapper.className = 'letters-wrapper';
-
-            letterSets[setName].forEach(letter => {
-                const btn = document.createElement('button');
-                btn.className = 'letter';
-                btn.textContent = letter;
-                btn.addEventListener('click', () => btn.classList.toggle('selected'));
-                lettersWrapper.appendChild(btn);
-            });
-
-            setContainer.appendChild(lettersWrapper);
-            elements.blendBox.appendChild(setContainer);
+          const setContainer = document.createElement('div');
+          setContainer.className = 'letter-set-container';
+          const setTitle = document.createElement('h3');
+          setTitle.className = 'letter-set-title';
+          setTitle.textContent = setName;
+          const lettersWrapper = document.createElement('div');
+          lettersWrapper.className = 'letters-wrapper';
+          letterSets[setName].forEach(letter => {
+            const btn = document.createElement('button');
+            btn.className = 'letter';
+            btn.textContent = letter;
+            btn.addEventListener('click', () => btn.classList.toggle('selected'));
+            lettersWrapper.appendChild(btn);
+          });
+          setContainer.appendChild(setTitle);
+          setContainer.appendChild(lettersWrapper);
+          elements.blendBox.appendChild(setContainer);
         }
       }
 
@@ -396,36 +387,29 @@
         elements.blendText.classList.remove('hidden');
         elements.blendBox.classList.add('horizontal');
 
-        if (gameState.currentWords.length === 0) {
-          endGame('You blended all the words!');
-          return;
-        }
-
+        if (gameState.currentWords.length === 0) return endGame('You blended all the words!');
         elements.prompt.textContent = 'Blend the sounds and click the correct word';
-        
+
         const wordIndex = Math.floor(Math.random() * gameState.currentWords.length);
         const choice = gameState.currentWords.splice(wordIndex, 1)[0];
         gameState.correctWord = choice.word;
         gameState.correctEmoji = choice.emoji;
 
-        // Display letters to blend
         gameState.correctWord.split('').forEach(l => {
-          const letterButton = document.createElement('button');
-          letterButton.className = 'letter';
-          letterButton.textContent = l;
-          letterButton.addEventListener('click', () => {
+          const btn = document.createElement('button');
+          btn.className = 'letter';
+          btn.textContent = l;
+          btn.addEventListener('click', () => {
             gameState.blended += l;
             elements.blendText.textContent = gameState.blended;
           });
-          elements.blendBox.appendChild(letterButton);
+          elements.blendBox.appendChild(btn);
         });
 
-        // Create choice buttons
         const distractors = satpinWordsList.filter(w => w.word !== gameState.correctWord);
-        const shuffledDistractors = distractors.sort(() => 0.5 - Math.random());
-        const options = [choice, ...shuffledDistractors.slice(0, 2)];
-        
-        options.sort(() => 0.5 - Math.random()).forEach(opt => {
+        const shuffled = [choice, ...distractors.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random());
+
+        shuffled.forEach(opt => {
           const btn = document.createElement('button');
           btn.className = 'word-choice';
           btn.innerHTML = `${opt.word} <span class="emoji">${opt.emoji}</span>`;
@@ -433,26 +417,16 @@
           elements.wordChoices.appendChild(btn);
         });
       }
-      
+
       function handleChoice(selection) {
         if (selection === gameState.correctWord) {
           gameState.score++;
-          if (gameState.score > 0 && gameState.score % 2 === 0) {
-            gameState.stars++;
-          }
+          if (gameState.score % 2 === 0) gameState.stars++;
           updateScore();
           updateStars();
           elements.feedback.textContent = `🎉 Correct! ${gameState.correctEmoji}`;
-          
-          if (gameState.stars >= 5) {
-              endGame("You earned 5 stars!");
-              return;
-          }
-
-          setTimeout(() => {
-            setupBlendMode();
-          }, 1200);
-
+          if (gameState.stars >= 5) return endGame("You earned 5 stars!");
+          setTimeout(() => setupBlendMode(), 1200);
         } else {
           elements.feedback.textContent = '❌ Try again!';
         }
@@ -463,6 +437,34 @@
         elements.gameComplete.classList.remove('hidden');
         elements.finalMessage.textContent = message;
       }
+
+      // Drag & Drop Section
+      function setupDraggableLetters() {
+        elements.dragLetterBank.innerHTML = '';
+        dragLetters.forEach(letter => {
+          const div = document.createElement('div');
+          div.className = 'letter';
+          div.textContent = letter;
+          div.draggable = true;
+          div.ondragstart = e => e.dataTransfer.setData('text/plain', letter);
+          elements.dragLetterBank.appendChild(div);
+        });
+      }
+
+      window.allowDrop = e => e.preventDefault();
+
+      window.drop = e => {
+        e.preventDefault();
+        const letter = e.dataTransfer.getData('text/plain');
+        const span = document.createElement('span');
+        span.textContent = letter;
+        span.className = 'letter';
+        elements.dropArea.appendChild(span);
+      };
+
+      window.clearDropArea = () => {
+        elements.dropArea.innerHTML = '';
+      };
     });
   </script>
 </body>
