@@ -1,473 +1,959 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sound Safari Game</title>
-  <style>
-    :root {
-      --bg-color: #f0f8ff;
-      --primary-color: #333;
-      --secondary-color: #555;
-      --button-bg: #fff0d5;
-      --button-hover-bg: #ffe4b5;
-      --button-selected-bg: #b6d7a8;
-      --correct-bg: #93c47d;
-      --correct-hover-bg: #6aa84f;
-      --home-button-bg: #add8e6;
-      --home-button-hover-bg: #87ceeb;
-      --border-color: #ccc;
-      --border-width: 3px;
-      --border-radius: 15px;
-      --main-font: sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sound Safari Game</title>
+    <style>
+        :root {
+            --bg-color: #f0f8ff;
+            --primary-color: #333;
+            --secondary-color: #555;
+            --button-bg: #fff0d5;
+            --button-hover-bg: #ffe4b5;
+            --button-selected-bg: #b6d7a8;
+            --correct-bg: #93c47d;
+            --correct-hover-bg: #6aa84f;
+            --incorrect-bg: #ea9999; /* New: for incorrect feedback */
+            --home-button-bg: #add8e6;
+            --home-button-hover-bg: #87ceeb;
+            --border-color: #ccc;
+            --border-width: 3px;
+            --border-radius: 15px;
+            --main-font: sans-serif;
+        }
 
-    body {
-      font-family: var(--main-font);
-      background-color: var(--bg-color);
-      color: var(--primary-color);
-      text-align: center;
-      padding: 30px;
-    }
+        body {
+            font-family: var(--main-font);
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-    h1 {
-      font-size: clamp(2.5em, 8vw, 4em);
-      margin-bottom: 30px;
-    }
+        h1 {
+            font-size: clamp(2.5em, 8vw, 4em);
+            margin-bottom: 20px;
+        }
 
-    h2 {
-      font-size: 2em;
-    }
+        h2 {
+            font-size: 2em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
 
-    button {
-      font-family: inherit;
-      border: none;
-      background: none;
-      cursor: pointer;
-      transition: background-color 0.2s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      font-size: 1.8em;
-    }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
 
-    button:active {
-      transform: scale(0.95);
-    }
+        button {
+            font-family: inherit;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 1.6em;
+        }
 
-    .home-button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: var(--home-button-bg);
-      color: var(--primary-color);
-      font-size: 1.4em;
-      padding: 10px 20px;
-      border-radius: var(--border-radius);
-      border: 2px solid var(--border-color);
-    }
+        button:active {
+            transform: scale(0.95);
+        }
 
-    .home-button:hover {
-      background-color: var(--home-button-hover-bg);
-    }
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--home-button-bg);
+            color: var(--primary-color);
+            font-size: 1.2em;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--border-color);
+            z-index: 10;
+        }
 
-    .menu-button {
-      background: var(--button-bg);
-      border: var(--border-width) solid var(--border-color);
-      border-radius: var(--border-radius);
-      padding: 25px;
-      margin: 20px;
-      font-size: 2em;
-    }
+        .home-button:hover {
+            background-color: var(--home-button-hover-bg);
+        }
 
-    .menu-button:hover {
-      background: var(--button-hover-bg);
-    }
+        .menu-button {
+            background: var(--button-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 15px;
+            font-size: 1.8em;
+            width: clamp(200px, 80vw, 400px);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
 
-.letter {
-  background: var(--button-bg);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--border-radius);
-  width: 100px;
-  height: 100px;
-  font-size: 3.5em; /* Slightly reduced for better fit */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-  padding-bottom: 5px; /* Added to give room for descenders like 'p' */
-  box-sizing: border-box;
-}
+        .menu-button:hover {
+            background: var(--button-hover-bg);
+        }
 
-    .letter.selected {
-      background-color: var(--button-selected-bg);
-    }
+        .letter {
+            background: var(--button-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--border-radius);
+            width: 90px; /* Slightly reduced for better fit */
+            height: 90px;
+            font-size: 3em; /* Adjusted font size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px;
+            padding-bottom: 2px; /* Added to give room for descenders like 'p' */
+            box-sizing: border-box;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+        }
 
-    .blend-box,
-    .letters-wrapper,
-    .drag-letter-bank,
-    .drop-area {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
+        .letter.selected {
+            background-color: var(--button-selected-bg);
+        }
 
-    .blend-box.horizontal {
-      flex-direction: row;
-    }
+        .letter.blending-active { /* New style for blending visual cue */
+            animation: blendPulse 0.3s forwards;
+        }
 
-    .letter-set-container {
-      width: 100%;
-      padding: 10px;
-      background-color: rgba(255, 255, 255, 0.5);
-      border-radius: var(--border-radius);
-      margin-bottom: 15px;
-    }
+        @keyframes blendPulse {
+            from { background-color: var(--button-bg); }
+            to { background-color: var(--button-selected-bg); }
+        }
 
-    .letter-set-title {
-      font-size: 1.8em;
-      margin-bottom: 10px;
-    }
+        .blend-box,
+        .letters-wrapper,
+        .drag-letter-bank,
+        .drop-area-container { /* Changed drop-area to a container */
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px; /* Reduced gap */
+            margin-bottom: 20px;
+            width: 100%; /* Ensure it uses full width */
+            max-width: 900px; /* Max width for central content */
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .blended-word {
-      font-size: 3em;
-      font-weight: bold;
-      margin: 20px 0;
-      letter-spacing: 0.1em;
-      min-height: 1.5em;
-    }
+        .blend-box.horizontal {
+            flex-direction: row;
+        }
 
-    .choices {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
+        .letter-set-container {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.6); /* Slightly more opaque */
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
 
-    .word-choice {
-      background: var(--button-bg);
-      border: var(--border-width) solid var(--border-color);
-      border-radius: var(--border-radius);
-      padding: 30px;
-      font-size: 2.5em;
-    }
+        .letter-set-title {
+            font-size: 1.6em; /* Slightly reduced */
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
 
-    .drop-area {
-      min-height: 100px;
-      border: 3px dashed #999;
-      padding: 20px;
-      border-radius: 15px;
-      background-color: #fff;
-      font-size: 2.5em;
-    }
+        /* Learn Mode specific */
+        .learn-card {
+            background: #ffffff;
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .learn-letter-display {
+            font-size: 8em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            min-height: 1.2em; /* Ensure consistent height */
+        }
+        .learn-sound-display {
+            font-size: 2em;
+            color: var(--secondary-color);
+            min-height: 1.5em; /* Ensure consistent height */
+            margin-bottom: 15px;
+        }
+        .learn-mnemonic {
+            font-size: 1.4em;
+            color: #666;
+            min-height: 1.2em;
+            margin-bottom: 20px;
+        }
+        .learn-nav-buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+        .learn-nav-buttons button {
+            background: var(--home-button-bg);
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--border-color);
+            font-size: 1.2em;
+        }
+        .learn-nav-buttons button:hover {
+            background: var(--home-button-hover-bg);
+        }
+        .learn-progress {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: var(--secondary-color);
+        }
+        .confidence-buttons {
+            margin-top: 20px;
+        }
+        .confidence-buttons button {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            margin: 0 10px;
+            font-size: 1.2em;
+        }
+        .confidence-buttons .btn-yes {
+            background-color: var(--correct-bg);
+            color: white;
+            border: 2px solid var(--correct-bg);
+        }
+        .confidence-buttons .btn-no {
+            background-color: var(--incorrect-bg);
+            color: white;
+            border: 2px solid var(--incorrect-bg);
+        }
+        .confidence-buttons button:hover {
+            opacity: 0.8;
+        }
 
-    .reset-button, .play-again {
-      background: var(--button-bg);
-      border: var(--border-width) solid var(--border-color);
-      border-radius: var(--border-radius);
-      padding: 15px 25px;
-      font-size: 1.8em;
-      margin-top: 20px;
-    }
 
-    .play-again {
-      background-color: var(--correct-bg);
-      color: white;
-    }
+        .blended-word {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+            letter-spacing: 0.1em;
+            min-height: 1.5em;
+            background-color: #fff; /* White background for visibility */
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--border-color);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
 
-    .reset-button:hover,
-    .play-again:hover {
-      background-color: var(--button-hover-bg);
-    }
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
 
-    .feedback {
-      font-size: 2.2em;
-      margin-top: 30px;
-      font-weight: bold;
-      min-height: 1.5em;
-    }
+        .word-choice {
+            background: var(--button-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px 30px; /* Adjusted padding */
+            font-size: 2em; /* Adjusted font size */
+            min-width: 150px;
+            flex-grow: 1;
+            max-width: 300px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+        }
 
-    .emoji {
-      font-size: 1.5em;
-      margin-left: 0.2em;
-    }
+        .word-choice:hover {
+            background: var(--button-hover-bg);
+        }
 
-    .hidden {
-      display: none;
-    }
-  </style>
+        .word-choice.correct { /* New style for correct choice */
+            background-color: var(--correct-bg);
+            color: white;
+            border-color: var(--correct-bg);
+            animation: bounceIn 0.5s forwards;
+        }
+        .word-choice.incorrect { /* New style for incorrect choice */
+            background-color: var(--incorrect-bg);
+            color: white;
+            border-color: var(--incorrect-bg);
+            animation: shake 0.3s forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .drop-area-container { /* New container for drag and drop elements */
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .drag-letter-bank {
+            border: 2px solid #ddd;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background-color: #f9f9f9;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        .drop-area {
+            min-height: 120px; /* Increased height */
+            border: 3px dashed #999;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #fff;
+            font-size: 2.8em; /* Adjusted font size */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-sizing: border-box;
+            min-width: 300px; /* Ensure some width */
+            max-width: 600px; /* Max width for drop area */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .drop-area span.letter { /* Style for dragged letters inside drop area */
+            background: var(--button-selected-bg); /* Different color for dropped letters */
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            width: 80px; /* Slightly smaller in drop area */
+            height: 80px;
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 2px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .reset-button, .play-again, .check-word-button {
+            background: var(--button-bg);
+            border: var(--border-width) solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            font-size: 1.6em;
+            margin-top: 10px;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+        }
+
+        .play-again {
+            background-color: var(--correct-bg);
+            color: white;
+            border-color: var(--correct-bg);
+        }
+
+        .check-word-button {
+            background-color: var(--home-button-bg);
+            border-color: var(--home-button-bg);
+            color: var(--primary-color);
+        }
+
+        .reset-button:hover,
+        .play-again:hover,
+        .check-word-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        .play-again:hover {
+            background-color: var(--correct-hover-bg);
+        }
+
+        .check-word-button:hover {
+            background-color: var(--home-button-hover-bg);
+        }
+
+        .feedback {
+            font-size: 2em; /* Slightly reduced */
+            margin-top: 25px;
+            font-weight: bold;
+            min-height: 1.5em;
+            color: var(--primary-color); /* Default color */
+        }
+        .feedback.correct {
+            color: var(--correct-bg);
+        }
+        .feedback.incorrect {
+            color: var(--incorrect-bg);
+        }
+
+        .emoji {
+            font-size: 1.2em; /* Adjusted emoji size */
+            margin-left: 0.1em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Centering content for different views */
+        #menu, #gameArea, #gameComplete, #dragSection, #learnMode {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Adjustments for smaller screens */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            .menu-button, .word-choice, .letter {
+                font-size: 1.4em;
+                padding: 15px;
+                margin: 10px;
+                width: auto;
+            }
+            .letter {
+                width: 70px;
+                height: 70px;
+                font-size: 2.5em;
+            }
+            .blended-word {
+                font-size: 2.2em;
+            }
+            .feedback {
+                font-size: 1.6em;
+            }
+            .home-button {
+                font-size: 1em;
+                padding: 6px 12px;
+            }
+            .learn-letter-display {
+                font-size: 6em;
+            }
+            .learn-sound-display {
+                font-size: 1.5em;
+            }
+        }
+    </style>
 </head>
 <body>
-  <button id="homeBtn" class="home-button hidden">🏠 Home</button>
-  <h1>🦁 Sound Safari</h1>
+    <button id="homeBtn" class="home-button hidden">🏠 Home</button>
+    <h1>🦁 Sound Safari</h1>
 
-  <div id="menu">
-    <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
-    <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
-    <button class="menu-button" id="dragLettersBtn">🧱 Free Build: Drag Letters</button>
-  </div>
+    <div id="menu">
+        <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
+        <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
+        <button class="menu-button" id="dragLettersBtn">🧱 Free Build: Drag Letters</button>
+    </div>
 
-  <!-- Original Game Area -->
-  <div id="gameArea" class="hidden">
-    <div class="score" id="score">Score: 0</div>
-    <div class="stars" id="stars"></div>
-    <h2 id="prompt"></h2>
-    <div class="blend-box" id="blendBox"></div>
-    <div class="blended-word" id="blendText"></div>
-    <div class="choices" id="wordChoices"></div>
-    <button class="reset-button" id="resetBtn">🔄 Reset Blending</button>
-    <div class="feedback" id="feedback"></div>
-  </div>
+    <div id="learnMode" class="hidden">
+        <h2>Practice Phase 2 Sounds</h2>
+        <p>Click "Reveal" to hear the sound, then tell me if you knew it!</p>
+        <div class="learn-card">
+            <div id="learnLetterDisplay" class="learn-letter-display"></div>
+            <div id="learnSoundDisplay" class="learn-sound-display hidden"></div>
+            <div id="learnMnemonic" class="learn-mnemonic hidden"></div>
+            <button id="revealSoundBtn" class="menu-button">Reveal Sound</button>
+            <div id="confidenceButtons" class="confidence-buttons hidden">
+                <button class="btn-yes" data-confidence="true">Yes, I knew it! 👍</button>
+                <button class="btn-no" data-confidence="false">No, I need practice 👎</button>
+            </div>
+        </div>
+        <div class="learn-nav-buttons">
+            <button id="prevLetterBtn">⬅️ Previous</button>
+            <button id="nextLetterBtn">Next ➡️</button>
+        </div>
+        <div id="learnProgress" class="learn-progress"></div>
+    </div>
 
-  <!-- Game Complete -->
-  <div id="gameComplete" class="hidden">
-    <h2>🏆 Well done!</h2>
-    <p id="finalMessage"></p>
-    <button class="play-again" id="playAgainBtn">Play Again</button>
-  </div>
+    <div id="gameArea" class="hidden">
+        <div class="score" id="score">Score: 0</div>
+        <div class="stars" id="stars"></div>
+        <h2 id="prompt"></h2>
+        <div class="blend-box horizontal" id="blendBox"></div>
+        <div class="blended-word" id="blendText"></div>
+        <div class="choices" id="wordChoices"></div>
+        <div class="action-buttons">
+            <button class="reset-button" id="resetBtn">🔄 Reset Blending</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+    </div>
 
-  <!-- New Drag Area -->
-  <div id="dragSection" class="hidden">
-    <h2>🧱 Build a Word</h2>
-    <p>Drag letters into the box to build a word</p>
-    <div class="drag-letter-bank" id="dragLetterBank"></div>
-    <div class="drop-area" id="dropArea" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-    <button class="reset-button" onclick="clearDropArea()">🔄 Clear</button>
-  </div>
+    <div id="gameComplete" class="hidden">
+        <h2>🏆 Well done!</h2>
+        <p id="finalMessage"></p>
+        <button class="play-again" id="playAgainBtn">Play Again</button>
+    </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const elements = {
-        menu: document.getElementById('menu'),
-        gameArea: document.getElementById('gameArea'),
-        homeBtn: document.getElementById('homeBtn'),
-        learnLettersBtn: document.getElementById('learnLettersBtn'),
-        blendWordsBtn: document.getElementById('blendWordsBtn'),
-        dragLettersBtn: document.getElementById('dragLettersBtn'),
-        scoreDisplay: document.getElementById('score'),
-        starsDisplay: document.getElementById('stars'),
-        prompt: document.getElementById('prompt'),
-        blendBox: document.getElementById('blendBox'),
-        blendText: document.getElementById('blendText'),
-        wordChoices: document.getElementById('wordChoices'),
-        resetBtn: document.getElementById('resetBtn'),
-        feedback: document.getElementById('feedback'),
-        gameComplete: document.getElementById('gameComplete'),
-        finalMessage: document.getElementById('finalMessage'),
-        playAgainBtn: document.getElementById('playAgainBtn'),
-        dragSection: document.getElementById('dragSection'),
-        dragLetterBank: document.getElementById('dragLetterBank'),
-        dropArea: document.getElementById('dropArea'),
-      };
+    <div id="dragSection" class="hidden">
+        <h2>🧱 Build a Word</h2>
+        <p>Drag letters from the bank into the box to build a word.</p>
+        <div class="drag-letter-bank" id="dragLetterBank"></div>
+        <div class="drop-area-container">
+            <div class="drop-area" id="dropArea" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            <div class="action-buttons">
+                <button class="check-word-button" id="checkWordBtn">✅ Check Word</button>
+                <button class="reset-button" onclick="clearDropArea()">🔄 Clear</button>
+            </div>
+        </div>
+        <div class="feedback" id="dragFeedback"></div>
+    </div>
 
-      const letterSets = {
-        'Set 1': ['s', 'a', 't', 'p'],
-        'Set 2': ['i', 'n', 'm', 'd'],
-        'Set 3': ['g', 'o', 'c', 'k'],
-        'Set 4': ['ck', 'e', 'u', 'r'],
-        'Set 5': ['h', 'b', 'f', 'ff', 'l', 'll', 'ss']
-      };
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = {
+                menu: document.getElementById('menu'),
+                gameArea: document.getElementById('gameArea'),
+                learnMode: document.getElementById('learnMode'), // New
+                homeBtn: document.getElementById('homeBtn'),
+                learnLettersBtn: document.getElementById('learnLettersBtn'),
+                blendWordsBtn: document.getElementById('blendWordsBtn'),
+                dragLettersBtn: document.getElementById('dragLettersBtn'),
+                scoreDisplay: document.getElementById('score'),
+                starsDisplay: document.getElementById('stars'),
+                prompt: document.getElementById('prompt'),
+                blendBox: document.getElementById('blendBox'),
+                blendText: document.getElementById('blendText'),
+                wordChoices: document.getElementById('wordChoices'),
+                resetBtn: document.getElementById('resetBtn'),
+                feedback: document.getElementById('feedback'),
+                gameComplete: document.getElementById('gameComplete'),
+                finalMessage: document.getElementById('finalMessage'),
+                playAgainBtn: document.getElementById('playAgainBtn'),
+                dragSection: document.getElementById('dragSection'),
+                dragLetterBank: document.getElementById('dragLetterBank'),
+                dropArea: document.getElementById('dropArea'),
+                checkWordBtn: document.getElementById('checkWordBtn'), // New
+                dragFeedback: document.getElementById('dragFeedback'), // New
 
-      const satpinWordsList = [
-        { word: 'sat', emoji: '🪑' }, { word: 'pin', emoji: '📌' }, { word: 'pat', emoji: '👏' },
-        { word: 'tap', emoji: '🚰' }, { word: 'nap', emoji: '😴' }, { word: 'sip', emoji: '🥤' },
-        { word: 'tip', emoji: '💡' }, { word: 'tan', emoji: '🌞' }, { word: 'pit', emoji: '🕳️' },
-        { word: 'pan', emoji: '🍳' }
-      ];
+                // Learn Mode Elements
+                learnLetterDisplay: document.getElementById('learnLetterDisplay'),
+                learnSoundDisplay: document.getElementById('learnSoundDisplay'),
+                learnMnemonic: document.getElementById('learnMnemonic'),
+                revealSoundBtn: document.getElementById('revealSoundBtn'),
+                confidenceButtons: document.getElementById('confidenceButtons'),
+                prevLetterBtn: document.getElementById('prevLetterBtn'),
+                nextLetterBtn: document.getElementById('nextLetterBtn'),
+                learnProgress: document.getElementById('learnProgress')
+            };
 
-      const dragLetters = ['s', 'a', 't', 'p', 'i', 'n', 'm', 'd'];
+            // Data for Learn Mode: letters, their sounds (text), and a simple mnemonic
+            const learnableLetters = [
+                { letter: 's', sound: '/s/', mnemonic: 'like a snake hissing' },
+                { letter: 'a', sound: '/a/', mnemonic: 'like in apple' },
+                { letter: 't', sound: '/t/', mnemonic: 'like in tap' },
+                { letter: 'p', sound: '/p/', mnemonic: 'like a puff of air' },
+                { letter: 'i', sound: '/i/', mnemonic: 'like in ink' },
+                { letter: 'n', sound: '/n/', mnemonic: 'like a humming noise' },
+                { letter: 'm', sound: '/m/', mnemonic: 'like delicious food' },
+                { letter: 'd', sound: '/d/', mnemonic: 'like tapping a drum' },
+                { letter: 'g', sound: '/g/', mnemonic: 'like water going down the drain' },
+                { letter: 'o', sound: '/o/', mnemonic: 'like in orange' },
+                { letter: 'c', sound: '/k/', mnemonic: 'like clicking a camera' },
+                { letter: 'k', sound: '/k/', mnemonic: 'like clicking a camera' }, // 'k' same sound as 'c' here for simplicity
+                { letter: 'ck', sound: '/k/', mnemonic: 'like clicking a camera (two letters, one sound)' },
+                { letter: 'e', sound: '/e/', mnemonic: 'like in egg' },
+                { letter: 'u', sound: '/uh/', mnemonic: 'like in up' },
+                { letter: 'r', sound: '/r/', mnemonic: 'like a race car' },
+                { letter: 'h', sound: '/h/', mnemonic: 'like breathing heavily' },
+                { letter: 'b', sound: '/b/', mnemonic: 'like a bouncing ball' },
+                { letter: 'f', sound: '/f/', mnemonic: 'like air leaking from a tire' },
+                { letter: 'ff', sound: '/f/', mnemonic: 'like air leaking from a tire' },
+                { letter: 'l', sound: '/l/', mnemonic: 'like licking a lollipop' },
+                { letter: 'll', sound: '/l/', mnemonic: 'like licking a lollipop' },
+                { letter: 'ss', sound: '/s/', mnemonic: 'like a snake hissing' }
+            ];
 
-      const gameState = {
-        score: 0,
-        stars: 0,
-        blended: '',
-        correctWord: '',
-        correctEmoji: '',
-        currentWords: [],
-        mode: ''
-      };
+            const satpinWordsList = [
+                { word: 'sat', emoji: '🪑' }, { word: 'pin', emoji: '📌' }, { word: 'pat', emoji: '👏' },
+                { word: 'tap', emoji: '🚰' }, { word: 'nap', emoji: '😴' }, { word: 'sip', emoji: '🥤' },
+                { word: 'tip', emoji: '💡' }, { word: 'tan', emoji: '🌞' }, { word: 'pit', emoji: '🕳️' },
+                { word: 'pan', emoji: '🍳' }, { word: 'ant', emoji: '🐜' }, { word: 'sit', emoji: '🪑' }
+            ];
 
-      elements.learnLettersBtn.addEventListener('click', () => startGame('letters'));
-      elements.blendWordsBtn.addEventListener('click', () => startGame('words'));
-      elements.playAgainBtn.addEventListener('click', () => startGame(gameState.mode));
-      elements.resetBtn.addEventListener('click', () => {
-        gameState.blended = '';
-        elements.blendText.textContent = '';
-      });
+            const draggableLetters = ['s', 'a', 't', 'p', 'i', 'n', 'm', 'd', 'o', 'c', 'k', 'e', 'u', 'r', 'h', 'b', 'f', 'l']; // More letters for free build
 
-      elements.homeBtn.addEventListener('click', goHome);
-      elements.dragLettersBtn.addEventListener('click', () => {
-        elements.menu.classList.add('hidden');
-        elements.dragSection.classList.remove('hidden');
-        elements.homeBtn.classList.remove('hidden');
-        setupDraggableLetters();
-      });
+            // Simple dictionary for drag and drop word checking
+            const simpleDictionary = new Set([
+                'sat', 'pin', 'pat', 'tap', 'nap', 'sip', 'tip', 'tan', 'pit', 'pan', 'ant', 'sit',
+                'cat', 'dog', 'sun', 'cup', 'net', 'run', 'pot', 'fan', 'mat', 'top', 'hen', 'pig',
+                'rat', 'mug', 'leg', 'bed', 'red', 'ten', 'pen', 'fox', 'box', 'kit', 'lid', 'lip',
+                'mop', 'pop', 'dad', 'mom', 'mad', 'sad', 'bag', 'rag', 'tag', 'can', 'man', 'fan',
+                'hot', 'cot', 'dot', 'log', 'fog', 'hop', 'cop', 'bug', 'rug', 'nut', 'hut', 'gum'
+            ]);
 
-      function goHome() {
-        elements.gameArea.classList.add('hidden');
-        elements.gameComplete.classList.add('hidden');
-        elements.dragSection.classList.add('hidden');
-        elements.homeBtn.classList.add('hidden');
-        elements.menu.classList.remove('hidden');
-        clearDropArea();
-      }
+            const gameState = {
+                score: 0,
+                stars: 0,
+                blended: '', // For blend mode, the string of letters clicked
+                correctWord: '',
+                correctEmoji: '',
+                currentWords: [], // Words remaining for blend mode
+                mode: '', // 'letters', 'words', 'drag'
+                learnIndex: 0, // Current index for learn mode
+                learnLettersArray: [] // Shuffled letters for learn mode
+            };
 
-      function startGame(mode) {
-        gameState.mode = mode;
-        gameState.score = 0;
-        gameState.stars = 0;
-        gameState.currentWords = [...satpinWordsList];
+            // --- Event Listeners ---
+            elements.learnLettersBtn.addEventListener('click', () => startGame('letters'));
+            elements.blendWordsBtn.addEventListener('click', () => startGame('words'));
+            elements.playAgainBtn.addEventListener('click', () => startGame(gameState.mode));
+            elements.resetBtn.addEventListener('click', () => {
+                gameState.blended = '';
+                elements.blendText.textContent = '';
+                elements.feedback.textContent = ''; // Clear blend mode feedback on reset
+                elements.feedback.className = 'feedback'; // Reset feedback class
+                // Remove selected class from letters
+                Array.from(elements.blendBox.children).forEach(btn => {
+                    btn.classList.remove('blending-active');
+                });
+            });
+            elements.homeBtn.addEventListener('click', goHome);
+            elements.dragLettersBtn.addEventListener('click', () => {
+                startGame('drag');
+            });
+            elements.checkWordBtn.addEventListener('click', checkBuiltWord); // New check button for drag mode
 
-        elements.menu.classList.add('hidden');
-        elements.dragSection.classList.add('hidden');
-        elements.gameComplete.classList.add('hidden');
-        elements.homeBtn.classList.remove('hidden');
-        elements.gameArea.classList.remove('hidden');
-        
-        clearBoard();
-        updateScore();
-        updateStars();
+            // Learn Mode Navigation & Confidence
+            elements.revealSoundBtn.addEventListener('click', revealSoundAndMnemonic);
+            elements.prevLetterBtn.addEventListener('click', showPreviousLetter);
+            elements.nextLetterBtn.addEventListener('click', showNextLetter);
+            elements.confidenceButtons.addEventListener('click', (event) => {
+                if (event.target.tagName === 'BUTTON') {
+                    handleConfidence(event.target.dataset.confidence === 'true');
+                }
+            });
 
-        if (mode === 'letters') setupLearnMode();
-        else setupBlendMode();
-      }
+            // --- Core Game Functions ---
 
-      function updateScore() {
-        elements.scoreDisplay.textContent = `Score: ${gameState.score}`;
-      }
+            function goHome() {
+                elements.gameArea.classList.add('hidden');
+                elements.learnMode.classList.add('hidden'); // Hide learn mode
+                elements.gameComplete.classList.add('hidden');
+                elements.dragSection.classList.add('hidden');
+                elements.homeBtn.classList.add('hidden');
+                elements.menu.classList.remove('hidden');
+                clearDropArea(); // Clear any dragged letters
+            }
 
-      function updateStars() {
-        elements.starsDisplay.innerHTML = Array(gameState.stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join('');
-      }
+            function startGame(mode) {
+                gameState.mode = mode;
+                clearAllSections(); // Hide all game sections initially
+                elements.homeBtn.classList.remove('hidden'); // Always show home button when in a game
 
-      function clearBoard() {
-        elements.feedback.textContent = '';
-        elements.blendText.textContent = '';
-        elements.blendBox.innerHTML = '';
-        elements.wordChoices.innerHTML = '';
-        gameState.blended = '';
-      }
+                if (mode === 'letters') {
+                    elements.learnMode.classList.remove('hidden');
+                    setupLearnMode();
+                } else if (mode === 'words') {
+                    elements.gameArea.classList.remove('hidden');
+                    setupBlendMode();
+                } else if (mode === 'drag') {
+                    elements.dragSection.classList.remove('hidden');
+                    setupDraggableLetters();
+                }
+            }
 
-      function setupLearnMode() {
-        clearBoard();
-        elements.prompt.textContent = 'Practice recognizing Phase 2 sounds';
-        elements.resetBtn.classList.add('hidden');
-        elements.scoreDisplay.classList.add('hidden');
-        elements.starsDisplay.classList.add('hidden');
-        elements.wordChoices.classList.add('hidden');
-        elements.blendText.classList.add('hidden');
-        elements.blendBox.classList.remove('horizontal');
+            function clearAllSections() {
+                elements.menu.classList.add('hidden');
+                elements.gameArea.classList.add('hidden');
+                elements.learnMode.classList.add('hidden');
+                elements.gameComplete.classList.add('hidden');
+                elements.dragSection.classList.add('hidden');
+                clearBoard(); // Clear blend mode specific elements
+                clearDropArea(); // Clear drag mode specific elements
+                elements.dragFeedback.textContent = ''; // Clear drag mode feedback
+                elements.dragFeedback.className = 'feedback';
+            }
 
-        for (const setName in letterSets) {
-          const setContainer = document.createElement('div');
-          setContainer.className = 'letter-set-container';
-          const setTitle = document.createElement('h3');
-          setTitle.className = 'letter-set-title';
-          setTitle.textContent = setName;
-          const lettersWrapper = document.createElement('div');
-          lettersWrapper.className = 'letters-wrapper';
-          letterSets[setName].forEach(letter => {
-            const btn = document.createElement('button');
-            btn.className = 'letter';
-            btn.textContent = letter;
-            btn.addEventListener('click', () => btn.classList.toggle('selected'));
-            lettersWrapper.appendChild(btn);
-          });
-          setContainer.appendChild(setTitle);
-          setContainer.appendChild(lettersWrapper);
-          elements.blendBox.appendChild(setContainer);
-        }
-      }
+            function updateScore() {
+                elements.scoreDisplay.textContent = `Score: ${gameState.score}`;
+            }
 
-      function setupBlendMode() {
-        clearBoard();
-        elements.resetBtn.classList.remove('hidden');
-        elements.scoreDisplay.classList.remove('hidden');
-        elements.starsDisplay.classList.remove('hidden');
-        elements.wordChoices.classList.remove('hidden');
-        elements.blendText.classList.remove('hidden');
-        elements.blendBox.classList.add('horizontal');
+            function updateStars() {
+                elements.starsDisplay.innerHTML = Array(gameState.stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join('');
+            }
 
-        if (gameState.currentWords.length === 0) return endGame('You blended all the words!');
-        elements.prompt.textContent = 'Blend the sounds and click the correct word';
+            function clearBoard() {
+                elements.feedback.textContent = '';
+                elements.feedback.className = 'feedback';
+                elements.blendText.textContent = '';
+                elements.blendBox.innerHTML = '';
+                elements.wordChoices.innerHTML = '';
+                gameState.blended = '';
+            }
 
-        const wordIndex = Math.floor(Math.random() * gameState.currentWords.length);
-        const choice = gameState.currentWords.splice(wordIndex, 1)[0];
-        gameState.correctWord = choice.word;
-        gameState.correctEmoji = choice.emoji;
+            // --- Learn Mode Functions ---
+            function setupLearnMode() {
+                gameState.learnLettersArray = [...learnableLetters].sort(() => 0.5 - Math.random()); // Shuffle for varied practice
+                gameState.learnIndex = 0;
+                displayCurrentLetter();
 
-        gameState.correctWord.split('').forEach(l => {
-          const btn = document.createElement('button');
-          btn.className = 'letter';
-          btn.textContent = l;
-          btn.addEventListener('click', () => {
-            gameState.blended += l;
-            elements.blendText.textContent = gameState.blended;
-          });
-          elements.blendBox.appendChild(btn);
+                // Hide irrelevant elements for learn mode
+                elements.scoreDisplay.classList.add('hidden');
+                elements.starsDisplay.classList.add('hidden');
+                elements.resetBtn.classList.add('hidden'); // Not used in learn mode
+            }
+
+            function displayCurrentLetter() {
+                const current = gameState.learnLettersArray[gameState.learnIndex];
+                elements.learnLetterDisplay.textContent = current.letter;
+                elements.learnSoundDisplay.textContent = current.sound;
+                elements.learnMnemonic.textContent = current.mnemonic;
+
+                // Reset visibility for new card
+                elements.learnSoundDisplay.classList.add('hidden');
+                elements.learnMnemonic.classList.add('hidden');
+                elements.revealSoundBtn.classList.remove('hidden');
+                elements.confidenceButtons.classList.add('hidden');
+
+                updateLearnProgress();
+            }
+
+            function revealSoundAndMnemonic() {
+                elements.learnSoundDisplay.classList.remove('hidden');
+                elements.learnMnemonic.classList.remove('hidden');
+                elements.revealSoundBtn.classList.add('hidden');
+                elements.confidenceButtons.classList.remove('hidden');
+            }
+
+            function handleConfidence(knewIt) {
+                // Here you could log performance if desired for adaptive learning
+                // For now, just advance to the next letter
+                showNextLetter();
+            }
+
+            function showNextLetter() {
+                gameState.learnIndex++;
+                if (gameState.learnIndex >= gameState.learnLettersArray.length) {
+                    gameState.learnIndex = 0; // Loop back to start or show a "finished" message
+                    // Or you could implement an 'end game' for learn mode here
+                    elements.feedback.textContent = "You've practiced all the letters! Great job!";
+                }
+                displayCurrentLetter();
+            }
+
+            function showPreviousLetter() {
+                gameState.learnIndex--;
+                if (gameState.learnIndex < 0) {
+                    gameState.learnIndex = gameState.learnLettersArray.length - 1; // Loop to end
+                }
+                displayCurrentLetter();
+            }
+
+            function updateLearnProgress() {
+                elements.learnProgress.textContent = `Letter ${gameState.learnIndex + 1} of ${gameState.learnLettersArray.length}`;
+            }
+
+            // --- Blend Mode Functions ---
+            function setupBlendMode() {
+                gameState.score = 0; // Reset score on new game
+                gameState.stars = 0; // Reset stars on new game
+                gameState.currentWords = [...satpinWordsList]; // Reset words list for a new round
+                clearBoard();
+                updateScore();
+                updateStars();
+
+                // Show relevant elements for blend mode
+                elements.scoreDisplay.classList.remove('hidden');
+                elements.starsDisplay.classList.remove('hidden');
+                elements.resetBtn.classList.remove('hidden');
+
+                if (gameState.currentWords.length === 0) {
+                    // This case should ideally not happen at start, but good for when all words are done
+                    return endGame('You blended all the words!');
+                }
+                elements.prompt.textContent = 'Blend the sounds and click the correct word';
+                presentNewBlendRound();
+            }
+
+            function presentNewBlendRound() {
+                clearBoard(); // Clear previous round's letters and choices
+                elements.feedback.textContent = ''; // Clear feedback for new round
+
+                if (gameState.currentWords.length === 0) {
+                    return endGame('You blended all the words! Well done!');
+                }
+
+                // Randomly pick a word
+                const wordIndex = Math.floor(Math.random() * gameState.currentWords.length);
+                const choice = gameState.currentWords.splice(wordIndex, 1)[0];
+                gameState.correctWord = choice.word;
+                gameState.correctEmoji = choice.emoji;
+
+                // Populate blend box with letters
+                gameState.correctWord.split('').forEach(l => {
+                    const btn = document.createElement('button');
+                    btn.className = 'letter';
+                    btn.textContent = l;
+                    btn.addEventListener('click', () => {
+                        // Visual cue for blending
+                        btn.classList.add('blending-active');
+                        setTimeout(() => btn.classList.remove('blending-active'), 300); // Remove class after animation
+
+                        gameState.blended += l;
+                        elements.blendText.textContent = gameState.blended;
+                    });
+                    elements.blendBox.appendChild(btn);
+                });
+
+                // Generate choices (correct word + 2 distractors)
+                const distractors = satpinWordsList.filter(w => w.word !== gameState.correctWord);
+                const shuffledDistractors = distractors.sort(() => 0.5 - Math.random()).slice(0, 2);
+                const choices = [choice, ...shuffledDistractors].sort(() => 0.5 - Math.random());
+
+                choices.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'word-choice';
+                    btn.innerHTML = `${opt.word} <span class="emoji">${opt.emoji}</span>`;
+                    btn.addEventListener('click', () => handleChoice(opt.word, btn));
+                    elements.wordChoices.appendChild(btn);
+                });
+            }
+
+            function handleChoice(selection, chosenButton) {
+                // Disable all choices temporarily to prevent multiple clicks
+                Array.from(elements.wordChoices.children).forEach(btn => btn.disabled = true);
+
+                if (selection === gameState.correctWord) {
+                    gameState.score++;
+                    if (gameState.score % 3 === 0) { // Earn a star every 3 correct answers
+                        gameState.stars++;
+                    }
+                    updateScore();
+                    updateStars();
+                    elements.feedback.textContent = `🎉 Correct! ${gameState.correctEmoji}`;
+                    elements.feedback.classList.remove('incorrect');
+                    elements.feedback.classList.add('correct');
+                    chosenButton.classList.add('correct'); // Apply correct styling
+
+                    if (gameState.stars >= 5) {
+                        setTimeout(() => endGame("You earned 5 stars! Fantastic!"), 1500);
+                    } else {
+                        setTimeout(() => presentNewBlendRound(), 1500); // Wait for animation, then new round
+                    }
+                } else {
+                    elements.feedback.textContent = '❌ Try again!';
+                    elements.feedback.classList.remove('correct');
+                    elements.feedback.classList.add('incorrect');
+                    chosenButton.classList.add('incorrect'); // Apply incorrect styling
+
+                    // Briefly show incorrect, then enable buttons again
+                    setTimeout(() => {
+                        chosenButton.classList.remove('incorrect');
+                        Array.from(elements.wordChoices.children).forEach(btn => btn.disabled = false);
+                    }, 800);
+                }
+            }
+
+            function endGame(message) {
+                elements.gameArea.classList.add('hidden');
+                elements.gameComplete.classList.remove('hidden');
+                elements.finalMessage.textContent = message;
+            }
+
+            // --- Drag & Drop Section Functions ---
+            function setupDraggableLetters() {
+                elements.dragLetterBank.innerHTML = '';
+                // Ensure letters are shuffled for variety
+                const shuffledLetters = [...draggableLetters].sort(() => 0.5 - Math.random());
+                shuffledLetters.forEach(letter => {
+                    const div = document.createElement('div');
+                    div.className = 'letter';
+                    div.textContent = letter;
+                    div.draggable = true;
+                    div.ondragstart = e => {
+                        e.dataTransfer.setData('text/plain', letter);
+                        // Add a class for visual feedback when dragging (optional)
+                        div.classList.add('dragging');
+                    };
+                    div.ondragend = e => {
+                        div.classList.remove('dragging');
+                    };
+                    elements.dragLetterBank.appendChild(div);
+                });
+                elements.dragFeedback.textContent = ''; // Clear feedback when setting up
+                elements.dragFeedback.className = 'feedback';
+                clearDropArea(); // Start with a clear drop area
+            }
+
+            window.allowDrop = e => {
+                e.preventDefault(); // Allow drop
+                // Optional: Add a visual highlight to the drop area when something is dragged over it
+                if (e.target.id === 'dropArea') {
+                    e.target.style.borderColor = 'blue';
+                }
+            };
+
+            window.drop = e => {
+                e.preventDefault();
+                // Remove the visual highlight from the drop area
+                if (e.target.id === 'dropArea') {
+                    e.target.style.borderColor = '#999';
+                }
+
+                const letter = e.dataTransfer.getData('text/plain');
+                const span = document.createElement('span');
+                span.textContent = letter;
+                span.className = 'letter'; // Apply the letter style
+                elements.dropArea.appendChild(span);
+                elements.dragFeedback.textContent = ''; // Clear feedback on successful drop
+                elements.dragFeedback.className = 'feedback';
+            };
+
+            window.clearDropArea = () => {
+                elements.dropArea.innerHTML = '';
+                elements.dragFeedback.textContent = ''; // Clear feedback when clearing
+                elements.dragFeedback.className = 'feedback';
+            };
+
+            function getWordFromDropArea() {
+                let word = '';
+                Array.from(elements.dropArea.children).forEach(span => {
+                    word += span.textContent;
+                });
+                return word;
+            }
+
+            function checkBuiltWord() {
+                const builtWord = getWordFromDropArea();
+                if (builtWord.length === 0) {
+                    elements.dragFeedback.textContent = "Drag some letters first!";
+                    elements.dragFeedback.classList.remove('correct', 'incorrect');
+                    return;
+                }
+
+                if (simpleDictionary.has(builtWord.toLowerCase())) {
+                    elements.dragFeedback.textContent = `🥳 Yes! "${builtWord}" is a word!`;
+                    elements.dragFeedback.classList.remove('incorrect');
+                    elements.dragFeedback.classList.add('correct');
+                } else {
+                    elements.dragFeedback.textContent = `🤔 "${builtWord}" is not in my dictionary. Try a different combination!`;
+                    elements.dragFeedback.classList.remove('correct');
+                    elements.dragFeedback.classList.add('incorrect');
+                }
+            }
         });
-
-        const distractors = satpinWordsList.filter(w => w.word !== gameState.correctWord);
-        const shuffled = [choice, ...distractors.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random());
-
-        shuffled.forEach(opt => {
-          const btn = document.createElement('button');
-          btn.className = 'word-choice';
-          btn.innerHTML = `${opt.word} <span class="emoji">${opt.emoji}</span>`;
-          btn.addEventListener('click', () => handleChoice(opt.word));
-          elements.wordChoices.appendChild(btn);
-        });
-      }
-
-      function handleChoice(selection) {
-        if (selection === gameState.correctWord) {
-          gameState.score++;
-          if (gameState.score % 2 === 0) gameState.stars++;
-          updateScore();
-          updateStars();
-          elements.feedback.textContent = `🎉 Correct! ${gameState.correctEmoji}`;
-          if (gameState.stars >= 5) return endGame("You earned 5 stars!");
-          setTimeout(() => setupBlendMode(), 1200);
-        } else {
-          elements.feedback.textContent = '❌ Try again!';
-        }
-      }
-
-      function endGame(message) {
-        elements.gameArea.classList.add('hidden');
-        elements.gameComplete.classList.remove('hidden');
-        elements.finalMessage.textContent = message;
-      }
-
-      // Drag & Drop Section
-      function setupDraggableLetters() {
-        elements.dragLetterBank.innerHTML = '';
-        dragLetters.forEach(letter => {
-          const div = document.createElement('div');
-          div.className = 'letter';
-          div.textContent = letter;
-          div.draggable = true;
-          div.ondragstart = e => e.dataTransfer.setData('text/plain', letter);
-          elements.dragLetterBank.appendChild(div);
-        });
-      }
-
-      window.allowDrop = e => e.preventDefault();
-
-      window.drop = e => {
-        e.preventDefault();
-        const letter = e.dataTransfer.getData('text/plain');
-        const span = document.createElement('span');
-        span.textContent = letter;
-        span.className = 'letter';
-        elements.dropArea.appendChild(span);
-      };
-
-      window.clearDropArea = () => {
-        elements.dropArea.innerHTML = '';
-      };
-    });
-  </script>
+    </script>
 </body>
 </html>
