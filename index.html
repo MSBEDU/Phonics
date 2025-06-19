@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sound Safari Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+    .choices, .blend-box {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .letter {
+      background: #ffefd5;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 0 10px;
+      cursor: pointer;
+      font-size: 2em;
+      transition: 0.2s;
+    }
+    .letter:hover {
+      background: #ffe4b5;
+    }
+    .picture-choice {
+      margin: 10px;
+      font-size: 1.5em;
+      cursor: pointer;
+      padding: 10px;
+      background-color: #dff0d8;
+      border-radius: 10px;
+    }
+    .picture-choice:hover {
+      background-color: #c8e6c9;
+    }
+  </style>
+</head>
+<body>
+  <h1>🦁 Sound Safari</h1>
+  <h2 id="prompt">Click the sound you hear</h2>
+  <div class="choices" id="soundChoices"></div>
+
+  <div class="blend-box" id="blendBox"></div>
+
+  <div class="choices" id="wordChoices"></div>
+
+  <h2 id="feedback"></h2>
+
+  <script>
+    const sounds = ['s', 'a', 't', 'p', 'i', 'n'];
+    const words = [
+      { word: 'sat', letters: ['s', 'a', 't'], image: '🪑 sat' },
+      { word: 'pin', letters: ['p', 'i', 'n'], image: '📌 pin' },
+      { word: 'pat', letters: ['p', 'a', 't'], image: '👏 pat' },
+      { word: 'sit', letters: ['s', 'i', 't'], image: '🪑 sit' }
+    ];
+
+    let currentSound = '';
+    let learnedWords = [];
+
+    function playSound(sound) {
+      const utter = new SpeechSynthesisUtterance(sound);
+      utter.rate = 0.7;
+      speechSynthesis.speak(utter);
+    }
+
+    function showSoundChoices() {
+      document.getElementById('feedback').textContent = '';
+      const container = document.getElementById('soundChoices');
+      container.innerHTML = '';
+      const choices = shuffle([...sounds]);
+      currentSound = choices[Math.floor(Math.random() * 3)];
+      playSound(currentSound);
+
+      for (let i = 0; i < 3; i++) {
+        const div = document.createElement('div');
+        div.className = 'letter';
+        div.textContent = choices[i];
+        div.onclick = () => handleSoundChoice(choices[i]);
+        container.appendChild(div);
+      }
+    }
+
+    function handleSoundChoice(choice) {
+      if (choice === currentSound) {
+        document.getElementById('feedback').textContent = '✅ Great job!';
+        setTimeout(showBlendingChallenge, 1000);
+      } else {
+        document.getElementById('feedback').textContent = '❌ Try again!';
+        playSound(currentSound);
+      }
+    }
+
+    function showBlendingChallenge() {
+      const box = document.getElementById('blendBox');
+      const choices = document.getElementById('wordChoices');
+      box.innerHTML = '';
+      choices.innerHTML = '';
+      document.getElementById('prompt').textContent = 'Sound it out!';
+
+      const randomWord = shuffle(words)[0];
+      randomWord.letters.forEach(letter => {
+        const span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = letter;
+        box.appendChild(span);
+      });
+
+      const allImages = shuffle([randomWord, ...shuffle(words).slice(1, 3)]);
+      allImages.forEach(opt => {
+        const div = document.createElement('div');
+        div.className = 'picture-choice';
+        div.textContent = opt.image;
+        div.onclick = () => handleWordChoice(opt.word === randomWord.word);
+        choices.appendChild(div);
+      });
+    }
+
+    function handleWordChoice(correct) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = correct ? '🎉 You blended the word!' : '❌ Try again!';
+      if (correct) {
+        setTimeout(showSoundChoices, 1500);
+      }
+    }
+
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    // Start the game
+    showSoundChoices();
+  </script>
+</body>
+</html>
