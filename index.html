@@ -8,11 +8,14 @@
     :root {
       --bg-color: #f0f8ff;
       --primary-color: #333;
-      --button-bg: #ffefd5;
+      --secondary-color: #555;
+      --button-bg: #fff0d5;
       --button-hover-bg: #ffe4b5;
       --button-selected-bg: #b6d7a8;
       --correct-bg: #93c47d;
       --correct-hover-bg: #6aa84f;
+      --home-button-bg: #add8e6;
+      --home-button-hover-bg: #87ceeb;
       --border-color: #ccc;
       --border-width: 3px;
       --border-radius: 15px;
@@ -28,18 +31,37 @@
     }
 
     h1 {
-      font-size: 3em;
+      font-size: clamp(2em, 8vw, 3em); /* Responsive font size */
       margin-bottom: 20px;
     }
     
-    /* Base styles for all buttons to override browser defaults */
     button {
       font-family: inherit;
       border: none;
       background: none;
       cursor: pointer;
-      transition: background-color 0.2s;
-      -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
+      transition: background-color 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active {
+        transform: scale(0.95);
+    }
+
+    .home-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: var(--home-button-bg);
+        color: var(--primary-color);
+        font-size: 1.2em;
+        padding: 10px 20px;
+        border-radius: var(--border-radius);
+        border: 2px solid var(--border-color);
+    }
+
+    .home-button:hover {
+        background-color: var(--home-button-hover-bg);
     }
 
     .menu-button {
@@ -48,7 +70,7 @@
       border-radius: var(--border-radius);
       padding: 20px;
       margin: 15px;
-      font-size: 1.5em;
+      font-size: clamp(1em, 4vw, 1.5em);
     }
 
     .menu-button:hover {
@@ -64,7 +86,7 @@
       display: flex;
       justify-content: center;
       margin-bottom: 10px;
-      height: 2em; /* Reserve space to prevent layout shift */
+      height: 2em;
     }
 
     .star {
@@ -73,17 +95,43 @@
     }
 
     #prompt {
-      font-size: 2em;
+      font-size: clamp(1.2em, 5vw, 2em);
       margin-bottom: 20px;
-      min-height: 1.2em; /* Reserve space */
+      min-height: 1.2em;
     }
 
     .blend-box {
       display: flex;
+      flex-direction: column; /* Changed for letter sets */
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
       margin-bottom: 20px;
+    }
+    
+    .blend-box.horizontal {
+        flex-direction: row; /* For blending mode */
+    }
+
+    .letter-set-container {
+      width: 100%;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: var(--border-radius);
+      margin-bottom: 15px;
+    }
+
+    .letter-set-title {
+      font-size: 1.5em;
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+    }
+    
+    .letters-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
     }
 
     .letter {
@@ -170,13 +218,14 @@
       background: var(--correct-hover-bg);
     }
     
-    /* Utility class to hide elements accessibly */
     .hidden {
         display: none;
     }
   </style>
 </head>
 <body>
+  <button id="homeBtn" class="home-button hidden">🏠 Home</button>
+
   <h1>🦁 Sound Safari</h1>
   <div id="menu">
     <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
@@ -206,6 +255,7 @@
       const elements = {
         menu: document.getElementById('menu'),
         gameArea: document.getElementById('gameArea'),
+        homeBtn: document.getElementById('homeBtn'),
         learnLettersBtn: document.getElementById('learnLettersBtn'),
         blendWordsBtn: document.getElementById('blendWordsBtn'),
         scoreDisplay: document.getElementById('score'),
@@ -222,7 +272,13 @@
       };
 
       // --- GAME DATA & STATE ---
-      const phase2Letters = ['s', 'a', 't', 'p', 'i', 'n', 'm', 'd', 'g', 'o', 'c', 'k', 'ck', 'e', 'u', 'r', 'h', 'b', 'f', 'ff', 'l', 'll', 'ss'];
+      const letterSets = {
+        'Set 1': ['s', 'a', 't', 'p'],
+        'Set 2': ['i', 'n', 'm', 'd'],
+        'Set 3': ['g', 'o', 'c', 'k'],
+        'Set 4': ['ck', 'e', 'u', 'r'],
+        'Set 5': ['h', 'b', 'f', 'ff', 'l', 'll', 'ss']
+      };
       const satpinWordsList = [
         { word: 'sat', emoji: '🪑' }, { word: 'pin', emoji: '📌' }, { word: 'pat', emoji: '👏' }, { word: 'tap', emoji: '🚰' },
         { word: 'nap', emoji: '😴' }, { word: 'sip', emoji: '🥤' }, { word: 'tip', emoji: '💡' }, { word: 'tan', emoji: '🌞' },
@@ -242,22 +298,31 @@
       // --- EVENT LISTENERS ---
       elements.learnLettersBtn.addEventListener('click', () => startGame('letters'));
       elements.blendWordsBtn.addEventListener('click', () => startGame('words'));
+      elements.homeBtn.addEventListener('click', goHome);
       elements.resetBtn.addEventListener('click', () => {
         gameState.blended = '';
         elements.blendText.textContent = '';
       });
       elements.playAgainBtn.addEventListener('click', () => startGame(gameState.mode));
 
+      // --- NAVIGATION ---
+      function goHome() {
+        elements.gameArea.classList.add('hidden');
+        elements.gameComplete.classList.add('hidden');
+        elements.homeBtn.classList.add('hidden');
+        elements.menu.classList.remove('hidden');
+      }
+
       // --- GAME LOGIC ---
       function startGame(mode) {
         gameState.mode = mode;
         gameState.score = 0;
         gameState.stars = 0;
-        gameState.blended = '';
-        gameState.currentWords = [...satpinWordsList]; // Reset the list of words for the new game
+        gameState.currentWords = [...satpinWordsList];
 
         elements.menu.classList.add('hidden');
         elements.gameComplete.classList.add('hidden');
+        elements.homeBtn.classList.remove('hidden');
         elements.gameArea.classList.remove('hidden');
         
         clearBoard();
@@ -284,26 +349,52 @@
           elements.blendText.textContent = '';
           elements.blendBox.innerHTML = '';
           elements.wordChoices.innerHTML = '';
+          gameState.blended = ''; // FIX: Reset blended word string
       }
 
       function setupLearnMode() {
+        clearBoard();
         elements.prompt.textContent = 'Practice recognizing Phase 2 sounds';
         elements.resetBtn.classList.add('hidden');
+        elements.scoreDisplay.classList.add('hidden');
+        elements.starsDisplay.classList.add('hidden');
         elements.wordChoices.classList.add('hidden');
+        elements.blendText.classList.add('hidden');
+        elements.blendBox.classList.remove('horizontal');
 
-        phase2Letters.forEach(letter => {
-          const btn = document.createElement('button');
-          btn.className = 'letter';
-          btn.textContent = letter;
-          btn.addEventListener('click', () => btn.classList.toggle('selected'));
-          elements.blendBox.appendChild(btn);
-        });
+        for (const setName in letterSets) {
+            const setContainer = document.createElement('div');
+            setContainer.className = 'letter-set-container';
+
+            const setTitle = document.createElement('h3');
+            setTitle.className = 'letter-set-title';
+            setTitle.textContent = setName;
+            setContainer.appendChild(setTitle);
+
+            const lettersWrapper = document.createElement('div');
+            lettersWrapper.className = 'letters-wrapper';
+
+            letterSets[setName].forEach(letter => {
+                const btn = document.createElement('button');
+                btn.className = 'letter';
+                btn.textContent = letter;
+                btn.addEventListener('click', () => btn.classList.toggle('selected'));
+                lettersWrapper.appendChild(btn);
+            });
+
+            setContainer.appendChild(lettersWrapper);
+            elements.blendBox.appendChild(setContainer);
+        }
       }
 
       function setupBlendMode() {
         clearBoard();
         elements.resetBtn.classList.remove('hidden');
+        elements.scoreDisplay.classList.remove('hidden');
+        elements.starsDisplay.classList.remove('hidden');
         elements.wordChoices.classList.remove('hidden');
+        elements.blendText.classList.remove('hidden');
+        elements.blendBox.classList.add('horizontal');
 
         if (gameState.currentWords.length === 0) {
           endGame('You blended all the words!');
@@ -312,7 +403,6 @@
 
         elements.prompt.textContent = 'Blend the sounds and click the correct word';
         
-        // Select a new word
         const wordIndex = Math.floor(Math.random() * gameState.currentWords.length);
         const choice = gameState.currentWords.splice(wordIndex, 1)[0];
         gameState.correctWord = choice.word;
@@ -347,7 +437,7 @@
       function handleChoice(selection) {
         if (selection === gameState.correctWord) {
           gameState.score++;
-          if (gameState.score % 2 === 0) {
+          if (gameState.score > 0 && gameState.score % 2 === 0) {
             gameState.stars++;
           }
           updateScore();
@@ -373,7 +463,6 @@
         elements.gameComplete.classList.remove('hidden');
         elements.finalMessage.textContent = message;
       }
-
     });
   </script>
 </body>
