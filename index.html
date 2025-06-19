@@ -82,18 +82,20 @@
       background: var(--button-hover-bg);
     }
 
-    .letter {
-      background: var(--button-bg);
-      border: var(--border-width) solid var(--border-color);
-      border-radius: var(--border-radius);
-      width: 90px;
-      height: 90px;
-      font-size: 3em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px;
-    }
+.letter {
+  background: var(--button-bg);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  width: 100px;
+  height: 100px;
+  font-size: 3.5em; /* Slightly reduced for better fit */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  padding-bottom: 5px; /* Added to give room for descenders like 'p' */
+  box-sizing: border-box;
+}
 
     .letter.selected {
       background-color: var(--button-selected-bg);
