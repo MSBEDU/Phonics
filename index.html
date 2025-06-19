@@ -5,46 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sound Safari Game</title>
   <style>
+    :root {
+      --bg-color: #f0f8ff;
+      --primary-color: #333;
+      --button-bg: #ffefd5;
+      --button-hover-bg: #ffe4b5;
+      --button-selected-bg: #b6d7a8;
+      --correct-bg: #93c47d;
+      --correct-hover-bg: #6aa84f;
+      --border-color: #ccc;
+      --border-width: 3px;
+      --border-radius: 15px;
+      --main-font: sans-serif;
+    }
+
     body {
-      font-family: sans-serif;
-      background-color: #f0f8ff;
+      font-family: var(--main-font);
+      background-color: var(--bg-color);
+      color: var(--primary-color);
       text-align: center;
       padding: 30px;
     }
+
     h1 {
       font-size: 3em;
       margin-bottom: 20px;
     }
+    
+    /* Base styles for all buttons to override browser defaults */
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      -webkit-tap-highlight-color: transparent; /* Removes tap highlight on mobile */
+    }
+
     .menu-button {
-      background: #ffefd5;
-      border: 3px solid #ccc;
-      border-radius: 15px;
+      background: var(--button-bg);
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
       padding: 20px;
       margin: 15px;
-      cursor: pointer;
       font-size: 1.5em;
-      transition: 0.2s;
     }
+
     .menu-button:hover {
-      background: #ffe4b5;
+      background: var(--button-hover-bg);
     }
+
     .score {
       font-size: 1.5em;
       margin-bottom: 10px;
     }
+
     .stars {
       display: flex;
       justify-content: center;
       margin-bottom: 10px;
+      height: 2em; /* Reserve space to prevent layout shift */
     }
+
     .star {
       font-size: 2em;
       margin: 0 5px;
     }
+
     #prompt {
       font-size: 2em;
       margin-bottom: 20px;
+      min-height: 1.2em; /* Reserve space */
     }
+
     .blend-box {
       display: flex;
       flex-wrap: wrap;
@@ -52,33 +85,37 @@
       gap: 15px;
       margin-bottom: 20px;
     }
+
     .letter {
-      background: #ffefd5;
-      border: 3px solid #ccc;
-      border-radius: 15px;
+      background: var(--button-bg);
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
       width: 70px;
       height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       font-size: 2em;
-      transition: 0.2s;
     }
+    
     .letter.selected {
-      background-color: #b6d7a8;
+      background-color: var(--button-selected-bg);
     }
+
     .letter:hover,
     .word-choice:hover {
-      background: #ffe4b5;
+      background: var(--button-hover-bg);
     }
+
     .blended-word {
       font-size: 3em;
       font-weight: bold;
       margin: 20px 0;
-      color: #333;
+      color: var(--primary-color);
       letter-spacing: 0.1em;
+      min-height: 1.5em;
     }
+
     .choices {
       display: flex;
       justify-content: center;
@@ -86,196 +123,258 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
+
     .word-choice {
-      background: #ffefd5;
-      border: 3px solid #ccc;
-      border-radius: 15px;
+      background: var(--button-bg);
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
       padding: 30px;
-      cursor: pointer;
       font-size: 2em;
-      transition: 0.2s;
     }
+
     .reset-button {
-      background: #ffefd5;
-      border: 3px solid #ccc;
-      border-radius: 15px;
+      background: var(--button-bg);
+      border: var(--border-width) solid var(--border-color);
+      border-radius: var(--border-radius);
       padding: 15px 25px;
-      cursor: pointer;
       font-size: 1.5em;
-      transition: 0.2s;
       margin-bottom: 20px;
     }
+
     .reset-button:hover {
-      background: #ffe4b5;
+      background: var(--button-hover-bg);
     }
+
     .feedback {
       font-size: 2em;
       margin-top: 30px;
       font-weight: bold;
+      min-height: 1.5em;
     }
+
     .emoji {
       font-size: 1.5em;
       margin-left: 0.2em;
     }
+
     .play-again {
-      background: #93c47d;
+      background: var(--correct-bg);
       color: white;
-      border: none;
-      border-radius: 15px;
+      border-radius: var(--border-radius);
       padding: 20px 30px;
       font-size: 1.2em;
       margin-top: 30px;
-      cursor: pointer;
     }
+
     .play-again:hover {
-      background: #6aa84f;
+      background: var(--correct-hover-bg);
+    }
+    
+    /* Utility class to hide elements accessibly */
+    .hidden {
+        display: none;
     }
   </style>
 </head>
 <body>
   <h1>🦁 Sound Safari</h1>
-  <div>
-    <button class="menu-button" onclick="startGame('letters')">🧩 Learn Phase 2 Sounds</button>
-    <button class="menu-button" onclick="startGame('words')">🔤 Blend SATPIN Words</button>
+  <div id="menu">
+    <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
+    <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
   </div>
-  <div class="score" id="score">Score: 0</div>
-  <div class="stars" id="stars"></div>
-  <h2 id="prompt">Choose an activity to begin</h2>
-  <div class="blend-box" id="blendBox"></div>
-  <div class="blended-word" id="blendText"></div>
-  <div class="choices" id="wordChoices"></div>
-  <button class="reset-button" onclick="resetBlend()">🔄 Reset Blending</button>
-  <div class="feedback" id="feedback"></div>
-  <div id="gameComplete" style="display:none;">
-    <h2>🏆 Game Complete! Well done!</h2>
-    <button class="play-again" onclick="startGame('words')">Play Again</button>
+
+  <div id="gameArea" class="hidden">
+    <div class="score" id="score">Score: 0</div>
+    <div class="stars" id="stars"></div>
+    <h2 id="prompt"></h2>
+    <div class="blend-box" id="blendBox"></div>
+    <div class="blended-word" id="blendText"></div>
+    <div class="choices" id="wordChoices"></div>
+    <button class="reset-button" id="resetBtn">🔄 Reset Blending</button>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div id="gameComplete" class="hidden">
+    <h2>🏆 Well done!</h2>
+    <p id="finalMessage"></p>
+    <button class="play-again" id="playAgainBtn">Play Again</button>
   </div>
 
   <script>
-    const phase2Letters = ['s','a','t','p','i','n','m','d','g','o','c','k','ck','e','u','r','h','b','f','ff','l','ll','ss'];
-    const satpinWordsList = [
-      { word:'sat', emoji:'🪑' },{ word:'pin', emoji:'📌' },{ word:'pat', emoji:'👏' },{ word:'tap', emoji:'🚰' },
-      { word:'nap', emoji:'😴' },{ word:'sip', emoji:'🥤' },{ word:'tip', emoji:'💡' },{ word:'tan', emoji:'🌞' },
-      { word:'pit', emoji:'🕳️' },{ word:'pan', emoji:'🍳' }
-    ];
-    let score = 0, stars = 0, blended = '', correctWord = '', correctEmoji = '', usedWords = [], satpinWords = [];
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- DOM ELEMENTS ---
+      const elements = {
+        menu: document.getElementById('menu'),
+        gameArea: document.getElementById('gameArea'),
+        learnLettersBtn: document.getElementById('learnLettersBtn'),
+        blendWordsBtn: document.getElementById('blendWordsBtn'),
+        scoreDisplay: document.getElementById('score'),
+        starsDisplay: document.getElementById('stars'),
+        prompt: document.getElementById('prompt'),
+        blendBox: document.getElementById('blendBox'),
+        blendText: document.getElementById('blendText'),
+        wordChoices: document.getElementById('wordChoices'),
+        resetBtn: document.getElementById('resetBtn'),
+        feedback: document.getElementById('feedback'),
+        gameComplete: document.getElementById('gameComplete'),
+        finalMessage: document.getElementById('finalMessage'),
+        playAgainBtn: document.getElementById('playAgainBtn'),
+      };
 
-    function startGame(mode) {
-      document.getElementById('gameComplete').style.display = 'none';
-      document.getElementById('feedback').textContent = '';
-      document.getElementById('blendText').textContent = '';
-      score = 0; stars = 0; blended = '';
-      updateScore(); updateStars();
-      usedWords = [];
-      satpinWords = [...satpinWordsList];
-      document.getElementById('prompt').textContent =
-        mode === 'letters' ? 'Tap Phase 2 sounds!' : 'Blend the sounds and click the correct word';
-      showNewChallenge(mode);
-    }
+      // --- GAME DATA & STATE ---
+      const phase2Letters = ['s', 'a', 't', 'p', 'i', 'n', 'm', 'd', 'g', 'o', 'c', 'k', 'ck', 'e', 'u', 'r', 'h', 'b', 'f', 'ff', 'l', 'll', 'ss'];
+      const satpinWordsList = [
+        { word: 'sat', emoji: '🪑' }, { word: 'pin', emoji: '📌' }, { word: 'pat', emoji: '👏' }, { word: 'tap', emoji: '🚰' },
+        { word: 'nap', emoji: '😴' }, { word: 'sip', emoji: '🥤' }, { word: 'tip', emoji: '💡' }, { word: 'tan', emoji: '🌞' },
+        { word: 'pit', emoji: '🕳️' }, { word: 'pan', emoji: '🍳' }
+      ];
 
-    function updateScore() {
-      document.getElementById('score').textContent = 'Score: ' + score;
-    }
+      const gameState = {
+        score: 0,
+        stars: 0,
+        blended: '',
+        correctWord: '',
+        correctEmoji: '',
+        currentWords: [],
+        mode: ''
+      };
 
-    function updateStars() {
-      const starBox = document.getElementById('stars');
-      starBox.innerHTML = Array(stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join('');
-    }
+      // --- EVENT LISTENERS ---
+      elements.learnLettersBtn.addEventListener('click', () => startGame('letters'));
+      elements.blendWordsBtn.addEventListener('click', () => startGame('words'));
+      elements.resetBtn.addEventListener('click', () => {
+        gameState.blended = '';
+        elements.blendText.textContent = '';
+      });
+      elements.playAgainBtn.addEventListener('click', () => startGame(gameState.mode));
 
-    function showNewChallenge(mode) {
-      blended = '';
-      document.getElementById('blendText').textContent = '';
-      document.getElementById('blendBox').innerHTML = '';
-      document.getElementById('wordChoices').innerHTML = '';
-      document.getElementById('feedback').textContent = '';
-      document.getElementById('gameComplete').style.display = 'none';
+      // --- GAME LOGIC ---
+      function startGame(mode) {
+        gameState.mode = mode;
+        gameState.score = 0;
+        gameState.stars = 0;
+        gameState.blended = '';
+        gameState.currentWords = [...satpinWordsList]; // Reset the list of words for the new game
 
-      if (mode === 'letters') {
+        elements.menu.classList.add('hidden');
+        elements.gameComplete.classList.add('hidden');
+        elements.gameArea.classList.remove('hidden');
+        
+        clearBoard();
+        updateScore();
+        updateStars();
+
+        if (mode === 'letters') {
+          setupLearnMode();
+        } else {
+          setupBlendMode();
+        }
+      }
+
+      function updateScore() {
+        elements.scoreDisplay.textContent = `Score: ${gameState.score}`;
+      }
+
+      function updateStars() {
+        elements.starsDisplay.innerHTML = Array(gameState.stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join('');
+      }
+      
+      function clearBoard() {
+          elements.feedback.textContent = '';
+          elements.blendText.textContent = '';
+          elements.blendBox.innerHTML = '';
+          elements.wordChoices.innerHTML = '';
+      }
+
+      function setupLearnMode() {
+        elements.prompt.textContent = 'Practice recognizing Phase 2 sounds';
+        elements.resetBtn.classList.add('hidden');
+        elements.wordChoices.classList.add('hidden');
+
         phase2Letters.forEach(letter => {
-          const btn = document.createElement('div');
+          const btn = document.createElement('button');
           btn.className = 'letter';
           btn.textContent = letter;
-          btn.onclick = () => btn.classList.toggle('selected');
-          document.getElementById('blendBox').appendChild(btn);
+          btn.addEventListener('click', () => btn.classList.toggle('selected'));
+          elements.blendBox.appendChild(btn);
         });
-      } else {
-        if (satpinWords.length === 0) {
-          document.getElementById('gameComplete').style.display = 'block';
-          document.getElementById('blendBox').innerHTML = '';
-          document.getElementById('wordChoices').innerHTML = '';
-          document.getElementById('blendText').textContent = '';
-          document.getElementById('feedback').textContent = '';
-          document.getElementById('prompt').textContent = 'You blended all SATPIN words!';
+      }
+
+      function setupBlendMode() {
+        clearBoard();
+        elements.resetBtn.classList.remove('hidden');
+        elements.wordChoices.classList.remove('hidden');
+
+        if (gameState.currentWords.length === 0) {
+          endGame('You blended all the words!');
           return;
         }
-        const idx = Math.floor(Math.random() * satpinWords.length);
-        const choice = satpinWords.splice(idx,1)[0];
-        correctWord = choice.word;
-        correctEmoji = choice.emoji;
-        usedWords.push(choice.word);
 
-        correctWord.split('').forEach(l => {
-          const span = document.createElement('div');
-          span.className = 'letter';
-          span.textContent = l;
-          span.onclick = () => {
-            blended += l;
-            document.getElementById('blendText').textContent = blended;
-          };
-          document.getElementById('blendBox').appendChild(span);
+        elements.prompt.textContent = 'Blend the sounds and click the correct word';
+        
+        // Select a new word
+        const wordIndex = Math.floor(Math.random() * gameState.currentWords.length);
+        const choice = gameState.currentWords.splice(wordIndex, 1)[0];
+        gameState.correctWord = choice.word;
+        gameState.correctEmoji = choice.emoji;
+
+        // Display letters to blend
+        gameState.correctWord.split('').forEach(l => {
+          const letterButton = document.createElement('button');
+          letterButton.className = 'letter';
+          letterButton.textContent = l;
+          letterButton.addEventListener('click', () => {
+            gameState.blended += l;
+            elements.blendText.textContent = gameState.blended;
+          });
+          elements.blendBox.appendChild(letterButton);
         });
 
-        let opts = [{word: correctWord, emoji: correctEmoji}];
-        let distractors = satpinWordsList.filter(
-          w => w.word !== correctWord && !usedWords.includes(w.word)
-        );
-        while (opts.length < 3 && distractors.length) {
-          const d = distractors.splice(Math.floor(Math.random() * distractors.length),1)[0];
-          opts.push(d);
-        }
-        if (opts.length < 3) {
-          let unused = satpinWordsList.filter(
-            w => w.word !== correctWord && usedWords.includes(w.word)
-          );
-          while (opts.length < 3 && unused.length) {
-            opts.push(unused.shift());
-          }
-        }
-        opts.sort(() => 0.5 - Math.random());
-        opts.forEach(o => {
-          const btn = document.createElement('div');
+        // Create choice buttons
+        const distractors = satpinWordsList.filter(w => w.word !== gameState.correctWord);
+        const shuffledDistractors = distractors.sort(() => 0.5 - Math.random());
+        const options = [choice, ...shuffledDistractors.slice(0, 2)];
+        
+        options.sort(() => 0.5 - Math.random()).forEach(opt => {
+          const btn = document.createElement('button');
           btn.className = 'word-choice';
-          btn.innerHTML = o.word + ' <span class="emoji">' + o.emoji + '</span>';
-          btn.onclick = () => handleChoice(o.word);
-          document.getElementById('wordChoices').appendChild(btn);
+          btn.innerHTML = `${opt.word} <span class="emoji">${opt.emoji}</span>`;
+          btn.addEventListener('click', () => handleChoice(opt.word));
+          elements.wordChoices.appendChild(btn);
         });
       }
-    }
+      
+      function handleChoice(selection) {
+        if (selection === gameState.correctWord) {
+          gameState.score++;
+          if (gameState.score % 2 === 0) {
+            gameState.stars++;
+          }
+          updateScore();
+          updateStars();
+          elements.feedback.textContent = `🎉 Correct! ${gameState.correctEmoji}`;
+          
+          if (gameState.stars >= 5) {
+              endGame("You earned 5 stars!");
+              return;
+          }
 
-    function handleChoice(selection) {
-      const fb = document.getElementById('feedback');
-      if (selection === correctWord) {
-        score++;
-        if (score % 2 === 0) stars++;
-        updateScore(); updateStars();
-        fb.textContent = '🎉 Correct! ' + correctEmoji;
-        setTimeout(() => {
-          showNewChallenge('words');
-        }, 1000);
-        if (stars === 5) {
-          document.getElementById('gameComplete').style.display = 'block';
-          document.getElementById('prompt').textContent = 'You blended all SATPIN words!';
+          setTimeout(() => {
+            setupBlendMode();
+          }, 1200);
+
+        } else {
+          elements.feedback.textContent = '❌ Try again!';
         }
-      } else {
-        fb.textContent = '❌ Try again!';
       }
-    }
 
-    function resetBlend() {
-      showNewChallenge('words');
-    }
+      function endGame(message) {
+        elements.gameArea.classList.add('hidden');
+        elements.gameComplete.classList.remove('hidden');
+        elements.finalMessage.textContent = message;
+      }
 
-    startGame('letters');
+    });
   </script>
 </body>
 </html>
