@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sound Safari Game</title>
+  <!-- Google Fonts: Quicksand for a phonics-friendly, single-storey 'a' and clear 'l' -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #f0f8ff;
@@ -21,7 +23,7 @@
       --border-color: #ccc;
       --border-width: 3px;
       --border-radius: 15px;
-      --main-font: sans-serif;
+      --main-font: 'Quicksand', sans-serif; /* Updated to Quicksand */
     }
 
     body {
@@ -471,6 +473,7 @@
     <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
     <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
     <button class="menu-button" id="buildWordBtn">🛠️ Build a Word</button>
+    <button class="menu-button" id="trickyWordsBtn">🤯 Tricky Words</button>
   </div>
 
   <div id="gameArea" class="hidden">
@@ -479,7 +482,7 @@
     <h2 id="prompt"></h2>
 
     <div id="flashcardPackSelection" class="hidden">
-      <p>Choose a Phase 2 Sound Set to practice:</p>
+      <p id="packSelectionIntroText">Choose a Set:</p>
       <div id="packButtons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
         </div>
       <button class="menu-button" id="backToMainMenuBtn">Back to Main Menu</button>
@@ -487,7 +490,7 @@
 
     <div id="flashcardContainer" class="hidden" data-mastered-unique-letters="">
         <p id="flashcardLetter"></p>
-        <p id="flashcardPhonemeDescription"></p> <!-- New element for phoneme description -->
+        <p id="flashcardPhonemeDescription"></p>
         <div id="flashcardActions" class="flashcard-actions">
             <button id="gotItBtn">✅ Got It!</button>
             <button id="needPracticeBtn" class="need-practice">❌ Need Practice</button>
@@ -500,7 +503,7 @@
     <div class="blend-box" id="blendBox"></div>
     <div class="blended-word" id="blendText"></div>
 
-    <div id="buildWordTargetFlashcard" class="hidden"></div> <!-- New flashcard for target word -->
+    <div id="buildWordTargetFlashcard" class="hidden"></div>
 
     <div id="buildWordDisplay" class="hidden"></div>
     <div id="letterPool" class="hidden"></div>
@@ -530,17 +533,19 @@
         learnLettersBtn: document.getElementById('learnLettersBtn'),
         blendWordsBtn: document.getElementById('blendWordsBtn'),
         buildWordBtn: document.getElementById('buildWordBtn'),
+        trickyWordsBtn: document.getElementById('trickyWordsBtn'), 
         scoreDisplay: document.getElementById('score'),
         starsDisplay: document.getElementById('stars'),
         prompt: document.getElementById('prompt'),
         
         flashcardPackSelection: document.getElementById('flashcardPackSelection'),
+        packSelectionIntroText: document.getElementById('packSelectionIntroText'), 
         packButtons: document.getElementById('packButtons'),
         backToMainMenuBtn: document.getElementById('backToMainMenuBtn'),
 
         flashcardContainer: document.getElementById('flashcardContainer'),
         flashcardLetter: document.getElementById('flashcardLetter'),
-        flashcardPhonemeDescription: document.getElementById('flashcardPhonemeDescription'), // New reference
+        flashcardPhonemeDescription: document.getElementById('flashcardPhonemeDescription'),
         flashcardActions: document.getElementById('flashcardActions'),
         gotItBtn: document.getElementById('gotItBtn'),
         needPracticeBtn: document.getElementById('needPracticeBtn'),
@@ -575,6 +580,27 @@
       };
       const allPhase2Letters = Object.values(letterSets).flat();
       const masterBuildLettersPool = [...letterSets['Set 1'], ...letterSets['Set 2']]; // For build a word
+
+      // Tricky Word Sets
+      const trickyWordSets = {
+          'Set 1 – Foundation Words': {
+              words: ['I', 'the', 'to', 'no', 'go'],
+              description: 'Short, very frequent words that appear in almost every beginner book.'
+          },
+          'Set 2 – Early Sentence Builders': {
+              words: ['into', 'he', 'she', 'we', 'me'],
+              description: 'Helps children build simple subject-verb sentences like “He is big.”'
+          },
+          'Set 3 – Identity and Action Words': {
+              words: ['be', 'was', 'my', 'you', 'they'],
+              description: 'Introduces trickier spelling patterns and supports early storytelling.'
+          },
+          'Set 4 – Describing and Referring Words': {
+              words: ['her', 'all', 'are', 'your', 'said'],
+              description: 'Introduces trickier spelling patterns and supports early storytelling.'
+          }
+      };
+
 
       // Phoneme descriptions for visual/textual guidance
       const phonemeDescriptions = {
@@ -615,15 +641,17 @@
         blended: '',
         correctWord: '',
         correctEmoji: '',
-        currentWords: [], // For blending and building modes
+        currentWords: [], 
         mode: '', 
 
         currentFlashcardIndex: 0, 
-        currentFlashcardLetters: [],
+        currentFlashcardLetters: [], 
         currentFlashcardSetName: '', 
         flashcardMasterList: [],
         flashcardsCompletedCount: 0,
-
+        packSelectionType: '', 
+        currentFlashcardSetDescription: '', // Stores the description for the current tricky word set
+        
         targetBuildWord: '',
         userBuiltWord: [], 
         buildLettersPool: [], 
@@ -654,13 +682,14 @@
       // Function to update the display for "Build a Word" mode
       function updateBuildWordDisplay() {
           elements.buildWordDisplay.textContent = gameState.userBuiltWord.join('');
-          elements.feedback.textContent = ''; // Clear feedback when display updates
+          elements.feedback.textContent = ''; 
       }
 
       // --- EVENT LISTENERS ---
-      elements.learnLettersBtn.addEventListener('click', () => showFlashcardPackSelection());
+      elements.learnLettersBtn.addEventListener('click', () => showFlashcardPackSelection('letters'));
       elements.blendWordsBtn.addEventListener('click', () => startGame('words'));
       elements.buildWordBtn.addEventListener('click', () => startGame('build'));
+      elements.trickyWordsBtn.addEventListener('click', () => showFlashcardPackSelection('trickyWords')); 
       elements.homeBtn.addEventListener('click', goHome); 
 
       elements.resetBtn.addEventListener('click', () => {
@@ -670,11 +699,11 @@
           const letterButtons = elements.blendBox.querySelectorAll('.letter');
           letterButtons.forEach(button => {
               button.classList.remove('blended-active');
-              button.disabled = false; // Re-enable individual letter buttons on reset
+              button.disabled = false; 
           });
           toggleBlendingControls(true); 
         } else if (gameState.mode === 'build') {
-          // In build mode, reset also means get a new word
+          // In build mode, reset means get a new word
           setupBuildMode(); 
         }
       });
@@ -707,6 +736,8 @@
         }
         gameState.currentFlashcardIndex = 0;
         gameState.flashcardsCompletedCount = 0;
+        gameState.packSelectionType = ''; 
+        gameState.currentFlashcardSetDescription = ''; // Clear description on game start
 
         elements.menu.classList.add('hidden');
         elements.gameComplete.classList.add('hidden');
@@ -749,7 +780,7 @@
           elements.flashcardContainer.classList.add('hidden');
           elements.flashcardActions.classList.add('hidden');
           elements.flashcardProgress.classList.add('hidden');
-          elements.flashcardPhonemeDescription.textContent = ''; // Clear description
+          elements.flashcardPhonemeDescription.textContent = ''; 
 
 
           elements.blendBox.innerHTML = '';
@@ -791,11 +822,14 @@
           elements.buildWordTargetFlashcard.classList.remove('fade-in');
           elements.buildWordTargetFlashcard.textContent = '';
 
-          elements.flashcardPhonemeDescription.textContent = ''; // Also clear description here
+          elements.flashcardPhonemeDescription.textContent = ''; 
       }
 
-      // --- LEARN LETTERS (FLASHCARDS) MODE: SELECTION ---
-      function showFlashcardPackSelection() {
+      // Modified to handle both letter and tricky word pack selections
+      function showFlashcardPackSelection(packType) {
+          gameState.mode = 'flashcards'; 
+          gameState.packSelectionType = packType; 
+
           elements.menu.classList.add('hidden');
           elements.gameComplete.classList.add('hidden');
           elements.homeBtn.classList.remove('hidden');
@@ -803,64 +837,90 @@
 
           hideAllGameSpecificElements();
           elements.flashcardPackSelection.classList.remove('hidden');
-          elements.prompt.textContent = 'Choose a Phase 2 Sound Set:';
+          
+          elements.packSelectionIntroText.textContent = `Choose a ${packType === 'letters' ? 'Phase 2 Sound' : 'Tricky Word'} Set:`;
 
           elements.packButtons.innerHTML = '';
+          const sets = packType === 'letters' ? letterSets : trickyWordSets;
+          
+          let allItems = [];
+          let allItemsName = '';
+          if (packType === 'letters') {
+              allItems = [...allPhase2Letters];
+              allItemsName = 'All Sounds';
+          } else { 
+              allItems = Object.values(trickyWordSets).flatMap(set => set.words);
+              allItemsName = 'All Tricky Words';
+          }
 
-          for (const setName in letterSets) {
+          for (const setName in sets) {
+              const setContent = sets[setName];
+              const displayItems = Array.isArray(setContent) ? setContent : setContent.words;
               const button = document.createElement('button');
               button.className = 'menu-button';
-              button.textContent = `${setName}: ${letterSets[setName].join(', ')}`;
-              button.addEventListener('click', () => startFlashcardPack(setName));
+              button.textContent = `${setName}: ${displayItems.join(', ')}`;
+              button.addEventListener('click', () => startFlashcardPack(setName, packType)); 
               elements.packButtons.appendChild(button);
           }
 
-          const allSoundsButton = document.createElement('button');
-          allSoundsButton.className = 'menu-button';
-          allSoundsButton.textContent = 'All Sounds';
-          allSoundsButton.addEventListener('click', () => startFlashcardPack('All Sounds'));
-          elements.packButtons.appendChild(allSoundsButton);
+          const allButton = document.createElement('button');
+          allButton.className = 'menu-button';
+          allButton.textContent = allItemsName;
+          allButton.addEventListener('click', () => startFlashcardPack(allItemsName, packType));
+          elements.packButtons.appendChild(allButton);
       }
 
-      // --- LEARN LETTERS (FLASHCARDS) MODE: DISPLAY ---
-      function startFlashcardPack(packName) {
+
+      function startFlashcardPack(packName, packType) {
           elements.flashcardPackSelection.classList.add('hidden');
           elements.flashcardContainer.classList.remove('hidden');
           elements.flashcardActions.classList.remove('hidden');
           elements.flashcardProgress.classList.remove('hidden');
 
-          let lettersForThisPack;
-          if (packName === 'All Sounds') {
-              lettersForThisPack = [...allPhase2Letters];
-          } else {
-              lettersForThisPack = [...letterSets[packName]];
+          let itemsForThisPack;
+          gameState.currentFlashcardSetDescription = ''; 
+
+          if (packType === 'letters') {
+              if (packName === 'All Sounds') {
+                  itemsForThisPack = [...allPhase2Letters];
+              } else {
+                  itemsForThisPack = [...letterSets[packName]];
+              }
+              elements.prompt.textContent = `What sound is this?`;
+          } else { 
+              if (packName === 'All Tricky Words') {
+                  itemsForThisPack = Object.values(trickyWordSets).flatMap(set => set.words);
+                  elements.prompt.textContent = `What is this tricky word?`;
+              } else {
+                  itemsForThisPack = [...trickyWordSets[packName].words];
+                  elements.prompt.textContent = `What is this tricky word?`;
+                  gameState.currentFlashcardSetDescription = trickyWordSets[packName].description;
+              }
           }
           
-          gameState.flashcardMasterList = lettersForThisPack;
-          gameState.currentFlashcardLetters = shuffleArray([...lettersForThisPack]);
+          gameState.flashcardMasterList = itemsForThisPack;
+          gameState.currentFlashcardLetters = shuffleArray([...itemsForThisPack]);
           gameState.currentFlashcardIndex = 0;
           gameState.currentFlashcardSetName = packName;
           gameState.flashcardsCompletedCount = 0;
-          elements.flashcardContainer.dataset.masteredUniqueLetters = '';
+          elements.flashcardContainer.dataset.masteredUniqueLetters = ''; 
 
-          elements.prompt.textContent = `What sound is this?`;
           displayFlashcard();
       }
 
       function displayFlashcard() {
           if (gameState.currentFlashcardLetters.length === 0) {
-              elements.prompt.textContent = `Finished! You've mastered all sounds in the ${gameState.currentFlashcardSetName} pack!`;
+              elements.prompt.textContent = `Finished! You've mastered all ${gameState.packSelectionType === 'letters' ? 'sounds' : 'tricky words'} in the ${gameState.currentFlashcardSetName} pack!`;
               elements.flashcardContainer.classList.add('hidden');
               
               elements.gameComplete.classList.remove('hidden');
-              elements.finalMessage.textContent = `You've mastered all sounds in the ${gameState.currentFlashcardSetName} pack!`;
-              elements.playAgainBtn.textContent = 'Play This Pack Again';
+              elements.finalMessage.textContent = `You've mastered all ${gameState.packSelectionType === 'letters' ? 'sounds' : 'tricky words'} in the ${gameState.currentFlashcardSetName} pack!`;
+              
+              elements.playAgainBtn.textContent = `Play This Pack Again`;
               elements.playAgainBtn.onclick = () => {
                 let existingChooseAnother = elements.gameComplete.querySelector('.choose-another-pack-btn');
-                if (existingChooseAnother) {
-                    existingChooseAnother.remove();
-                }
-                startFlashcardPack(gameState.currentFlashcardSetName);
+                if (existingChooseAnother) { existingChooseAnother.remove(); }
+                startFlashcardPack(gameState.currentFlashcardSetName, gameState.packSelectionType);
               };
               
               let existingChooseAnother = elements.gameComplete.querySelector('.choose-another-pack-btn');
@@ -870,18 +930,21 @@
               const chooseAnotherPackBtn = document.createElement('button');
               chooseAnotherPackBtn.className = 'play-again choose-another-pack-btn';
               chooseAnotherPackBtn.textContent = 'Choose Another Pack';
-              chooseAnotherPackBtn.onclick = () => showFlashcardPackSelection();
+              chooseAnotherPackBtn.onclick = () => showFlashcardPackSelection(gameState.packSelectionType);
               elements.gameComplete.appendChild(chooseAnotherPackBtn); 
 
               return;
           }
 
-          const currentLetter = gameState.currentFlashcardLetters[gameState.currentFlashcardIndex];
-          elements.flashcardLetter.textContent = currentLetter;
+          const currentItem = gameState.currentFlashcardLetters[gameState.currentFlashcardIndex];
+          elements.flashcardLetter.textContent = currentItem;
           elements.flashcardLetter.classList.remove('hidden-content');
           
-          // Display phoneme description
-          elements.flashcardPhonemeDescription.textContent = phonemeDescriptions[currentLetter] || '';
+          if (gameState.packSelectionType === 'letters') {
+              elements.flashcardPhonemeDescription.textContent = phonemeDescriptions[currentItem] || '';
+          } else { 
+              elements.flashcardPhonemeDescription.textContent = gameState.currentFlashcardSetDescription || 'Try to remember this word!';
+          }
 
           elements.flashcardProgress.textContent = `Mastered: ${gameState.flashcardsCompletedCount} of ${gameState.flashcardMasterList.length}`;
       }
@@ -890,12 +953,12 @@
           elements.flashcardContainer.classList.add('fade-out');
 
           setTimeout(() => {
-              const currentLetter = gameState.currentFlashcardLetters[gameState.currentFlashcardIndex];
+              const currentItem = gameState.currentFlashcardLetters[gameState.currentFlashcardIndex];
 
               if (assessment === 'gotIt') {
-                  if (!elements.flashcardContainer.dataset.masteredUniqueLetters.includes(currentLetter)) {
+                  if (!elements.flashcardContainer.dataset.masteredUniqueLetters.includes(currentItem)) {
                       gameState.flashcardsCompletedCount++;
-                      elements.flashcardContainer.dataset.masteredUniqueLetters += currentLetter; 
+                      elements.flashcardContainer.dataset.masteredUniqueLetters += currentItem; 
                   }
                   gameState.currentFlashcardLetters.splice(gameState.currentFlashcardIndex, 1);
                   
@@ -908,7 +971,7 @@
                   }
 
               } else if (assessment === 'needPractice') {
-                  gameState.currentFlashcardLetters.push(currentLetter);
+                  gameState.currentFlashcardLetters.push(currentItem);
                   gameState.currentFlashcardIndex++;
                   if (gameState.currentFlashcardIndex >= gameState.currentFlashcardLetters.length) {
                       gameState.currentFlashcardIndex = 0; 
@@ -1051,7 +1114,6 @@
         elements.checkBuildBtn.classList.remove('hidden');
         elements.resetBtn.classList.remove('hidden'); 
 
-        // Initialize or reset available words for building if starting new session
         if (gameState.availableBuildWords.length === 0 || gameState.mode !== 'build') { 
             const filteredWords = satpinWordsList.filter(wordObj => {
                 const wordLetters = wordObj.word.split('');
@@ -1100,7 +1162,6 @@
           gameState.userBuiltWord.push(letter);
           updateBuildWordDisplay();
 
-          // Disable the clicked button so it can't be clicked again for this word
           buttonElement.disabled = true; 
           buttonElement.classList.add('selected'); 
           buttonElement.classList.add('blended-active'); 
@@ -1118,9 +1179,8 @@
             const letterBtn = document.createElement('button');
             letterBtn.className = 'letter';
             letterBtn.textContent = letter;
-            // Use data-letter-value to store the letter, and data-original-index to keep each button unique
             letterBtn.dataset.letterValue = letter; 
-            letterBtn.dataset.originalIndex = index; // Unique ID for each button instance
+            letterBtn.dataset.originalIndex = index; 
             letterBtn.addEventListener('click', () => selectLetterForBuild(letter, letterBtn));
             elements.letterPool.appendChild(letterBtn);
         });
@@ -1131,7 +1191,6 @@
           updateBuildWordDisplay();
           elements.feedback.textContent = '';
           
-          // Re-enable all letter buttons in the pool and remove 'selected' class
           elements.letterPool.querySelectorAll('.letter').forEach(button => {
               button.disabled = false;
               button.classList.remove('selected');
