@@ -93,13 +93,13 @@
       background: var(--button-hover-bg);
     }
     
-    /* Style for the Build a Word button */
-    #buildWordBtn {
+    /* Removed specific background-color for #buildWordBtn to match others */
+    /* #buildWordBtn {
         background-color: var(--build-button-bg);
     }
     #buildWordBtn:hover {
         background-color: var(--build-button-hover-bg);
-    }
+    } */
 
     /* Style for Flashcard Pack Selection buttons */
     #flashcardPackSelection .menu-button {
@@ -222,7 +222,7 @@
     /* Buttons for flashcard self-assessment */
     .flashcard-actions {
         display: flex;
-        justify-content;
+        justify-content: center;
         gap: 10px;
         margin-top: 15px;
     }
@@ -956,7 +956,7 @@
 
       // Updated satpinWordsList with placeholder images for Picture-Word Matching
       const satpinWordsList = [
-        { word: 'sat', emoji: '🪑', image: 'https://placehold.co/250x250/FFDAB9/000000?text=SAT' },
+        { word: 'sat', emoji: '�', image: 'https://placehold.co/250x250/FFDAB9/000000?text=SAT' },
         { word: 'pin', emoji: '📌', image: 'https://placehold.co/250x250/ADD8E6/000000?text=PIN' },
         { word: 'pat', emoji: '👏', image: 'https://placehold.co/250x250/98FB98/000000?text=PAT' },
         { word: 'tap', emoji: '🚰', image: 'https://placehold.co/250x250/FFD700/000000?text=TAP' },
@@ -1322,29 +1322,7 @@
 
       function displayFlashcard() {
           if (gameState.currentFlashcardLetters.length === 0) {
-              elements.prompt.textContent = `Finished! You've mastered all ${gameState.packSelectionType === 'letters' ? 'sounds' : 'tricky words'} in the ${gameState.currentFlashcardSetName} pack!`;
-              elements.flashcardContainer.classList.add('hidden');
-              
-              elements.gameComplete.classList.remove('hidden');
-              elements.finalMessage.textContent = `You've mastered all ${gameState.packSelectionType === 'letters' ? 'sounds' : 'tricky words'} in the ${gameState.currentFlashcardSetName} pack!`;
-              
-              elements.playAgainBtn.textContent = `Play This Pack Again`;
-              elements.playAgainBtn.onclick = () => {
-                let existingChooseAnother = elements.gameComplete.querySelector('.choose-another-pack-btn');
-                if (existingChooseAnother) { existingChooseAnother.remove(); }
-                startFlashcardPack(gameState.currentFlashcardSetName, gameState.packSelectionType);
-              };
-              
-              let existingChooseAnother = elements.gameComplete.querySelector('.choose-another-pack-btn');
-              if (existingChooseAnother) {
-                  existingChooseAnother.remove();
-              }
-              const chooseAnotherPackBtn = document.createElement('button');
-              chooseAnotherPackBtn.className = 'play-again choose-another-pack-btn';
-              chooseAnotherPackBtn.textContent = 'Choose Another Pack';
-              chooseAnotherPackBtn.onclick = () => showFlashcardPackSelection(gameState.packSelectionType);
-              elements.gameComplete.appendChild(chooseAnotherPackBtn); 
-
+              endGame("You've mastered all the letters!"); // Corrected message
               return;
           }
 
@@ -2179,3 +2157,4 @@
   </script>
 </body>
 </html>
+�
