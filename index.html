@@ -222,7 +222,7 @@
     /* Buttons for flashcard self-assessment */
     .flashcard-actions {
         display: flex;
-        justify-content: center;
+        justify-content;
         gap: 10px;
         margin-top: 15px;
     }
@@ -656,10 +656,7 @@
     <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
     <button class="menu-button" id="buildWordBtn">🛠️ Build a Word</button>
     <button class="menu-button" id="trickyWordsBtn">🤯 Tricky Words</button>
-    <button class="menu-button" id="pictureWordMatchBtn">🖼️ Picture-Word Match</button> <!-- Renamed button -->
-    <button class="menu-button" id="trickyWordSortBtn">🧠 Tricky Word Sort</button> <!-- New button -->
-    <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button> <!-- New button -->
-  </div>
+    <button class="menu-button" id="pictureWordMatchBtn">🖼️ Picture-Word Match</button> <button class="menu-button" id="trickyWordSortBtn">🧠 Tricky Word Sort</button> <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button> </div>
 
   <div id="gameArea" class="hidden">
     <div class="score" id="score">Score: 0</div>
@@ -698,14 +695,12 @@
         <button id="checkBuildBtn">Check</button>
     </div>
 
-    <div id="pictureWordMatchingSection" class="hidden"> <!-- New section for Picture-Word Matching -->
-        <img id="pictureWordImage" src="" alt="Image to match" class="hidden">
+    <div id="pictureWordMatchingSection" class="hidden"> <img id="pictureWordImage" src="" alt="Image to match" class="hidden">
         <div id="pictureWordChoices"></div>
         <button class="reset-button" id="pictureWordResetBtn">🔄 Reset Choices</button>
     </div>
 
-    <div id="trickyWordSortingSection" class="hidden"> <!-- New section for Tricky Word Sorting -->
-        <div class="sort-zones-container">
+    <div id="trickyWordSortingSection" class="hidden"> <div class="sort-zones-container">
             <div id="trickyZone" class="sort-zone">
                 <h3>Tricky Words 🤯</h3>
             </div>
@@ -719,8 +714,7 @@
         <button class="action-buttons" id="trickySortCheckBtn">Check My Sort</button>
     </div>
 
-    <div id="canvasDrawingTracerSection" class="hidden"> <!-- New section for Canvas Drawing Tracer -->
-        <canvas id="letterCanvas"></canvas>
+    <div id="canvasDrawingTracerSection" class="hidden"> <canvas id="letterCanvas"></canvas>
         <div class="canvas-actions">
             <button id="clearCanvasBtn">🗑️ Clear Drawing</button>
             <button id="nextLetterBtn">➡️ Next Letter</button>
@@ -1017,6 +1011,7 @@
         lastY: 0,
         hasDrawnOnCanvas: false,
         canvasCtx: null,
+        lettersToTrace: [], // New variable to hold the queue of letters
       };
 
       // --- UTILITY FUNCTIONS ---
@@ -1987,9 +1982,12 @@
               addCanvasEventListeners();
           }
           
+          // Initialize letters to trace list
+          const singleLetters = allPhase2Letters.filter(letter => letter.length === 1);
+          gameState.lettersToTrace = shuffleArray(singleLetters);
+
           // Ensure font is loaded before attempting to draw
           document.fonts.ready.then(() => {
-              console.log('Fonts are ready. Proceeding with canvas setup.');
               // Use a small timeout to allow browser to render the canvas element after it becomes visible
               setTimeout(() => {
                   resizeCanvas(); // Call resize after fonts are confirmed loaded and canvas is rendered
@@ -2008,12 +2006,16 @@
       }
 
       function resizeCanvas() {
-          const parent = elements.canvasDrawingTracerSection;
-          // Set internal canvas dimensions to match the parent's client dimensions
-          elements.letterCanvas.width = parent.clientWidth;
-          elements.letterCanvas.height = parent.clientHeight;
+          const canvas = elements.letterCanvas;
+          // Get the actual rendered dimensions of the canvas element
+          const displayWidth = canvas.offsetWidth;
+          const displayHeight = canvas.offsetHeight;
+
+          // Set the internal drawing buffer size to match the display size
+          canvas.width = displayWidth;
+          canvas.height = displayHeight;
           
-          console.log(`Canvas resized to: ${elements.letterCanvas.width}x${elements.letterCanvas.height}`);
+          console.log(`Canvas resized. Internal: ${canvas.width}x${canvas.height}, Display: ${displayWidth}x${displayHeight}`);
           // Redraw the faded letter after resize
           drawFadedLetter(gameState.currentTracingLetter);
       }
@@ -2043,10 +2045,20 @@
 
       function getMousePos(canvas, evt) {
           const rect = canvas.getBoundingClientRect();
+          // Calculate coordinates relative to the canvas's display size
           const x = evt.clientX - rect.left;
           const y = evt.clientY - rect.top;
-          console.log(`Mouse Pos: clientX=${evt.clientX}, clientY=${evt.clientY}, rect.left=${rect.left}, rect.top=${rect.top}, calculatedX=${x}, calculatedY=${y}`);
-          return { x, y };
+
+          // Scale coordinates from display pixels to internal canvas pixels
+          // This is crucial if canvas.width/height (internal) differs from rect.width/height (display)
+          const scaleX = canvas.width / rect.width;
+          const scaleY = canvas.height / rect.height;
+
+          const scaledX = x * scaleX;
+          const scaledY = y * scaleY;
+
+          console.log(`Mouse Pos: clientX=${evt.clientX}, clientY=${evt.clientY}, rect.left=${rect.left}, rect.top=${rect.top}, rect.width=${rect.width}, rect.height=${rect.height}, canvas.width=${canvas.width}, canvas.height=${canvas.height}, calculatedX=${scaledX}, calculatedY=${scaledY}`);
+          return { x: scaledX, y: scaledY };
       }
 
       function startDrawing(e) {
@@ -2055,6 +2067,9 @@
           gameState.lastX = pos.x;
           gameState.lastY = pos.y;
           gameState.hasDrawnOnCanvas = true; // Mark that drawing has started
+          // Start a new path for each new drawing stroke
+          gameState.canvasCtx.beginPath();
+          gameState.canvasCtx.moveTo(gameState.lastX, gameState.lastY);
       }
 
       function draw(e) {
@@ -2062,9 +2077,8 @@
           const ctx = gameState.canvasCtx;
           const pos = getMousePos(elements.letterCanvas, e);
 
-          ctx.beginPath();
-          ctx.moveTo(gameState.lastX, gameState.lastY);
-          ctx.lineTo(pos.x, pos.y);
+          // Use quadraticCurveTo for smoother lines
+          ctx.quadraticCurveTo(gameState.lastX, gameState.lastY, (gameState.lastX + pos.x) / 2, (gameState.lastY + pos.y) / 2);
           ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--canvas-drawing-color');
           ctx.lineWidth = 10;
           ctx.lineCap = 'round';
@@ -2079,13 +2093,17 @@
       }
 
       function loadLetterToTrace() {
-          // Select a random letter from allPhase2Letters
-          const availableLetters = allPhase2Letters.filter(letter => letter.length === 1); // Only single letters for now for simplicity
-          if (availableLetters.length === 0) {
-              elements.prompt.textContent = "No more letters to trace!";
+          // Check if there are letters left in the queue
+          if (gameState.lettersToTrace.length === 0) {
+              endGame("You've traced all the letters!");
+              // Re-initialize for next game
+              const singleLetters = allPhase2Letters.filter(letter => letter.length === 1);
+              gameState.lettersToTrace = shuffleArray(singleLetters);
               return;
           }
-          gameState.currentTracingLetter = shuffleArray(availableLetters)[0];
+          
+          // Get the next letter from the queue
+          gameState.currentTracingLetter = gameState.lettersToTrace.shift();
           
           clearCanvasDrawing(); // Clear user drawing and redraw faded letter
           gameState.hasDrawnOnCanvas = false; // Reset drawing flag for new letter
@@ -2107,8 +2125,6 @@
           const fontFamily = getComputedStyle(document.documentElement).getPropertyValue('--main-font');
           ctx.font = `${fontSize}px ${fontFamily}`; 
           
-          console.log(`Drawing letter: ${letter} with font: ${ctx.font}`);
-
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(letter, canvas.width / 2, canvas.height / 2);
