@@ -25,6 +25,14 @@
       --canvas-drawing-color: #457b9d;
     }
 
+    html, body {
+      /* Prevent scrolling on the entire page */
+      overflow: hidden; 
+      height: 100%; /* Ensure body and html take full height */
+      margin: 0; /* Remove default body margin */
+      padding: 0; /* Remove default body padding */
+    }
+
     body {
       font-family: var(--main-font);
       background-color: var(--bg-color);
@@ -599,6 +607,23 @@
         color: var(--incorrect-bg);
     }
 
+    /* New style for action buttons (e.g., Check, Next) */
+    .action-buttons {
+        background-color: var(--correct-bg); /* Use a distinct color */
+        color: white; /* Ensure text is visible */
+        border: var(--border-width) solid var(--correct-hover-bg); /* Solid border */
+        border-radius: var(--border-radius);
+        padding: 15px 30px;
+        font-size: clamp(1em, 4vw, 1.5em);
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        margin-top: 20px; /* Increased margin for better separation */
+        display: inline-block; /* Explicitly set display */
+    }
+
+    .action-buttons:hover {
+        background-color: var(--correct-hover-bg);
+    }
+
     /* Styles for Canvas Drawing Tracer */
     #canvasDrawingTracerSection {
         display: flex;
@@ -734,6 +759,9 @@
   </div>
 
   <script>
+    // Global variable to hold the element being dragged in Tricky Word Sort mode
+    let draggedTrickyWordElement = null;
+
     document.addEventListener('DOMContentLoaded', () => {
       // --- DOM ELEMENTS ---
       const elements = {
@@ -961,7 +989,7 @@
         { word: 'pin', emoji: '📌', image: 'https://placehold.co/250x250/ADD8E6/000000?text=📌' },
         { word: 'pat', emoji: '👏', image: 'https://placehold.co/250x250/98FB98/000000?text=👏' },
         { word: 'tap', emoji: '🚰', image: 'https://placehold.co/250x250/FFD700/000000?text=🚰' },
-        { word: 'nap', emoji: '😴', image: 'https://placehold.co/250x250/DDA0DD/000000?text=😴' },
+        { word: 'nap', emoji: '�', image: 'https://placehold.co/250x250/DDA0DD/000000?text=😴' },
         { word: 'sip', emoji: '🥤', image: 'https://placehold.co/250x250/87CEFA/000000?text=🥤' },
         { word: 'tip', emoji: '💡', image: 'https://placehold.co/250x250/F08080/000000?text=💡' },
         { word: 'tan', emoji: '🌞', image: 'https://placehold.co/250x250/F4A460/000000?text=🌞' },
@@ -1003,7 +1031,7 @@
 
         // Tricky Word Sorting specific
         trickySortWords: [], // Words currently in the pool for sorting
-        draggedTrickyWord: null,
+        // draggedTrickyWord: null, // Removed, using global variable
 
         // Canvas Drawing Tracer specific
         currentTracingLetter: '',
@@ -1082,6 +1110,12 @@
 
       elements.clearCanvasBtn.addEventListener('click', clearCanvasDrawing); // New listener
       elements.nextLetterBtn.addEventListener('click', nextTracingLetter); // New listener
+
+      // Add a global dragend listener to reset draggedTrickyWordElement
+      document.addEventListener('dragend', () => {
+          draggedTrickyWordElement = null; // Clear the reference after drag operation
+          console.log('Drag operation ended. draggedTrickyWordElement reset.');
+      });
 
 
       // --- NAVIGATION FUNCTIONS ---
@@ -1751,8 +1785,6 @@
       }
 
       // --- NEW: TRICKY WORD SORTING GAME ---
-      let draggedTrickyWordElement = null; // Global to hold the element being dragged
-
       function setupTrickyWordSorting() {
           clearBoard();
           gameState.mode = 'trickyWordSort';
@@ -1809,9 +1841,18 @@
       }
 
       function handleTrickyWordDragStart(e) {
-          draggedTrickyWordElement = e.target;
-          e.dataTransfer.setData('text/plain', e.target.dataset.word);
-          e.dataTransfer.effectAllowed = 'move';
+          // Ensure the target is a sortable word and has dataset properties
+          if (e.target && e.target.classList.contains('sortable-word') && e.target.dataset.word && e.target.dataset.type) {
+              draggedTrickyWordElement = e.target;
+              e.dataTransfer.setData('text/plain', e.target.dataset.word);
+              e.dataTransfer.setData('text/word-type', e.target.dataset.type); // Store the type as well
+              e.dataTransfer.effectAllowed = 'move';
+              console.log('Drag started:', e.target.dataset.word, e.target.dataset.type);
+          } else {
+              e.preventDefault(); // Prevent dragging if it's not a valid sortable word
+              draggedTrickyWordElement = null; // Ensure it's null if drag is invalid
+              console.warn('Drag started on non-sortable or invalid element, preventing drag:', e.target);
+          }
       }
 
       function handleTrickyWordDragOver(e) {
@@ -1826,14 +1867,38 @@
       function handleTrickyWordDrop(e) {
           e.preventDefault();
           const dropZone = e.target.closest('.sort-zone');
-          if (!dropZone) return; // Ensure it's dropped on a valid zone
+          if (!dropZone) {
+              console.warn('Dropped outside a valid sort zone.');
+              return;
+          }
           dropZone.classList.remove('drag-over');
 
           const word = e.dataTransfer.getData('text/plain');
-          const wordType = draggedTrickyWordElement.dataset.type; 
+          const wordType = e.dataTransfer.getData('text/word-type'); // Retrieve the type from dataTransfer
 
-          // Remove the element from its old parent (pool or other zone)
-          draggedTrickyWordElement.remove(); 
+          if (!word || !wordType) {
+              console.error('Missing word or type data during drop operation. Word:', word, 'Type:', wordType);
+              return; // Prevent further execution if data is incomplete
+          }
+
+          // Find and remove the original element from its previous location
+          // We iterate through potential parent containers to find and remove the element
+          let originalElementRemoved = false;
+          const containers = [elements.trickyWordPool, elements.trickyZone, elements.notTrickyZone];
+          for (const container of containers) {
+              const existingElement = container.querySelector(`[data-word="${word}"][data-type="${wordType}"]`);
+              if (existingElement) {
+                  existingElement.remove();
+                  originalElementRemoved = true;
+                  break;
+              }
+          }
+
+          if (!originalElementRemoved) {
+              console.error('Could not find the original dragged element to remove after drop.');
+              // This might happen if the element was already moved or removed by another action.
+              // We can still proceed to create the new element if `word` and `wordType` are valid.
+          }
 
           // Create a new element for the dropped word in the target zone
           const newWordElement = document.createElement('div');
@@ -1841,11 +1906,12 @@
           newWordElement.textContent = word;
           newWordElement.setAttribute('draggable', true);
           newWordElement.dataset.word = word;
-          newWordElement.dataset.type = wordType; 
-          newWordElement.addEventListener('dragstart', handleTrickyWordDragStart);
+          newWordElement.dataset.type = wordType; // Use the retrieved type
+          newWordElement.addEventListener('dragstart', handleTrickyWordDragStart); // Re-attach dragstart listener
           dropZone.appendChild(newWordElement);
 
           elements.trickySortFeedback.textContent = ''; // Clear feedback on drag
+          console.log(`Dropped word "${word}" (type: ${wordType}) into ${dropZone.id}`);
       }
 
       function checkTrickyWordSort() {
@@ -2161,3 +2227,4 @@
   </script>
 </body>
 </html>
+�
