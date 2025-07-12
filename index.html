@@ -490,16 +490,16 @@
     }
 
     #pictureWordChoices {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid; /* Changed to grid */
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Responsive grid, min width 140px, fills space */
+        justify-items: center; /* Center items within their grid cells */
         gap: 15px;
         width: 100%;
     }
 
     #pictureWordChoices .word-choice {
-        flex: 1 1 45%; /* Allow two items per row on larger screens */
-        min-width: 140px;
+        width: 100%; /* Make it fill its grid cell */
+        max-width: 200px; /* Optional: cap max width for very large screens */
         padding: clamp(15px, 4vw, 25px);
         font-size: clamp(1.3em, 4.5vw, 1.8em);
     }
@@ -956,16 +956,17 @@
 
       // Updated satpinWordsList with placeholder images for Picture-Word Matching
       const satpinWordsList = [
-        { word: 'sat', emoji: '�', image: 'https://placehold.co/250x250/FFDAB9/000000?text=SAT' },
-        { word: 'pin', emoji: '📌', image: 'https://placehold.co/250x250/ADD8E6/000000?text=PIN' },
-        { word: 'pat', emoji: '👏', image: 'https://placehold.co/250x250/98FB98/000000?text=PAT' },
-        { word: 'tap', emoji: '🚰', image: 'https://placehold.co/250x250/FFD700/000000?text=TAP' },
-        { word: 'nap', emoji: '😴', image: 'https://placehold.co/250x250/DDA0DD/000000?text=NAP' },
-        { word: 'sip', emoji: '🥤', image: 'https://placehold.co/250x250/87CEFA/000000?text=SIP' },
-        { word: 'tip', emoji: '💡', image: 'https://placehold.co/250x250/F08080/000000?text=TIP' },
-        { word: 'tan', emoji: '🌞', image: 'https://placehold.co/250x250/F4A460/000000?text=TAN' },
-        { word: 'pit', emoji: '🕳️', image: 'https://placehold.co/250x250/B0E0E6/000000?text=PIT' },
-        { word: 'pan', emoji: '🍳', image: 'https://placehold.co/250x250/FFB6C1/000000?text=PAN' }
+        // Updated 'sat' with the provided GitHub raw image URL
+        { word: 'sat', emoji: '�', image: 'https://raw.githubusercontent.com/MSBEDU/Phonics/2a1508a8e5cd8a4fda0272c12edb6dcf655f9219/images/sat.jpg' },
+        { word: 'pin', emoji: '📌', image: 'https://placehold.co/250x250/ADD8E6/000000?text=📌' },
+        { word: 'pat', emoji: '👏', image: 'https://placehold.co/250x250/98FB98/000000?text=👏' },
+        { word: 'tap', emoji: '🚰', image: 'https://placehold.co/250x250/FFD700/000000?text=🚰' },
+        { word: 'nap', emoji: '😴', image: 'https://placehold.co/250x250/DDA0DD/000000?text=😴' },
+        { word: 'sip', emoji: '🥤', image: 'https://placehold.co/250x250/87CEFA/000000?text=🥤' },
+        { word: 'tip', emoji: '💡', image: 'https://placehold.co/250x250/F08080/000000?text=💡' },
+        { word: 'tan', emoji: '🌞', image: 'https://placehold.co/250x250/F4A460/000000?text=🌞' },
+        { word: 'pit', emoji: '🕳️', image: 'https://placehold.co/250x250/B0E0E6/000000?text=🕳️' },
+        { word: 'pan', emoji: '🍳', image: 'https://placehold.co/250x250/FFB6C1/000000?text=🍳' }
       ];
 
       // New data for Tricky Word Sorting Game
@@ -1395,6 +1396,8 @@
         const chosenWordObject = gameState.currentWords.splice(wordIndex, 1)[0];
         gameState.correctWord = chosenWordObject.word;
         gameState.correctEmoji = chosenWordObject.emoji;
+        // FIX: Ensure gameState.currentWord is set to the full object for handleChoice to access its properties
+        gameState.currentWord = chosenWordObject; 
 
         elements.blendBox.innerHTML = ''; 
         gameState.blended = '';
@@ -1439,7 +1442,8 @@
           gameState.stars++; 
           updateScore();
           updateStars();
-          elements.feedback.textContent = `🎉 Correct! ${gameState.currentWord.emoji}`; // Use currentWord.emoji
+          // FIX: Changed from gameState.currentWord.emoji to gameState.correctEmoji as currentWord was not always guaranteed to be set
+          elements.feedback.textContent = `🎉 Correct! ${gameState.correctEmoji}`; 
           chosenButton.classList.add('correct-feedback');
           
           if (gameState.stars >= 10) { 
