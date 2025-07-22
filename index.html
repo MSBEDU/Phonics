@@ -32,6 +32,19 @@
       margin-bottom: 50px;
     }
 
+    .logo {
+      margin-bottom: 20px;
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (min-width: 600px) {
+      .logo {
+        max-width: none;
+      }
+    }
+
     h1 {
       font-size: 2.8rem;
       margin-bottom: 10px;
@@ -89,8 +102,8 @@
 </head>
 <body>
   <header>
-    <!-- Replace with your actual logo if needed -->
- <img src="assets/logo.png" alt="TeachTinker logo" style="height: 80px; margin-bottom: 20px;" />
+    <img src="assets/logo.png" alt="TeachTinker logo" class="logo" />
+    <h1>TeachTinker</h1>
     <div class="tagline">Smart resources. No fuss.</div>
     <p class="intro">
       Welcome to TeachTinker — a hub of smart, ready-to-use tools designed for busy educators. Everything here is built to help you teach with clarity, save time, and stay focused on what matters most: learning.
