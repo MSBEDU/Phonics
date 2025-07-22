@@ -31,6 +31,146 @@
       height: auto;
     }
 
+    .tool-logo {
+      height: 60px;
+      margin-bottom: 12px;
+    }
+
+    .tiles {
+      display: grid;
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      margin-bottom: 60px;
+    }
+
+    .tile {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      text-align: center;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tile:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .tile h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tile p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    footer {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main logo -->
+  <img src="assets/logo.svg" alt="TeachTinker logo" class="logo" style="max-width: 280px;" />
+
+  <!-- Product Tiles -->
+  <div class="tiles">
+
+    <!-- Sound Safari -->
+    <a href="sound-safari/index.html" class="tile">
+      <img src="assets/ss-logo.svg" alt="Sound Safari logo" class="tool-logo" />
+      <p>Phonics games for early readers</p>
+    </a>
+
+    <!-- Baseline+ -->
+    <a href="intake-assessment/index.html" class="tile">
+      <img src="assets/baseline-logo.svg" alt="Baseline+ logo" class="tool-logo" />
+      <p>Assess speaking, writing, spelling and reading with ease</p>
+    </a>
+
+    <!-- Class Blender -->
+    <a href="class-blender/index.html" class="tile">
+      <h2>🧠 Class Blender</h2>
+      <p>Build balanced classes by academics, gender, and behaviour</p>
+    </a>
+
+    <!-- Research Highlights -->
+    <a href="research/index.html" class="tile">
+      <h2>🧪 Research Highlights</h2>
+      <p>Bite-sized insights from the latest education research</p>
+    </a>
+
+    <!-- Blog -->
+    <a href="blog/index.html" class="tile">
+      <h2>✍️ Blog</h2>
+      <p>Practical tips and updates from the TeachTinker team</p>
+    </a>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 TeachTinker. Built by educators, for educators.
+  </footer>
+
+</body>
+</html>
+
+
+
+
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TeachTinker</title>
+  <style>
+    :root {
+      --blue: #5B8DEF;
+      --yellow: #F6A800;
+      --charcoal: #2F2F2F;
+      --muted: #4F4F4F;
+      --bg: #F9FAFB;
+      --radius: 12px;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Open Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--charcoal);
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      margin-bottom: 40px;
+      max-width: 100%;
+      height: auto;
+    }
+
     .tiles {
       display: grid;
       gap: 20px;
@@ -82,10 +222,10 @@
 </head>
 <body>
 
-  <!-- Logo -->
+  <!-- Logo 
   <img src="assets/logo.svg" alt="TeachTinker logo" class="logo" style="max-width: 280px;" />
 
-  <!-- Product Tiles -->
+  <!-- Product Tiles 
   <div class="tiles">
     
 <a href="sound-safari/index.html" class="tile" style="align-items: center; text-align: center;">
@@ -94,10 +234,10 @@
 </a>
 
 
-    <a href="intake-assessment/index.html" class="tile">
-      <h2>📋 Intake Assessment</h2>
-      <p>Assess speaking, writing, spelling and reading with ease</p>
-    </a>
+ <a href="intake-assessment/index.html" class="tile" style="align-items: center; text-align: center;">
+  <img src="assets/baseline-logo.svg" alt="Baseline+ logo" class="tool-logo" />
+  <p>Assess speaking, writing, spelling and reading with ease</p>
+</a>
 
     <a href="class-blender/index.html" class="tile">
       <h2>🧠 Class Blender</h2>
@@ -116,7 +256,7 @@
 
   </div>
 
-  <!-- Footer -->
+  <!-- Footer 
   <footer>
     &copy; 2025 TeachTinker. Built by educators, for educators.
   </footer>
@@ -126,112 +266,3 @@
 
 
 
-<!-- 
-//
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TeachTinker</title>
-  <style>
-    :root {
-      --blue: #5B8DEF;
-      --yellow: #F6A800;
-      --charcoal: #2F2F2F;
-      --muted: #4F4F4F;
-      --bg: #F9FAFB;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Inter', 'Open Sans', sans-serif;
-      background-color: var(--bg);
-      color: var(--charcoal);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      min-height: 100vh;
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    header {
-      max-width: 800px;
-      margin-bottom: 50px;
-    }
-
-    .logo {
-      margin-bottom: 40px;
-      display: block;
-      max-width: 100%;
-      height: auto;
-    }
-
-    @media (min-width: 600px) {
-      .logo {
-        max-width: none;
-      }
-    }
-
-    .intro {
-      font-size: 1.2rem;
-      margin: 0 0 50px;
-      line-height: 1.5;
-      max-width: 600px;
-    }
-
-    .app-links {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .app-links a {
-      text-decoration: none;
-      background-color: var(--blue);
-      color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      transition: background-color 0.3s;
-    }
-
-    .app-links a:hover {
-      background-color: #4077d9;
-    }
-
-    footer {
-      margin-top: 80px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    @media (min-width: 600px) {
-      .app-links {
-        flex-direction: row;
-        justify-content: center;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="assets/logo.svg" alt="TeachTinker logo" class="logo" />
-  </header>
-
-  <div class="app-links">
-    <a href="sound-safari/index.html">🎧 Sound Safari</a>
-    <a href="other-app/index.html">🧠 Other App</a>
-  </div>
-
-  <footer>
-    &copy; 2025 TeachTinker. Built by educators, for educators.
-  </footer>
-</body>
-</html>
-
--->
