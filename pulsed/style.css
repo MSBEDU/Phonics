@@ -250,4 +250,15 @@ footer {
     width: 90px;
     height: 130px;
   }
+/* Quiz feedback states */
+.quiz-feedback.correct {
+  color: #2e7d32; /* green for correct */
 }
+
+.quiz-feedback.incorrect {
+  color: #c62828; /* red for incorrect */
+}
+  
+}
+
+
