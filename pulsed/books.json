@@ -1,118 +1,52 @@
 [
- 
-{
-    "id": "456e7890-e89b-12d3-a456-426614174002",
+  {
+    "id": "b1",
+    "status": "complete",
     "title": "Teaching with the Brain in Mind",
     "author": "Eric Jensen",
     "description": "A book that explores how educators can enhance student learning by applying the latest brain research to teaching practices.",
     "imageName": "EricJensen",
     "genres": ["Educational Neuroscience", "Teaching Strategies"],
-    "progress": 0.0,
+    "progress": 0,
     "buyLink": "https://shorturl.at/ubzvy",
-    "rating": 1, 
+    "rating": 5,
+    "badgeAwarded": "BookBadge1",
     "content": [
-        {
-            "id": "f01c3a8b-759d-4bce-b028-9e4f4b6314e7",
-            "title": "Introduction to Brain-Based Learning",
-            "content": "Eric Jensen introduces the concept of brain-based learning, explaining how understanding brain functions can help educators create more effective teaching strategies. He emphasizes the importance of incorporating research from neuroscience to enhance student engagement and learning outcomes.",
-            "type": "text"
-        },
-        {
-            "id": "5df2a2b8-9f9a-4c45-8735-7de478b714c9",
-            "title": "The Physiology of Learning",
-            "content": "Jensen discusses how the brain processes information, including the roles of different brain regions and the impact of neuroplasticity. He highlights the significance of creating a stimulating learning environment that encourages brain development and cognitive growth.",
-            "type": "text"
-        },
-        {
-            "id": "e84c2d12-f3f2-4a8e-8b6e-ec1d33fede9a",
-            "title": "The Role of Emotions in Learning",
-            "content": "Emotions play a crucial role in learning. Jensen explains how positive emotions can enhance memory and attention, while negative emotions can hinder learning. He provides strategies for creating a positive emotional climate in the classroom to support student success.",
-            "type": "text"
-        },
-        {
-            "id": "4e9a4d4a-7f1b-4b1e-8f8e-9e5d3b5e2c5f",
-            "title": "Quiz: The Role of Emotions",
-            "type": "quiz",
-            "question": {
-                "text": "How do emotions impact learning according to Eric Jensen?",
-                "options": [
-                    "Positive emotions enhance memory and attention",
-                    "Negative emotions have no effect on learning",
-                    "Emotions do not impact learning",
-                    "Positive emotions hinder learning"
-                ],
-                "correctAnswer": "Positive emotions enhance memory and attention"
-            }
-        },
-        {
-            "id": "9c4f6b4b-0c5e-46d1-9e6b-8b5e6e4e3d4d",
-            "title": "Strategies for Engaging the Brain",
-            "content": "Jensen offers practical strategies for engaging students' brains in the learning process. These include using movement, storytelling, and hands-on activities to make learning more dynamic and interactive. He emphasizes the importance of varying teaching methods to cater to different learning styles.",
-            "type": "text"
-        },
-        {
-            "id": "4d1e5a2c-8e2f-49a2-8f3e-7d5e4c3b2a5e",
-            "title": "Creating a Brain-Friendly Classroom",
-            "content": "A brain-friendly classroom environment can significantly enhance learning. Jensen provides tips on optimizing classroom layout, lighting, and noise levels to create a conducive learning atmosphere. He also discusses the importance of incorporating breaks and physical activity into the school day.",
-            "type": "text"
-        },
-        {
-            "id": "1e2f4c3a-6e2d-49c3-9e1f-7e2d5b4c3d2a",
-            "title": "The Impact of Stress on Learning",
-            "content": "Stress can negatively impact learning and memory. Jensen explains the physiological effects of stress on the brain and offers strategies for reducing stress in the classroom. These include mindfulness practices, relaxation techniques, and creating a supportive classroom culture.",
-            "type": "text"
-        },
-        {
-            "id": "5f4e3c2b-9e6c-4d2a-8d5e-7e1c5b2a3e4f",
-            "title": "Quiz: The Impact of Stress",
-            "type": "quiz",
-            "question": {
-                "text": "What are some strategies to reduce stress in the classroom?",
-                "options": [
-                    "Mindfulness practices",
-                    "Relaxation techniques",
-                    "Creating a supportive classroom culture",
-                    "All of the above"
-                ],
-                "correctAnswer": "All of the above"
-            }
-        },
-        {
-            "id": "7e2f1d4c-6e2c-4d2b-9e5c-7d1e4b3a2c5f",
-            "title": "The Role of Nutrition in Learning",
-            "content": "Nutrition plays a vital role in brain function and learning. Jensen discusses the importance of a balanced diet for cognitive performance and provides recommendations for healthy eating habits that support brain health.",
-            "type": "text"
-        },
-        {
-            "id": "9e5d2b4c-7e1d-4c3e-9f2a-7c1e4d3b5a2f",
-            "title": "Integrating the Arts into Education",
-            "content": "Integrating the arts into education can enhance creativity and cognitive development. Jensen explores the benefits of arts education, including improved problem-solving skills, increased engagement, and better academic performance. He offers practical tips for incorporating art, music, and drama into the curriculum.",
-            "type": "text"
-        },
-        {
-            "id": "1f4e3d2c-8e2d-4c3b-9e2f-7e1c5b4a3d6e",
-            "title": "The Future of Brain-Based Education",
-            "content": "Jensen looks ahead to the future of brain-based education, discussing emerging trends and technologies that could revolutionize teaching and learning. He emphasizes the need for ongoing professional development and collaboration among educators to stay abreast of the latest research and best practices.",
-            "type": "text"
-        },
-        {
-            "id": "8e1d4c3a-7e2d-4c3b-9e1f-7e5d3b4a2c5f",
-            "title": "Quiz: The Future of Education",
-            "type": "quiz",
-            "question": {
-                "text": "What does Eric Jensen emphasize for the future of brain-based education?",
-                "options": [
-                    "Emerging trends and technologies",
-                    "Ongoing professional development",
-                    "Collaboration among educators",
-                    "All of the above"
-                ],
-                "correctAnswer": "All of the above"
-            }
+      {
+        "id": "f01c3a8b-759d-4bce-b028-9e4f4b6314e7",
+        "title": "Introduction to Brain-Based Learning",
+        "content": "Eric Jensen introduces the concept of brain-based learning, explaining how understanding brain functions can help educators create more effective teaching strategies.",
+        "type": "text"
+      },
+      {
+        "id": "5df2a2b8-9f9a-4c45-8735-7de478b714c9",
+        "title": "The Physiology of Learning",
+        "content": "Jensen discusses how the brain processes information, including the roles of different brain regions and the impact of neuroplasticity.",
+        "type": "text"
+      },
+      {
+        "id": "e84c2d12-f3f2-4a8e-8b6e-ec1d33fede9a",
+        "title": "The Role of Emotions in Learning",
+        "content": "Emotions play a crucial role in learning. Jensen explains how positive emotions can enhance memory and attention, while negative emotions can hinder learning.",
+        "type": "text"
+      },
+      {
+        "id": "4e9a4d4a-7f1b-4b1e-8f8e-9e5d3b5e2c5f",
+        "title": "Quiz: The Role of Emotions",
+        "type": "quiz",
+        "question": {
+          "text": "How do emotions impact learning according to Eric Jensen?",
+          "options": [
+            "Positive emotions enhance memory and attention",
+            "Negative emotions have no effect on learning",
+            "Emotions do not impact learning",
+            "Positive emotions hinder learning"
+          ],
+          "correctAnswer": "Positive emotions enhance memory and attention"
         }
+      }
     ]
-},
-
+  },
   {
     "id": "b2",
     "status": "incomplete",
