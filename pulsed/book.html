@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>pulsED – Book Library</title>
+  <title>Book Details</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,20 +11,17 @@
     <img src="images/logo.png" alt="pulsED Logo" id="logo" />
     <h1>pulsED Book Library</h1>
     <nav>
-      <a href="index.html" class="active">Home</a>
+      <a href="index.html">Home</a>
       <a href="about.html">How to Use</a>
       <a href="/">Back to TeachTinker</a>
     </nav>
   </header>
-  <main>
-    <section id="book-list" class="grid"></section>
+  <main id="book-detail">
+    <!-- Content dynamically injected by app.js -->
   </main>
   <footer>
     Back to <a href="/">TeachTinker</a> | © 2025 TeachTinker
   </footer>
   <script src="app.js"></script>
-  <script>
-    renderBookList();
-  </script>
 </body>
 </html>
