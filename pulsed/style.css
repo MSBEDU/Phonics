@@ -1,23 +1,25 @@
+/* ======== TeachTinker-styled pulsED CSS ======== */
 :root {
-  --bg: #f7f9fb;
-  --primary: #294178;
-  --accent: #4d7bfa;
-  --text: #202245;
+  --bg: #f9fafb;
+  --primary: #5B8DEF;     /* TeachTinker blue */
+  --accent: #F6A800;      /* TeachTinker yellow */
+  --text: #2F2F2F;
   --nav-bg: #f0f4f9;
   --card-bg: #fff;
   --card-shadow: 0 2px 10px rgba(44,61,91,0.07);
   --button-bg: #e6ecfa;
-  --button-hover: #4d7bfa22;
+  --button-hover: rgba(91, 141, 239, 0.15);
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Quicksand', Arial, sans-serif;
+  font-family: 'Montserrat', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
 }
 
+/* Header */
 header {
   background: var(--nav-bg);
   box-shadow: 0 2px 6px #e8ebf1;
@@ -25,6 +27,7 @@ header {
   align-items: center;
   gap: 1.2rem;
   padding: 0.7rem 1.5rem;
+  flex-wrap: wrap;
 }
 
 #logo {
@@ -40,7 +43,7 @@ header h1 {
   font-size: 1.65rem;
   color: var(--primary);
   margin: 0 1.5rem 0 0;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 
 nav {
@@ -55,7 +58,7 @@ nav a {
   font-weight: 600;
   padding: 0.4em 0.85em;
   border-radius: 0.6em;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 nav a.active,
@@ -64,12 +67,14 @@ nav a:hover {
   color: var(--accent);
 }
 
+/* Main Layout */
 main {
   padding: 2.2rem 0.5rem 1.5rem 0.5rem;
   max-width: 900px;
   margin: 0 auto;
 }
 
+/* Book Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -89,7 +94,7 @@ main {
 }
 
 .book-card:hover {
-  box-shadow: 0 4px 18px #aec9fa55;
+  box-shadow: 0 4px 18px rgba(91,141,239,0.2);
 }
 
 .book-cover {
@@ -110,15 +115,15 @@ main {
 }
 
 .book-author {
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   color: var(--primary);
   text-align: center;
   margin-bottom: 0.9rem;
 }
 
 .book-card button {
-  background: var(--button-bg);
-  color: var(--primary);
+  background: var(--primary);
+  color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -134,6 +139,7 @@ main {
   color: #fff;
 }
 
+/* Book Details */
 .detail-section {
   background: var(--card-bg);
   border-radius: 18px;
@@ -159,6 +165,7 @@ main {
   margin-bottom: 1.1rem;
 }
 
+/* Quiz */
 .quiz-section {
   background: var(--card-bg);
   border-radius: 18px;
@@ -194,7 +201,7 @@ main {
 
 .quiz-options button:hover,
 .quiz-options button.selected {
-  background: var(--accent);
+  background: var(--primary);
   color: #fff;
 }
 
@@ -216,5 +223,31 @@ main {
 }
 
 .next-btn:hover {
-  background: #294178;
+  background: #e29c00;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text);
+  font-size: 0.85rem;
+  border-top: 1px solid #e3e9f3;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  nav {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .book-cover {
+    width: 90px;
+    height: 130px;
+  }
 }
