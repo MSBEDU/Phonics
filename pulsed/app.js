@@ -1,6 +1,6 @@
 // ======== pulsED app.js ========
 
-// --- Book Data (real book content as provided, add more below) ---
+// --- Book Data ---
 const books = [
   {
     id: "book1",
@@ -70,10 +70,10 @@ const books = [
       }
     ]
   },
-  // Add Book 3–6 here in the same structure
+  // Add more books here...
 ];
 
-// --- Routing/navigation helpers ---
+// --- Helper to get query params ---
 function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
@@ -82,9 +82,11 @@ function getQueryParam(param) {
 // --- Render Homepage ---
 function renderBookList() {
   const bookList = document.getElementById('book-list');
+  if (!bookList) return;
+
   bookList.innerHTML = books.map(book => `
     <div class="book-card">
-      <img src="${book.cover}" alt="Book cover" class="book-cover"/>
+      <img src="${book.cover}" alt="Book cover for ${book.title}" class="book-cover"/>
       <div class="book-title">${book.title}</div>
       <div class="book-author">${book.author}</div>
       <button onclick="goToBook('${book.id}')">View Details</button>
@@ -96,38 +98,32 @@ function goToBook(bookId) {
   window.location.href = `book.html?book=${bookId}`;
 }
 
-// --- Render Book Detail Page ---
-if (window.location.pathname.endsWith('book.html')) {
+// --- Render Book Details ---
+function renderBookDetail() {
+  const container = document.getElementById('book-detail');
+  if (!container) return;
+
   const bookId = getQueryParam('book');
   const book = books.find(b => b.id === bookId);
+
   if (book) {
-    document.body.innerHTML = `
-      <header>
-        <img src="images/logo.png" alt="pulsED Logo" id="logo" />
-        <h1>pulsED Book Library</h1>
-        <nav>
-          <a href="index.html">Home</a>
-          <a href="about.html">How to Use</a>
-        </nav>
-      </header>
-      <main>
-        <section class="detail-section">
-          <img src="${book.cover}" alt="Book cover" class="book-cover"/>
-          <h2>${book.title}</h2>
-          <div class="book-author">by ${book.author}</div>
-          <div class="book-summary">${book.summary}</div>
-          <div class="teaching-tips">
-            <strong>Teaching Tips:</strong>
-            <ul>
-              ${book.teachingTips.map(tip => `<li>${tip}</li>`).join('')}
-            </ul>
-          </div>
-          <button onclick="startQuiz('${book.id}')">Take Quiz</button>
-        </section>
-      </main>
+    container.innerHTML = `
+      <section class="detail-section">
+        <img src="${book.cover}" alt="Book cover for ${book.title}" class="book-cover"/>
+        <h2>${book.title}</h2>
+        <div class="book-author">by ${book.author}</div>
+        <div class="book-summary">${book.summary}</div>
+        <div class="teaching-tips">
+          <strong>Teaching Tips:</strong>
+          <ul>
+            ${book.teachingTips.map(tip => `<li>${tip}</li>`).join('')}
+          </ul>
+        </div>
+        <button onclick="startQuiz('${book.id}')">Take Quiz</button>
+      </section>
     `;
   } else {
-    document.body.innerHTML = "<p>Book not found.</p>";
+    container.innerHTML = "<p>Book not found.</p>";
   }
 }
 
@@ -136,7 +132,10 @@ function startQuiz(bookId) {
   window.location.href = `quiz.html?book=${bookId}`;
 }
 
-if (window.location.pathname.endsWith('quiz.html')) {
+function renderQuiz() {
+  const container = document.getElementById('quiz-section');
+  if (!container) return;
+
   const bookId = getQueryParam('book');
   const book = books.find(b => b.id === bookId);
 
@@ -146,36 +145,26 @@ if (window.location.pathname.endsWith('quiz.html')) {
 
     function renderQuizQuestion() {
       const q = book.quiz[quizIndex];
-      document.body.innerHTML = `
-        <header>
-          <img src="images/logo.png" alt="pulsED Logo" id="logo" />
-          <h1>pulsED Book Quiz</h1>
-          <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">How to Use</a>
-          </nav>
-        </header>
-        <main>
-          <section class="quiz-section">
-            <div class="quiz-question">${q.question}</div>
-            <div class="quiz-options">
-              ${q.options.map((opt, i) => `<button onclick="checkQuizAnswer(${i})">${opt}</button>`).join('')}
-            </div>
-            <div id="quiz-feedback"></div>
-          </section>
-        </main>
+      container.innerHTML = `
+        <section class="quiz-section">
+          <div class="quiz-question">${q.question}</div>
+          <div class="quiz-options">
+            ${q.options.map((opt, i) => `<button onclick="checkQuizAnswer(${i})">${opt}</button>`).join('')}
+          </div>
+          <div id="quiz-feedback" class="quiz-feedback"></div>
+        </section>
       `;
     }
 
     window.checkQuizAnswer = function(selected) {
       const q = book.quiz[quizIndex];
       const correct = selected === q.answer;
-      document.querySelectorAll('.quiz-options button')[selected].classList.add('selected');
-      document.getElementById('quiz-feedback').innerHTML = correct
-        ? `<span style="color: #294178;">Correct!</span>`
-        : `<span style="color: #F65757;">Incorrect. The answer is: ${q.options[q.answer]}</span>`;
+      const feedback = document.getElementById('quiz-feedback');
 
+      feedback.className = `quiz-feedback ${correct ? 'correct' : 'incorrect'}`;
+      feedback.textContent = correct ? "Correct!" : `Incorrect. The answer is: ${q.options[q.answer]}`;
       score += correct ? 1 : 0;
+
       setTimeout(() => {
         quizIndex++;
         if (quizIndex < book.quiz.length) {
@@ -187,29 +176,25 @@ if (window.location.pathname.endsWith('quiz.html')) {
     };
 
     function renderQuizResults() {
-      document.body.innerHTML = `
-        <header>
-          <img src="images/logo.png" alt="pulsED Logo" id="logo" />
-          <h1>pulsED Book Quiz</h1>
-          <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">How to Use</a>
-          </nav>
-        </header>
-        <main>
-          <section class="quiz-section">
-            <h2>Quiz Complete!</h2>
-            <div>Your score: <strong>${score}/${book.quiz.length}</strong></div>
-            <button class="next-btn" onclick="window.location.href='book.html?book=${bookId}'">Back to Book</button>
-            <button class="next-btn" onclick="window.location.href='index.html'">Home</button>
-          </section>
-        </main>
+      container.innerHTML = `
+        <section class="quiz-section">
+          <h2>Quiz Complete!</h2>
+          <div>Your score: <strong>${score}/${book.quiz.length}</strong></div>
+          <button class="next-btn" onclick="window.location.href='book.html?book=${bookId}'">Back to Book</button>
+          <button class="next-btn" onclick="window.location.href='index.html'">Home</button>
+        </section>
       `;
     }
 
     renderQuizQuestion();
   } else {
-    document.body.innerHTML = "<p>Quiz not found.</p>";
+    container.innerHTML = "<p>Quiz not found.</p>";
   }
 }
 
+// --- Initialize on page load ---
+document.addEventListener("DOMContentLoaded", () => {
+  renderBookList();
+  renderBookDetail();
+  renderQuiz();
+});
