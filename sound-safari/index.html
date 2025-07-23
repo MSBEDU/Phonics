@@ -122,8 +122,7 @@
     }
 
 
-    /* Removed score and stars display */
-    /*
+    /* Re-added score and stars display */
     .score {
       font-size: 1.5em;
       margin-bottom: 10px;
@@ -140,7 +139,7 @@
       font-size: 2em;
       margin: 0 5px;
     }
-    */
+    
 
     #prompt {
       font-size: clamp(1em, 4vw, 1.3em); /* Made smaller */
@@ -712,9 +711,9 @@
     <button class="menu-button" id="pictureWordMatchBtn">🖼️ Picture-Word Match</button> <button class="menu-button" id="trickyWordSortBtn">🧠 Tricky Word Sort</button> <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button> </div>
 
   <div id="gameArea" class="hidden">
-    <!-- Removed score and stars display -->
-    <!-- <div class="score" id="score">Score: 0</div> -->
-    <!-- <div class="stars" id="stars"></div> -->
+    <!-- Re-added score and stars display -->
+    <div class="score" id="score">Score: 0</div>
+    <div class="stars" id="stars"></div>
     <h2 id="prompt"></h2>
 
     <div id="flashcardPackSelection" class="hidden">
@@ -749,7 +748,7 @@
         <button id="checkBuildBtn">Check</button>
     </div>
 
-    <div id="pictureWordMatchingSection" class="hidden"> <img id="pictureWordImage" src="" alt="Image to match" class="hidden">
+    <div id="pictureWordMatchingSection" class="hidden"> <img id="pictureWordImage" src="" alt="Image to match" class="hidden" onerror="this.onerror=null; this.src='https://via.placeholder.com/150x150/FF0000/FFFFFF?text=Error'; console.error('Image failed to load:', this.src);">
         <div id="pictureWordChoices"></div>
         <button class="reset-button" id="pictureWordResetBtn">🔄 Reset Choices</button>
     </div>
@@ -833,131 +832,131 @@
       's': {
         description: 'Snake sound: teeth close, tongue behind.',
         examples: [{ word: 'sun', emoji: '☀️' }, { word: 'sit', emoji: '🪑' }],
-        image: 'https://placehold.co/150x150/87CEEB/FFFFFF?text=SNAKE'
+        image: 'https://via.placeholder.com/150x150/87CEEB/FFFFFF?text=SNAKE'
       },
       'a': {
         description: 'Open mouth, "ah" sound like in apple.',
         examples: [{ word: 'apple', emoji: '🍎' }, { word: 'ant', emoji: '🐜' }],
-        image: 'https://placehold.co/150x150/FF6347/FFFFFF?text=APPLE'
+        image: 'https://via.placeholder.com/150x150/FF6347/FFFFFF?text=APPLE'
       },
       't': {
         description: 'Tap tongue behind teeth, quick "tuh" sound.',
         examples: [{ word: 'top', emoji: '⬆️' }, { word: 'ten', emoji: '🔟' }],
-        image: 'https://placehold.co/150x150/FFD700/000000?text=TIGER'
+        image: 'https://via.placeholder.com/150x150/FFD700/000000?text=TIGER'
       },
       'p': {
         description: 'Pop lips together, quick "puh" sound.',
         examples: [{ word: 'pen', emoji: '🖊️' }, { word: 'pig', emoji: '🐷' }],
-        image: 'https://placehold.co/150x150/98FB98/000000?text=PIG'
+        image: 'https://via.placeholder.com/150x150/98FB98/000000?text=PIG'
       },
       'i': {
         description: 'Small smile, "ih" sound like in ink.',
         examples: [{ word: 'ink', emoji: '✒️' }, { word: 'igloo', emoji: '🧊' }],
-        image: 'https://placehold.co/150x150/ADD8E6/000000?text=IGLOO'
+        image: 'https://via.placeholder.com/150x150/ADD8E6/000000?text=IGLOO'
       },
       'n': {
         description: 'Tongue tip behind teeth, nose hums.',
         examples: [{ word: 'net', emoji: '🕸️' }, { word: 'nut', emoji: '🌰' }],
-        image: 'https://placehold.co/150x150/DDA0DD/000000?text=NEST'
+        image: 'https://via.placeholder.com/150x150/DDA0DD/000000?text=NEST'
       },
       'm': {
         description: 'Lips together, mouth closed, hum.',
         examples: [{ word: 'mat', emoji: '🧘' }, { word: 'moon', emoji: '🌕' }],
-        image: 'https://placehold.co/150x150/FFB6C1/000000?text=MOON'
+        image: 'https://via.placeholder.com/150x150/FFB6C1/000000?text=MOON'
       },
       'd': {
         description: 'Tap tongue behind teeth, quick "duh" sound.',
         examples: [{ word: 'dog', emoji: '🐶' }, { word: 'doll', emoji: '🎎' }],
-        image: 'https://placehold.co/150x150/8FBC8F/000000?text=DOG'
+        image: 'https://via.placeholder.com/150x150/8FBC8F/000000?text=DOG'
       },
       'g': {
         description: 'Back of tongue up, "guh" sound.',
         examples: [{ word: 'go', emoji: '➡️' }, { word: 'gap', emoji: '〰️' }],
-        image: 'https://placehold.co/150x150/B0E0E6/000000?text=GOAT'
+        image: 'https://via.placeholder.com/150x150/B0E0E6/000000?text=GOAT'
       },
       'o': {
         description: 'Round mouth, short "oh" sound.',
         examples: [{ word: 'on', emoji: '🔛' }, { word: 'pot', emoji: '🍲' }],
-        image: 'https://placehold.co/150x150/FFDAB9/000000?text=ORANGE'
+        image: 'https://via.placeholder.com/150x150/FFDAB9/000000?text=ORANGE'
       },
       'c': {
         description: 'Back of tongue up, quick "kuh" sound.',
         examples: [{ word: 'cat', emoji: '🐱' }, { word: 'cup', emoji: '☕' }],
-        image: 'https://placehold.co/150x150/DDA0DD/000000?text=CAT'
+        image: 'https://via.placeholder.com/150x150/DDA0DD/000000?text=CAT'
       },
       'k': {
         description: 'Back of tongue up, quick "kuh" sound.',
         examples: [{ word: 'kid', emoji: '🧒' }, { word: 'kit', emoji: '🛠️' }],
-        image: 'https://placehold.co/150x150/FFDEAD/000000?text=KITE'
+        image: 'https://via.placeholder.com/150x150/FFDEAD/000000?text=KITE'
       },
       'ck': {
         description: 'Same as "k", two letters one sound.',
         examples: [{ word: 'duck', emoji: '🦆' }, { word: 'sock', emoji: '🧦' }],
-        image: 'https://placehold.co/150x150/F0E68C/000000?text=DUCK'
+        image: 'https://via.placeholder.com/150x150/F0E68C/000000?text=DUCK'
       },
       'e': {
         description: 'Relaxed mouth, short "eh" sound.',
         examples: [{ word: 'egg', emoji: '🥚' }, { word: 'red', emoji: '🔴' }],
-        image: 'https://placehold.co/150x150/F4A460/000000?text=EGG'
+        image: 'https://via.placeholder.com/150x150/F4A460/000000?text=EGG'
       },
       'u': {
         description: 'Short "uh" sound, like up.',
         examples: [{ word: 'up', emoji: '⬆️' }, { word: 'cup', emoji: '☕' }],
-        image: 'https://placehold.co/150x150/D8BFD8/000000?text=UMBRELLA'
+        image: 'https://via.placeholder.com/150x150/D8BFD8/000000?text=UMBRELLA'
       },
       'r': {
         description: 'Tongue curls back, "rrr" sound.',
         examples: [{ word: 'run', emoji: '🏃' }, { word: 'rat', emoji: '🐀' }],
-        image: 'https://placehold.co/150x150/C0C0C0/000000?text=RABBIT'
+        image: 'https://via.placeholder.com/150x150/C0C0C0/000000?text=RABBIT'
       },
       'h': {
         description: 'Quiet breath out of mouth.',
         examples: [{ word: 'hat', emoji: '🎩' }, { word: 'hen', emoji: '🐔' }],
-        image: 'https://placehold.co/150x150/FFDAB9/000000?text=HAT'
+        image: 'https://via.placeholder.com/150x150/FFDAB9/000000?text=HAT'
       },
       'b': {
         description: 'Lips together, puff of air, "buh" sound.',
         examples: [{ word: 'bat', emoji: '🏏' }, { word: 'bus', emoji: '🚌' }],
-        image: 'https://placehold.co/150x150/A2CD5A/000000?text=BALL'
+        image: 'https://via.placeholder.com/150x150/A2CD5A/000000?text=BALL'
       },
       'f': {
         description: 'Top teeth on lower lip, blow air.',
         examples: [{ word: 'fan', emoji: '🌬️' }, { word: 'fish', emoji: '🐠' }],
-        image: 'https://placehold.co/150x150/87CEFA/000000?text=FISH'
+        image: 'https://via.placeholder.com/150x150/87CEFA/000000?text=FISH'
       },
       'ff': {
         description: 'Same as "f", two letters one sound.',
         examples: [{ word: 'puff', emoji: '💨' }, { word: 'off', emoji: '❌' }],
-        image: 'https://placehold.co/150x150/87CEFA/000000?text=FISH' // Same image as 'f'
+        image: 'https://via.placeholder.com/150x150/87CEFA/000000?text=FISH' // Same image as 'f'
       },
       'l': {
         description: 'Tongue tip behind top teeth, "llll" sound.',
         examples: [{ word: 'leg', emoji: '🦵' }, { word: 'lip', emoji: '👄' }],
-        image: 'https://placehold.co/150x150/F08080/000000?text=LEAF'
+        image: 'https://via.placeholder.com/150x150/F08080/000000?text=LEAF'
       },
       'll': {
         description: 'Same as "l", two letters one sound.',
         examples: [{ word: 'bell', emoji: '🔔' }, { word: 'fill', emoji: '💧' }],
-        image: 'https://placehold.co/150x150/F08080/000000?text=LEAF' // Same image as 'l'
+        image: 'https://via.placeholder.com/150x150/F08080/000000?text=LEAF' // Same image as 'l'
       },
       'ss': {
         description: 'Same as "s", two letters one sound.',
         examples: [{ word: 'hiss', emoji: '🐍' }, { word: 'mess', emoji: ' messy' }],
-        image: 'https://placehold.co/150x150/87CEEB/FFFFFF?text=SNAKE' // Same image as 's'
+        image: 'https://via.placeholder.com/150x150/87CEEB/FFFFFF?text=SNAKE' // Same image as 's'
       }
     };
 
     const satpinWordsList = [
-      { word: 'sat', emoji: '�', image: 'https://raw.githubusercontent.com/MSBEDU/Phonics/2a1508a8e5cd8a4fda0272c12edb6dcf655f9219/images/sat.jpg' },
-      { word: 'pin', emoji: '📌', image: 'https://placehold.co/250x250/ADD8E6/000000?text=📌' },
-      { word: 'pat', emoji: '👏', image: 'https://placehold.co/250x250/98FB98/000000?text=👏' },
-      { word: 'tap', emoji: '🚰', image: 'https://placehold.co/250x250/FFD700/000000?text=🚰' },
-      { word: 'nap', emoji: '😴', image: 'https://placehold.co/250x250/DDA0DD/000000?text=😴' },
-      { word: 'sip', emoji: '🥤', image: 'https://placehold.co/250x250/87CEFA/000000?text=🥤' },
-      { word: 'tip', emoji: '💡', image: 'https://placehold.co/250x250/F08080/000000?text=💡' },
-      { word: 'tan', emoji: '🌞', image: 'https://placehold.co/250x250/F4A460/000000?text=TAN' },
-      { word: 'pit', emoji: '🕳️', image: 'https://placehold.co/250x250/B0E0E6/000000?text=🕳️' },
-      { word: 'pan', emoji: '🍳', image: 'https://placehold.co/250x250/FFB6C1/000000?text=🍳' }
+      { word: 'sat', emoji: '🪑', image: 'https://via.placeholder.com/250x250/FFDAB9/000000?text=SAT' }, // Changed to via.placeholder.com
+      { word: 'pin', emoji: '📌', image: 'https://via.placeholder.com/250x250/ADD8E6/000000?text=PIN' },
+      { word: 'pat', emoji: '👏', image: 'https://via.placeholder.com/250x250/98FB98/000000?text=PAT' },
+      { word: 'tap', emoji: '🚰', image: 'https://via.placeholder.com/250x250/FFD700/000000?text=TAP' },
+      { word: 'nap', emoji: '😴', image: 'https://via.placeholder.com/250x250/DDA0DD/000000?text=NAP' },
+      { word: 'sip', emoji: '🥤', image: 'https://via.placeholder.com/250x250/87CEFA/000000?text=SIP' },
+      { word: 'tip', emoji: '💡', image: 'https://via.placeholder.com/250x250/F08080/000000?text=TIP' },
+      { word: 'tan', emoji: '🌞', image: 'https://via.placeholder.com/250x250/F4A460/000000?text=TAN' },
+      { word: 'pit', emoji: '🕳️', image: 'https://via.placeholder.com/250x250/B0E0E6/000000?text=PIT' },
+      { word: 'pan', emoji: '🍳', image: 'https://via.placeholder.com/250x250/FFB6C1/000000?text=PAN' }
     ];
 
     const trickyWordsData = {
@@ -967,9 +966,8 @@
 
     let elements = {}; // Declare elements globally
     let gameState = { // Declare gameState globally
-      // Removed score and stars from gameState
-      // score: 0,
-      // stars: 0,
+      score: 0, // Re-added
+      stars: 0, // Re-added
       blended: '',
       correctWord: '',
       correctEmoji: '',
@@ -1028,10 +1026,9 @@
         elements.feedback.textContent = ''; 
     }
 
-    // Removed updateScore and updateStars functions
-    /*
+    // Re-added updateScore and updateStars functions
     function updateScore() {
-      if (gameState.mode === 'words' || gameState.mode === 'pictureWordMatch' || gameState.mode === 'trickyWordSort' || gameState.mode === 'canvasDrawingTracer') { 
+      if (['words', 'pictureWordMatch', 'trickyWordSort', 'canvasDrawingTracer', 'build'].includes(gameState.mode)) { 
           elements.scoreDisplay.textContent = `Score: ${gameState.score}`;
           elements.scoreDisplay.classList.remove('hidden');
       } else {
@@ -1043,7 +1040,6 @@
       elements.starsDisplay.innerHTML = Array(gameState.stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join('');
       elements.starsDisplay.classList.remove('hidden');
     }
-    */
     
     function hideAllGameSpecificElements() {
         elements.flashcardPackSelection.classList.add('hidden');
@@ -1099,9 +1095,9 @@
         elements.clearCanvasBtn.classList.add('hidden');
         elements.nextLetterBtn.classList.add('hidden');
         
-        // Removed score and stars display hiding
-        // elements.scoreDisplay.classList.add('hidden'); 
-        // elements.starsDisplay.classList.add('hidden');
+        // Re-added score and stars display hiding
+        elements.scoreDisplay.classList.add('hidden'); 
+        elements.starsDisplay.classList.add('hidden');
     }
 
     function clearBoard() {
@@ -1154,10 +1150,11 @@
     }
 
     function startGame(mode) {
+      console.log(`startGame called with mode: ${mode}`); // Debugging log
       gameState.mode = mode;
-      // Removed score and stars initialization
-      // gameState.score = 0; 
-      // gameState.stars = 0; 
+      // Re-added score and stars initialization
+      gameState.score = 0; 
+      gameState.stars = 0; 
       if (mode === 'words') {
           gameState.currentWords = [...satpinWordsList]; 
       }
@@ -1170,11 +1167,12 @@
       elements.gameComplete.classList.add('hidden');
       elements.homeBtn.classList.remove('hidden');
       elements.gameArea.classList.remove('hidden');
+      console.log(`gameArea classList after removing hidden: ${elements.gameArea.classList}`); // Debugging log
       
       clearBoard();
-      // Removed updateScore and updateStars calls
-      // updateScore(); 
-      // updateStars(); 
+      // Re-added updateScore and updateStars calls
+      updateScore(); 
+      updateStars(); 
       hideAllGameSpecificElements();
 
       if (mode === 'words') {
@@ -1191,6 +1189,7 @@
     }
 
     function showFlashcardPackSelection(packType) {
+        console.log(`showFlashcardPackSelection called with packType: ${packType}`); // Debugging log
         gameState.mode = 'flashcards'; 
         gameState.packSelectionType = packType; 
 
@@ -1198,6 +1197,7 @@
         elements.gameComplete.classList.add('hidden');
         elements.homeBtn.classList.remove('hidden');
         elements.gameArea.classList.remove('hidden');
+        console.log(`gameArea classList after removing hidden in flashcard selection: ${elements.gameArea.classList}`); // Debugging log
 
         hideAllGameSpecificElements();
         elements.flashcardPackSelection.classList.remove('hidden');
@@ -1329,9 +1329,9 @@
     function setupBlendMode() {
       clearBoard();
       elements.prompt.innerHTML = 'Blend the sounds and click the correct word.<br>Collect 10 ⭐ to complete this activity!'; 
-      // Removed updateScore and updateStars calls
-      // updateScore(); 
-      // updateStars(); 
+      // Re-added updateScore and updateStars calls
+      updateScore(); 
+      updateStars(); 
       elements.resetBtn.classList.remove('hidden');
       elements.wordChoices.classList.remove('hidden');
       elements.blendText.classList.remove('hidden');
@@ -1389,21 +1389,20 @@
       toggleBlendingControls(false); 
 
       if (selection === gameState.correctWord) {
-        // Removed score and stars increment
-        // gameState.score++;
-        // gameState.stars++; 
-        // updateScore();
-        // updateStars();
+        // Re-added score and stars increment
+        gameState.score++;
+        gameState.stars++; 
+        updateScore();
+        updateStars();
         elements.feedback.textContent = `🎉 Correct! ${gameState.correctEmoji}`; 
         chosenButton.classList.add('correct-feedback');
         
-        // Removed stars check
-        /*
+        // Re-added stars check
         if (gameState.stars >= 10) { 
             endGame("You earned 10 stars!");
             return;
         }
-        */
+        
 
         setTimeout(() => {
           chosenButton.classList.remove('correct-feedback');
@@ -1430,9 +1429,9 @@
       clearBoard();
       elements.prompt.innerHTML = 'Use the letters to build a SATPIN word (from Set 1 & 2 sounds)!<br>Collect 10 ⭐ to complete this activity!'; 
       
-      // Removed updateScore and updateStars calls
-      // updateScore(); 
-      // updateStars(); 
+      // Re-added updateScore and updateStars calls
+      updateScore(); 
+      updateStars(); 
 
       elements.buildWordTargetFlashcard.classList.remove('hidden'); 
       elements.buildWordDisplay.classList.remove('hidden');
@@ -1554,22 +1553,23 @@
         if (gameState.userBuiltWord.join('') === gameState.targetBuildWord) {
             elements.feedback.textContent = `🎉 Correct! You built: ${gameState.targetBuildWord.toLowerCase()} ${gameState.correctEmoji}`; 
             
-            // Removed stars increment
-            // gameState.stars++;
-            // updateStars();
+            // Re-added stars increment
+            gameState.score++;
+            gameState.stars++;
+            updateScore();
+            updateStars();
 
             elements.letterPool.querySelectorAll('.letter').forEach(btn => btn.setAttribute('disabled', 'true')); // Disable all letters
             elements.clearBuildBtn.disabled = true;
             elements.deleteBuildBtn.disabled = true; 
             elements.checkBuildBtn.disabled = true;
 
-            // Removed stars check
-            /*
+            // Re-added stars check
             if (gameState.stars >= 10) { 
                 endGame("You earned 10 stars!");
                 return;
             }
-            */
+            
 
             setTimeout(() => {
                 setupBuildMode(); 
@@ -1593,9 +1593,9 @@
       elements.pictureWordImage.classList.remove('hidden');
       elements.pictureWordResetBtn.classList.remove('hidden');
       
-      // Removed updateScore and updateStars calls
-      // updateScore(); 
-      // updateStars(); 
+      // Re-added updateScore and updateStars calls
+      updateScore(); 
+      updateStars(); 
 
       gameState.pictureWordMatchWords = shuffleArray([...satpinWordsList]);
       loadNextPictureWord();
@@ -1637,17 +1637,18 @@
       if (selectedWord === gameState.currentPictureWord.word) {
           elements.feedback.textContent = `🎉 Correct! ${gameState.currentPictureWord.emoji}`;
           chosenButton.classList.add('correct-feedback');
-          // Removed stars increment
-          // gameState.stars++;
-          // updateStars();
+          // Re-added stars increment
+          gameState.score++;
+          gameState.stars++;
+          updateScore();
+          updateStars();
 
-          // Removed stars check
-          /*
+          // Re-added stars check
           if (gameState.stars >= 10) {
               endGame("You earned 10 stars!");
               return;
           }
-          */
+          
 
           setTimeout(() => {
               chosenButton.classList.remove('correct-feedback');
@@ -1686,9 +1687,9 @@
         elements.trickySortCheckBtn.disabled = true; // Explicitly disable at start
 
 
-        // Removed updateScore and updateStars calls
-        // updateScore();
-        // updateStars();
+        // Re-added updateScore and updateStars calls
+        updateScore();
+        updateStars();
 
         // Select 3 tricky and 3 not tricky words
         const selectedTricky = shuffleArray([...trickyWordsData.tricky]).slice(0, 3);
@@ -1861,28 +1862,18 @@
             elements.trickySortFeedback.textContent = '🎉 Great job! All words sorted correctly!';
             elements.trickySortFeedback.classList.remove('incorrect');
             elements.trickySortFeedback.classList.add('correct');
-            // Removed stars increment
-            // gameState.stars++;
-            // updateStars();
+            // Re-added stars increment
+            gameState.score++;
+            gameState.stars++;
+            updateScore();
+            updateStars();
 
-            // Disable further interaction for this round
-            elements.trickyWordPool.querySelectorAll('.sortable-word').forEach(btn => btn.setAttribute('draggable', false));
-            elements.trickyZone.removeEventListener('dragover', handleTrickyWordDragOver);
-            elements.trickyZone.removeEventListener('dragleave', handleTrickyWordDragLeave);
-            elements.trickyZone.removeEventListener('drop', handleTrickyWordDrop);
-            elements.notTrickyZone.removeEventListener('dragover', handleTrickyWordDragOver);
-            elements.notTrickyZone.removeEventListener('dragleave', handleTrickyWordDragLeave);
-            elements.notTrickyZone.removeEventListener('drop', handleTrickyWordDrop);
-            elements.trickySortCheckBtn.disabled = true; // Disable after correct sort
-            
-
-            // Removed stars check
-            /*
+            // Re-added stars check
             if (gameState.stars >= 10) {
                 endGame("You earned 10 stars!");
                 return;
             }
-            */
+            
 
             setTimeout(setupTrickyWordSorting, 2000); // Load new set of words after a delay
         }
@@ -1952,9 +1943,9 @@
         elements.clearCanvasBtn.classList.remove('hidden');
         elements.nextLetterBtn.classList.remove('hidden');
 
-        // Removed updateScore and updateStars calls
-        // updateScore();
-        // updateStars();
+        // Re-added updateScore and updateStars calls
+        updateScore();
+        updateStars();
 
         // Initialize canvas context if not already done
         if (!gameState.canvasCtx) {
@@ -2123,9 +2114,11 @@
             elements.feedback.textContent = '🎉 Great tracing!';
             elements.feedback.classList.remove('incorrect');
             elements.feedback.classList.add('correct');
-            // Removed stars increment
-            // gameState.stars++;
-            // updateStars();
+            // Re-added stars increment
+            gameState.score++;
+            gameState.stars++;
+            updateScore();
+            updateStars();
             setTimeout(() => {
                 loadLetterToTrace();
             }, 1000); // Short delay before next letter
@@ -2151,9 +2144,9 @@
         pictureWordMatchBtn: document.getElementById('pictureWordMatchBtn'),
         trickyWordSortBtn: document.getElementById('trickyWordSortBtn'),
         canvasDrawingTracerBtn: document.getElementById('canvasDrawingTracerBtn'),
-        // Removed score and stars display elements
-        // scoreDisplay: document.getElementById('score'),
-        // starsDisplay: document.getElementById('stars'),
+        // Re-added score and stars display elements
+        scoreDisplay: document.getElementById('score'),
+        starsDisplay: document.getElementById('stars'),
         prompt: document.getElementById('prompt'),
         
         flashcardPackSelection: document.getElementById('flashcardPackSelection'),
@@ -2270,4 +2263,3 @@
   </script>
 </body>
 </html>
-�
