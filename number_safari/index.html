@@ -21,21 +21,25 @@
     </div>
 
     <!-- Counting Game Screen -->
-    <div id="counting-game" class="screen hidden">
-      <button class="back-to-hub">Back to Safari Map</button>
-      <h2>Count the Critters!</h2>
-      <div class="instructions">
-        <p id="counting-instruction-text">How many <span id="counting-object-name"></span> can you count?</p>
-        <button id="counting-start-game">Start Counting!</button>
-      </div>
-      <div class="game-area counting-area">
-        <!-- Counting objects will be placed here by JavaScript -->
-      </div>
-      <div class="feedback">
-        <p id="counting-feedback-message"></p>
-        <button id="counting-next-round" class="hidden">Next Round</button>
-      </div>
-    </div>
+
+<div id="counting-game" class="screen hidden">
+    <h2>Counting Critters!</h2>
+    <p id="counting-instruction-text">How many <span id="counting-object-name" style="color:#E91E63;"></span> can you find and count?</p>
+    
+    <p class="game-status-message">Streak: <span id="counting-streak-display">0</span> / 10</p>
+
+    <div id="counting-game-area" class="game-area-counting-area">
+        </div>
+
+    <div id="counting-number-choices" class="number-choices-area hidden">
+        </div>
+
+    <p id="counting-feedback-message" class="feedback-message"></p>
+    <button id="counting-start-game" class="start-game-button">Start Counting!</button>
+    <button id="counting-next-round" class="next-round-button hidden">Next Round</button>
+    <button class="back-to-hub">Back to Safari Map</button>
+</div>
+
 
     <!-- Patterns Game Screen -->
     <div id="patterns-game" class="screen hidden">
