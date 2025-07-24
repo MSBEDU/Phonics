@@ -1,0 +1,355 @@
+body {
+    font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', sans-serif;
+    background: linear-gradient(to bottom right, #87CEEB, #F0F8FF); /* Sky blue to light blue gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.app-container {
+    background-color: #fcecd5; /* A warm, light background */
+    border: 10px solid #a0522d; /* Wooden border effect */
+    border-radius: 25px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    text-align: center;
+    max-width: 95%; /* Make it a bit wider for more content */
+    width: 1000px; /* Adjust main container width */
+    box-sizing: border-box;
+    position: relative; /* For absolute positioning of screens */
+    min-height: 600px; /* Ensure enough height for all screens */
+}
+
+/* --- Screen Management --- */
+.screen {
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Position screens on top of each other */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    box-sizing: border-box;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none; /* Disable interaction when hidden */
+}
+
+.screen.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: all; /* Enable interaction when active */
+}
+
+.screen.hidden {
+    display: none; /* Actually hide it from layout */
+}
+
+/* --- General Elements --- */
+h1, h2 {
+    color: #4CAF50; /* Green for "Safari" feel */
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+h2 {
+    font-size: 2.5em; /* Slightly smaller for game titles */
+}
+
+.instructions p {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #FFC107; /* Bright yellow/orange */
+    color: #8B4513; /* Dark brown text */
+    border: 5px solid #D39E00; /* Darker border */
+    border-radius: 15px;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    margin: 10px; /* Space between buttons */
+}
+
+button:hover {
+    background-color: #E0B000;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.feedback {
+    min-height: 60px; /* Space for messages */
+    margin-top: 20px;
+}
+
+.feedback p {
+    font-size: 2em;
+    font-weight: bold;
+    color: #007bff; /* Blue for feedback */
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- Activity Hub Specific Styles --- */
+#activity-hub {
+    justify-content: center;
+}
+
+.activity-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.activity-buttons button {
+    min-width: 250px;
+    height: 100px;
+}
+
+/* --- Game Area Specific Styles (General) --- */
+.game-area {
+    min-height: 350px;
+    border: 3px dashed #9E9E9E;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    position: relative;
+    background-color: #e0f2f7;
+    width: 90%; /* Make game areas take up more width */
+    max-width: 800px; /* Max width for game areas */
+    box-sizing: border-box;
+    padding: 20px; /* Add padding inside game areas */
+}
+
+/* --- Counting Game Specific Styles --- */
+.counting-area .object-to-count {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+.counting-area .object-to-count.clicked {
+    transform: scale(0.9) translateY(5px);
+    opacity: 0.7;
+}
+
+#counting-object-name {
+    font-weight: bold;
+    color: #E91E63;
+}
+
+/* --- Patterns Game Specific Styles --- */
+#patterns-game .game-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Allow pattern items to wrap if too many */
+}
+
+.pattern-item {
+    width: 100px;
+    height: 100px;
+    margin: 10px; /* More margin for pattern items */
+    background-color: #D3D3D3;
+    border: 2px solid #696969;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: #696969;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.pattern-item.empty::before {
+    content: '?';
+    opacity: 0.5;
+}
+
+.pattern-item img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.choices-area {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 120px;
+    border: 3px dashed #B0C4DE;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #E6E6FA;
+}
+
+.draggable-choice {
+    width: 90px;
+    height: 90px;
+    margin: 10px;
+    cursor: grab;
+    transition: transform 0.1s;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.draggable-choice:hover {
+    transform: scale(1.05);
+    border: 2px solid #4682B4;
+}
+
+.draggable-choice:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+/* --- Number Recognition Specific Styles --- */
+.recognition-area {
+    display: grid; /* Use grid for number choices */
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Responsive columns */
+    gap: 20px;
+    padding: 20px;
+    min-height: 200px;
+    background-color: #f7e6d0; /* Different background for recognition */
+}
+
+.number-choice {
+    background-color: #fff;
+    border: 5px solid #FFD700; /* Gold border */
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4em;
+    font-weight: bold;
+    color: #FF69B4; /* Hot pink number */
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    aspect-ratio: 1 / 1; /* Keep choices square */
+}
+
+.number-choice:hover {
+    transform: scale(1.05);
+    background-color: #ffe082; /* Lighter gold on hover */
+}
+
+.number-choice.correct {
+    background-color: #A5D6A7; /* Light green for correct */
+    border-color: #4CAF50; /* Darker green */
+}
+
+.number-choice.incorrect {
+    background-color: #FFCDD2; /* Light red for incorrect */
+    border-color: #F44336; /* Darker red */
+}
+
+/* --- Number Tracing/Match Specific Styles --- */
+.tracing-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #d0e0f7; /* Light blue background */
+}
+
+.target-number-shape {
+    width: 150px;
+    height: 150px;
+    border: 3px dashed #4682B4;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    background-color: #fff;
+}
+
+.target-number-shape img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.tracing-choices {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.tracing-choice-item {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #FFD700;
+    border-radius: 10px;
+    cursor: grab;
+    transition: transform 0.1s, border-color 0.2s;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tracing-choice-item img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.tracing-choice-item:hover {
+    transform: scale(1.05);
+    border-color: #E0B000;
+}
+
+.tracing-choice-item.correct-match {
+    border-color: #4CAF50;
+    box-shadow: 0 0 15px #4CAF50;
+}
+
+.tracing-choice-item.incorrect-match {
+    border-color: #F44336;
+    box-shadow: 0 0 15px #F44336;
+}
+
+.back-to-hub {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #607D8B; /* Blue Grey */
+    color: white;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    z-index: 10; /* Ensure it's on top */
+}
+
+.back-to-hub:hover {
+    background-color: #455A64;
+}
