@@ -45,7 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const tracingFeedbackMessage = document.getElementById('tracing-feedback-message');
     const tracingNextRoundButton = document.getElementById('tracing-next-round');
 
-
+// Add this new listener somewhere within your document.addEventListener('DOMContentLoaded', () => { ... });
+countingStartGameButton.addEventListener('click', () => {
+    countingGame.startGame();
+});
     // --- Assets ---
     const assets = {
         images: {
@@ -123,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Reset streak if starting new session
                     countingGame.currentStreak = 0;
                     countingGame.streakMessageElement.textContent = countingGame.currentStreak;
-                    countingGame.startGame();
                     break;
                 case 'patterns':
                     this.showScreen(patternsGameScreen);
