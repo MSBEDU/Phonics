@@ -47,40 +47,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const assets = {
         images: {
             counting: [
-                { id: 'acorn', src: 'assets/images/counting/acorn.png', name: 'acorn' }, // Corrected path
-                { id: 'butterfly', src: 'assets/images/counting/butterfly.png', name: 'butterfly' }, // Corrected path
-                { id: 'flower', src: 'assets/images/counting/flower.png', name: 'flower' }, // Corrected path
-                { id: 'star', src: 'assets/images/counting/star.png', name: 'star' },     // Corrected path
+                { id: 'acorn', src: 'assets/images/counting/acorn.png', name: 'acorn' },
+                { id: 'butterfly', src: 'assets/images/counting/butterfly.png', name: 'butterfly' },
+                { id: 'flower', src: 'assets/images/counting/flower.png', name: 'flower' },
+                { id: 'star', src: 'assets/images/counting/star.png', name: 'star' },
             ],
             patterns: [
-                { id: 'red_circle', src: 'assets/images/patterns/red_circle.png', name: 'Red Circle' },        // Corrected path
-                { id: 'blue_square', src: 'assets/images/patterns/blue_square.png', name: 'Blue Square' },     // Corrected path
-                { id: 'yellow_triangle', src: 'assets/images/patterns/yellow_triangle.png', name: 'Yellow Triangle' }, // Corrected path
-                { id: 'green_star', src: 'assets/images/patterns/green_star.png', name: 'Green Star' },      // Corrected path
-                { id: 'purple_flower', src: 'assets/images/patterns/purple_flower.png', name: 'Purple Flower' }, // Corrected path
+                { id: 'red_circle', src: 'assets/images/patterns/red_circle.png', name: 'Red Circle' },
+                { id: 'blue_square', src: 'assets/images/patterns/blue_square.png', name: 'Blue Square' },
+                { id: 'yellow_triangle', src: 'assets/images/patterns/yellow_triangle.png', name: 'Yellow Triangle' },
+                { id: 'green_star', src: 'assets/images/patterns/green_star.png', name: 'Green Star' },
+                { id: 'purple_flower', src: 'assets/images/patterns/purple_flower.png', name: 'Purple Flower' },
             ],
             numbers: { // For recognition and tracing
-                '1': { src: 'assets/images/numbers/number_1.png', name: 'one' }, // Corrected path
-                '2': { src: 'assets/images/numbers/number_2.png', name: 'two' }, // Corrected path
-                '3': { src: 'assets/images/numbers/number_3.png', name: 'three' }, // Corrected path
-                '4': { src: 'assets/images/numbers/number_4.png', name: 'four' }, // Corrected path
-                '5': { src: 'assets/images/numbers/number_5.png', name: 'five' }, // Corrected path
+                '1': { src: 'assets/images/numbers/number_1.png', name: 'one' },
+                '2': { src: 'assets/images/numbers/number_2.png', name: 'two' },
+                '3': { src: 'assets/images/numbers/number_3.png', name: 'three' },
+                '4': { src: 'assets/images/numbers/number_4.png', name: 'four' },
+                '5': { src: 'assets/images/numbers/number_5.png', name: 'five' },
                 // Add images for numbers up to 10 if desired (and put them in assets/images/numbers/)
             }
         },
         audio: {
             numbers: {
-                1: new Audio('assets/audio/numbers/one.mp3'),   // Corrected path
-                2: new Audio('assets/audio/numbers/two.mp3'),   // Corrected path
-                3: new Audio('assets/audio/numbers/three.mp3'), // Corrected path
-                4: new Audio('assets/audio/numbers/four.mp3'),  // Corrected path
-                5: new Audio('assets/audio/numbers/five.mp3'),  // Corrected path
+                1: new Audio('assets/audio/numbers/one.mp3'),
+                2: new Audio('assets/audio/numbers/two.mp3'),
+                3: new Audio('assets/audio/numbers/three.mp3'),
+                4: new Audio('assets/audio/numbers/four.mp3'),
+                5: new Audio('assets/audio/numbers/five.mp3'),
                 // Add audio for numbers up to 10 (and put them in assets/audio/numbers/)
             },
-            success: new Audio('assets/audio/great_job.mp3'),     // Corrected path
-            tryAgain: new Audio('assets/audio/try_again.mp3'),    // Corrected path
-            correctDing: new Audio('assets/audio/correct_ding.mp3'), // Corrected path
-            incorrectBuzz: new Audio('assets/audio/incorrect_buzz.mp3') // Corrected path
+            success: new Audio('assets/audio/great_job.mp3'),
+            tryAgain: new Audio('assets/audio/try_again.mp3'),
+            correctDing: new Audio('assets/audio/correct_ding.mp3'),
+            incorrectBuzz: new Audio('assets/audio/incorrect_buzz.mp3')
         }
     };
 
@@ -169,22 +169,79 @@ document.addEventListener('DOMContentLoaded', () => {
             // Use a slight delay to ensure gameArea dimensions are stable
             setTimeout(() => {
                 const gameAreaRect = countingGameArea.getBoundingClientRect();
-                const objectSize = 80; // from CSS
+
+                // Create a dummy image to get its *actual* rendered dimensions
+                // before creating all the others
+                const dummyImg = document.createElement('img');
+                dummyImg.src = this.selectedObject.src;
+                dummyImg.classList.add('object-to-count');
+                dummyImg.style.visibility = 'hidden'; // Don't show it
+                dummyImg.style.position = 'absolute'; // Don't affect layout
+                countingGameArea.appendChild(dummyImg); // Temporarily add to DOM to get dimensions
+
+                const objectWidth = dummyImg.offsetWidth;
+                const objectHeight = dummyImg.offsetHeight;
+                countingGameArea.removeChild(dummyImg); // Remove the dummy image
+
+                const safetyMargin = 10; // Add a small buffer from the edges
+
+                const maxX = gameAreaRect.width - objectWidth - safetyMargin;
+                const maxY = gameAreaRect.height - objectHeight - safetyMargin;
+
+                // Ensure max values are not negative
+                const finalMaxX = Math.max(0, maxX);
+                const finalMaxY = Math.max(0, maxY);
+
+                // Store positions of already placed objects for collision detection
+                const placedObjects = [];
 
                 for (let i = 0; i < this.targetCount; i++) {
                     const img = document.createElement('img');
                     img.src = this.selectedObject.src;
                     img.classList.add('object-to-count');
-                    img.dataset.id = i; // Unique ID for each object
+                    img.dataset.id = i;
 
-                    // Random positioning within the gameArea bounds
-                    const maxX = gameAreaRect.width - objectSize;
-                    const maxY = gameAreaRect.height - objectSize;
-                    img.style.left = getRandomInt(0, maxX) + 'px';
-                    img.style.top = getRandomInt(0, maxY) + 'px';
+                    let newLeft, newTop;
+                    let collision;
+                    let attempts = 0;
+                    const maxAttempts = 500; // Limit attempts to prevent infinite loops on dense layouts
+
+                    do {
+                        collision = false;
+                        newLeft = getRandomInt(0, finalMaxX);
+                        newTop = getRandomInt(0, finalMaxY);
+
+                        // Check for collision with already placed objects (AABB collision detection)
+                        for (const placed of placedObjects) {
+                            if (newLeft < placed.left + placed.width &&
+                                newLeft + objectWidth > placed.left &&
+                                newTop < placed.top + placed.height &&
+                                newTop + objectHeight > placed.top) {
+                                collision = true;
+                                break; // Found a collision, break and try new position
+                            }
+                        }
+                        attempts++;
+                    } while (collision && attempts < maxAttempts); // Keep trying until no collision or max attempts reached
+
+                    if (attempts >= maxAttempts) {
+                        console.warn('Could not place object without overlap after max attempts. Placing anyway.');
+                        // If it's too hard to place without overlap, it might still overlap a little
+                    }
+
+                    img.style.left = newLeft + 'px';
+                    img.style.top = newTop + 'px';
 
                     img.addEventListener('click', (e) => this.handleObjectClick(e));
                     countingGameArea.appendChild(img);
+
+                    // Store the position and size of this newly placed object
+                    placedObjects.push({
+                        left: newLeft,
+                        top: newTop,
+                        width: objectWidth,
+                        height: objectHeight
+                    });
                 }
             }, 100);
         },
