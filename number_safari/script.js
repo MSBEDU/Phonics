@@ -47,40 +47,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const assets = {
         images: {
             counting: [
-                { id: 'acorn', src: 'assets/images/acorn.png', name: 'acorn' },
-                { id: 'butterfly', src: 'assets/images/butterfly.png', name: 'butterfly' },
-                { id: 'flower', src: 'assets/images/flower.png', name: 'flower' },
-                { id: 'star', src: 'assets/images/star.png', name: 'star' },
+                { id: 'acorn', src: 'assets/images/counting/acorn.png', name: 'acorn' }, // Corrected path
+                { id: 'butterfly', src: 'assets/images/counting/butterfly.png', name: 'butterfly' }, // Corrected path
+                { id: 'flower', src: 'assets/images/counting/flower.png', name: 'flower' }, // Corrected path
+                { id: 'star', src: 'assets/images/counting/star.png', name: 'star' },     // Corrected path
             ],
             patterns: [
-                { id: 'red_circle', src: 'assets/images/red_circle.png', name: 'Red Circle' },
-                { id: 'blue_square', src: 'assets/images/blue_square.png', name: 'Blue Square' },
-                { id: 'yellow_triangle', src: 'assets/images/yellow_triangle.png', name: 'Yellow Triangle' },
-                { id: 'green_star', src: 'assets/images/green_star.png', name: 'Green Star' },
-                { id: 'purple_flower', src: 'assets/images/purple_flower.png', name: 'Purple Flower' },
+                { id: 'red_circle', src: 'assets/images/patterns/red_circle.png', name: 'Red Circle' },        // Corrected path
+                { id: 'blue_square', src: 'assets/images/patterns/blue_square.png', name: 'Blue Square' },     // Corrected path
+                { id: 'yellow_triangle', src: 'assets/images/patterns/yellow_triangle.png', name: 'Yellow Triangle' }, // Corrected path
+                { id: 'green_star', src: 'assets/images/patterns/green_star.png', name: 'Green Star' },      // Corrected path
+                { id: 'purple_flower', src: 'assets/images/patterns/purple_flower.png', name: 'Purple Flower' }, // Corrected path
             ],
             numbers: { // For recognition and tracing
-                '1': { src: 'assets/images/number_1.png', name: 'one' },
-                '2': { src: 'assets/images/number_2.png', name: 'two' },
-                '3': { src: 'assets/images/number_3.png', name: 'three' },
-                '4': { src: 'assets/images/number_4.png', name: 'four' },
-                '5': { src: 'assets/images/number_5.png', name: 'five' },
-                // Add images for numbers up to 10 if desired
+                '1': { src: 'assets/images/numbers/number_1.png', name: 'one' }, // Corrected path
+                '2': { src: 'assets/images/numbers/number_2.png', name: 'two' }, // Corrected path
+                '3': { src: 'assets/images/numbers/number_3.png', name: 'three' }, // Corrected path
+                '4': { src: 'assets/images/numbers/number_4.png', name: 'four' }, // Corrected path
+                '5': { src: 'assets/images/numbers/number_5.png', name: 'five' }, // Corrected path
+                // Add images for numbers up to 10 if desired (and put them in assets/images/numbers/)
             }
         },
         audio: {
             numbers: {
-                1: new Audio('assets/audio/one.mp3'),
-                2: new Audio('assets/audio/two.mp3'),
-                3: new Audio('assets/audio/three.mp3'),
-                4: new Audio('assets/audio/four.mp3'),
-                5: new Audio('assets/audio/five.mp3'),
-                // Add audio for numbers up to 10
+                1: new Audio('assets/audio/numbers/one.mp3'),   // Corrected path
+                2: new Audio('assets/audio/numbers/two.mp3'),   // Corrected path
+                3: new Audio('assets/audio/numbers/three.mp3'), // Corrected path
+                4: new Audio('assets/audio/numbers/four.mp3'),  // Corrected path
+                5: new Audio('assets/audio/numbers/five.mp3'),  // Corrected path
+                // Add audio for numbers up to 10 (and put them in assets/audio/numbers/)
             },
-            success: new Audio('assets/audio/great_job.mp3'),
-            tryAgain: new Audio('assets/audio/try_again.mp3'),
-            correctDing: new Audio('assets/audio/correct_ding.mp3'),
-            incorrectBuzz: new Audio('assets/audio/incorrect_buzz.mp3')
+            success: new Audio('assets/audio/great_job.mp3'),     // Corrected path
+            tryAgain: new Audio('assets/audio/try_again.mp3'),    // Corrected path
+            correctDing: new Audio('assets/audio/correct_ding.mp3'), // Corrected path
+            incorrectBuzz: new Audio('assets/audio/incorrect_buzz.mp3') // Corrected path
         }
     };
 
