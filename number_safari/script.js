@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const countingGameArea = document.querySelector('.counting-area');
     const countingFeedbackMessage = document.getElementById('counting-feedback-message');
     const countingNextRoundButton = document.getElementById('counting-next-round');
+    // NEW DOM Elements for Counting Game
+    const countingNumberChoices = document.getElementById('counting-number-choices'); // For number selection
+    const countingStreakDisplay = document.getElementById('counting-streak-display'); // For streak display
 
     // Patterns Game Elements
     const patternsGameScreen = document.getElementById('patterns-game');
@@ -117,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
             switch (activityName) {
                 case 'counting':
                     this.showScreen(countingGameScreen);
+                    // Reset streak if starting new session
+                    countingGame.currentStreak = 0;
+                    countingGame.streakMessageElement.textContent = countingGame.currentStreak;
                     countingGame.startGame();
                     break;
                 case 'patterns':
@@ -149,6 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedObject: null,
         clickedObjects: new Set(),
         MAX_COUNT_NUMBER: 5, // Max number to count
+        currentStreak: 0, // NEW: Current streak counter
+        targetStreak: 10, // NEW: Target streak for mastery
+        streakMessageElement: countingStreakDisplay, // Reference to the streak display element
 
         startGame() {
             countingStartGameButton.classList.add('hidden');
@@ -157,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             this.currentCount = 0;
             this.clickedObjects.clear();
             countingGameArea.innerHTML = ''; // Clear previous objects
+            countingNumberChoices.innerHTML = ''; // NEW: Clear number choices
+            countingNumberChoices.classList.add('hidden'); // NEW: Hide choices
 
             this.targetCount = getRandomInt(1, this.MAX_COUNT_NUMBER);
             this.selectedObject = assets.images.counting[getRandomInt(0, assets.images.counting.length - 1)];
@@ -201,6 +212,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     img.classList.add('object-to-count');
                     img.dataset.id = i;
 
+                    // NEW: Random size and rotation (Idea #5)
+                    const randomScale = getRandomInt(80, 120) / 100; // 0.8 to 1.2 scale
+                    const randomRotate = getRandomInt(-20, 20); // -20 to 20 degrees rotation
+                    img.style.transform = `scale(${randomScale}) rotate(${randomRotate}deg)`;
+                    img.style.transformOrigin = 'center center'; // Ensure rotation around center
+
+
                     let newLeft, newTop;
                     let collision;
                     let attempts = 0;
@@ -213,10 +231,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // Check for collision with already placed objects (AABB collision detection)
                         for (const placed of placedObjects) {
-                            if (newLeft < placed.left + placed.width &&
-                                newLeft + objectWidth > placed.left &&
-                                newTop < placed.top + placed.height &&
-                                newTop + objectHeight > placed.top) {
+                            // Account for potential scaling when checking collision
+                            const placedObjectRenderedWidth = placed.width * placed.scale;
+                            const placedObjectRenderedHeight = placed.height * placed.scale;
+                            const newObjectRenderedWidth = objectWidth * randomScale;
+                            const newObjectRenderedHeight = objectHeight * randomScale;
+
+                            if (newLeft < placed.left + placedObjectRenderedWidth &&
+                                newLeft + newObjectRenderedWidth > placed.left &&
+                                newTop < placed.top + placedObjectRenderedHeight &&
+                                newTop + newObjectRenderedHeight > placed.top) {
                                 collision = true;
                                 break; // Found a collision, break and try new position
                             }
@@ -235,12 +259,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     img.addEventListener('click', (e) => this.handleObjectClick(e));
                     countingGameArea.appendChild(img);
 
-                    // Store the position and size of this newly placed object
+                    // Store the position and *applied* size (including scale) of this newly placed object
                     placedObjects.push({
                         left: newLeft,
                         top: newTop,
                         width: objectWidth,
-                        height: objectHeight
+                        height: objectHeight,
+                        scale: randomScale // Store scale for accurate collision checks
                     });
                 }
             }, 100);
@@ -266,17 +291,104 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check for completion or error
             if (this.currentCount === this.targetCount) {
                 // Correct count!
+                // Play final number audio
+                if (assets.audio.numbers[this.currentCount]) {
+                    assets.audio.numbers[this.currentCount].cloneNode(true).play();
+                }
+
                 setTimeout(() => {
-                    countingFeedbackMessage.textContent = `Great Job! You counted ${this.targetCount} ${this.selectedObject.name}s!`;
-                    assets.audio.success.cloneNode(true).play();
-                    countingNextRoundButton.classList.remove('hidden');
-                }, 500); // Small delay for number audio to finish
+                    // Hide objects and prompt for number selection
+                    countingGameArea.innerHTML = ''; // Clear objects
+                    countingFeedbackMessage.textContent = 'How many did you count? Select the correct number!';
+                    this.presentNumberChoices(); // NEW: Call function to show choices
+                }, 700); // Small delay for number audio to finish
             } else if (this.currentCount > this.targetCount) {
                 // Too many clicked
                 countingFeedbackMessage.textContent = `Oops! You counted too many. Try again!`;
                 assets.audio.tryAgain.cloneNode(true).play();
+                this.handleIncorrectAnswer(); // NEW: Reset streak on overcount
                 setTimeout(() => this.startGame(), 2000); // Restart the game after a short delay
             }
+        },
+
+        // NEW: Method to present number choices
+        presentNumberChoices() {
+            countingNumberChoices.classList.remove('hidden');
+            countingNumberChoices.innerHTML = ''; // Clear previous choices
+
+            let choices = new Set();
+            choices.add(this.targetCount); // Always include the correct answer
+
+            // Add distractors (e.g., 2 other random numbers)
+            while (choices.size < 3) { // You can adjust how many choices to show (e.g., 3, 4, 5)
+                let randomNum = getRandomInt(1, this.MAX_COUNT_NUMBER);
+                // Ensure distractors are not the target and not already in choices
+                if (randomNum !== this.targetCount) {
+                    choices.add(randomNum);
+                }
+            }
+            let choicesArray = Array.from(choices);
+            shuffleArray(choicesArray); // Shuffle to randomize order
+
+            choicesArray.forEach(num => {
+                const button = document.createElement('button');
+                button.classList.add('number-choice-button'); // Add a class for styling
+                button.textContent = num;
+                button.dataset.number = num; // Store the number
+                button.addEventListener('click', (e) => this.handleNumberChoiceClick(e));
+                countingNumberChoices.appendChild(button);
+            });
+        },
+
+        // NEW: Method to handle number choice click
+        handleNumberChoiceClick(event) {
+            const selectedNumber = parseInt(event.target.dataset.number);
+
+            // Disable all buttons to prevent multiple clicks
+            document.querySelectorAll('.number-choice-button').forEach(btn => btn.disabled = true);
+
+            if (selectedNumber === this.targetCount) {
+                event.target.classList.add('correct');
+                countingFeedbackMessage.textContent = 'Excellent! That\'s correct!';
+                assets.audio.success.cloneNode(true).play();
+                this.handleCorrectAnswer(); // NEW: Handle streak logic
+            } else {
+                event.target.classList.add('incorrect');
+                countingFeedbackMessage.textContent = `Not quite! The correct number was ${this.targetCount}.`;
+                assets.audio.incorrectBuzz.cloneNode(true).play();
+                this.handleIncorrectAnswer(); // NEW: Handle streak logic
+            }
+
+            // Hide choices and show next round button after a delay
+            setTimeout(() => {
+                countingNumberChoices.classList.add('hidden');
+                countingNumberChoices.innerHTML = ''; // Clear choices
+                countingNextRoundButton.classList.remove('hidden');
+            }, 1500); // Small delay before showing next round button
+        },
+
+        // NEW: Handle streak increment
+        handleCorrectAnswer() {
+            this.currentStreak++;
+            this.streakMessageElement.textContent = this.currentStreak;
+            if (this.currentStreak >= this.targetStreak) {
+                countingFeedbackMessage.textContent = `Amazing! You got ${this.targetStreak} in a row!`;
+                // Play a special celebratory sound or animation for achieving streak
+                assets.audio.success.cloneNode(true).play(); // Play success again for streak completion
+                setTimeout(() => {
+                    this.currentStreak = 0; // Reset for next mastery session
+                    this.streakMessageElement.textContent = this.currentStreak;
+                    countingStartGameButton.textContent = "Play Again!"; // Change button text
+                    countingStartGameButton.classList.remove('hidden');
+                    countingNextRoundButton.classList.add('hidden'); // Hide regular next round
+                }, 2000); // Longer delay for celebration
+            }
+        },
+
+        // NEW: Handle streak reset
+        handleIncorrectAnswer() {
+            this.currentStreak = 0; // Reset streak on incorrect answer
+            this.streakMessageElement.textContent = this.currentStreak;
         }
     };
 
@@ -371,9 +483,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const numMissing = 2;
             solution = pattern.slice(pattern.length - numMissing);
-            currentPattern = pattern.slice(0, pattern.length - numMissing);
+            // NOTE: 'currentPattern' here refers to the initial sequence displayed, not the entire completed pattern.
+            // The global 'currentPattern' in the 'patternsGame' object is not directly used after being set here.
+            // It might be intended to hold the initial pattern for reference. If so, it should be assigned.
+            // For now, it's just a local variable being returned.
+            const currentPatternForDisplay = pattern.slice(0, pattern.length - numMissing);
 
-            return { currentPattern, solution, uniqueItemsUsed };
+
+            return { currentPattern: currentPatternForDisplay, solution, uniqueItemsUsed };
         },
 
         createDraggableItem(asset) {
@@ -412,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.currentTarget.innerHTML = '';
                     e.currentTarget.appendChild(img);
                     e.currentTarget.classList.remove('empty');
-                    e.currentTarget.removeEventListener('drop', this.handleDrop);
+                    e.currentTarget.removeEventListener('drop', this.handleDrop); // Prevent dropping again in same slot
 
                     this.filledSlots.add(targetSlotIndex);
 
