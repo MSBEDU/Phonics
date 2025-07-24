@@ -1,119 +1,102 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2487.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Safari: Math Adventures for Kids!</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;title&gt;Number Safari: Math Adventures for Kids!&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;link rel="stylesheet" href="style.css"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;div class="app-container"&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;!-- Main Activity Selection Hub --&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;div id="activity-hub" class="screen active"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h1&gt;Welcome to Number Safari!&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;p&gt;Choose your math adventure:&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="activity-buttons"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="btn-counting" data-activity="counting"&gt;Count the Critters!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="btn-patterns" data-activity="patterns"&gt;Pattern Parade!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="btn-recognition" data-activity="recognition"&gt;Number Recognition!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="btn-tracing" data-activity="tracing"&gt;Number Match! (Tracing)&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;!-- Counting Game Screen --&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;div id="counting-game" class="screen hidden"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;button class="back-to-hub"&gt;Back to Safari Map&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2&gt;Count the Critters!&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="instructions"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="counting-instruction-text"&gt;How many &lt;span id="counting-object-name"&gt;&lt;/span&gt; can you count?&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="counting-start-game"&gt;Start Counting!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="game-area counting-area"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;!-- Counting objects will be placed here by JavaScript --&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="feedback"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="counting-feedback-message"&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="counting-next-round" class="hidden"&gt;Next Round&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;!-- Patterns Game Screen --&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;div id="patterns-game" class="screen hidden"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;button class="back-to-hub"&gt;Back to Safari Map&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2&gt;Pattern Parade!&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="instructions"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="patterns-instruction-text"&gt;Can you complete the pattern?&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="patterns-start-game"&gt;Start Parade!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="game-area pattern-area"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;!-- Pattern elements and empty slots go here --&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="choices-area"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;!-- Draggable choices go here --&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="feedback"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="patterns-feedback-message"&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="patterns-next-round" class="hidden"&gt;Next Pattern!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;!-- Number Recognition Game Screen --&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;div id="recognition-game" class="screen hidden"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;button class="back-to-hub"&gt;Back to Safari Map&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2&gt;Number Recognition!&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="instructions"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="recognition-instruction-text"&gt;Click on the number &lt;span id="recognition-target-number-text"&gt;&lt;/span&gt;!&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="recognition-start-game"&gt;Start Matching!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="game-area recognition-area"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;!-- Number choices will be placed here by JavaScript --&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="feedback"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="recognition-feedback-message"&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="recognition-next-round" class="hidden"&gt;Next Number!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">        &lt;!-- Number Tracing/Match Game Screen (Simplified) --&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;div id="tracing-game" class="screen hidden"&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;button class="back-to-hub"&gt;Back to Safari Map&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;h2&gt;Number Match!&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="instructions"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="tracing-instruction-text"&gt;Match the number to its shape!&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="tracing-start-game"&gt;Start Matching!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="game-area tracing-area"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="target-number-shape"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;!-- Image of number shape will go here --&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;div class="tracing-choices"&gt;</span></p>
-<p class="p1"><span class="s1">                    &lt;!-- Draggable number images will go here --&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;div class="feedback"&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;p id="tracing-feedback-message"&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">                &lt;button id="tracing-next-round" class="hidden"&gt;Next Match!&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">            &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">        &lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">    &lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">    &lt;script src="script.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+  <div class="app-container">
+    <!-- Main Activity Selection Hub -->
+    <div id="activity-hub" class="screen active">
+      <h1>Welcome to Number Safari!</h1>
+      <p>Choose your math adventure:</p>
+      <div class="activity-buttons">
+        <button id="btn-counting" data-activity="counting">Count the Critters!</button>
+        <button id="btn-patterns" data-activity="patterns">Pattern Parade!</button>
+        <button id="btn-recognition" data-activity="recognition">Number Recognition!</button>
+        <button id="btn-tracing" data-activity="tracing">Number Match! (Tracing)</button>
+      </div>
+    </div>
+
+    <!-- Counting Game Screen -->
+    <div id="counting-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Count the Critters!</h2>
+      <div class="instructions">
+        <p id="counting-instruction-text">How many <span id="counting-object-name"></span> can you count?</p>
+        <button id="counting-start-game">Start Counting!</button>
+      </div>
+      <div class="game-area counting-area">
+        <!-- Counting objects will be placed here by JavaScript -->
+      </div>
+      <div class="feedback">
+        <p id="counting-feedback-message"></p>
+        <button id="counting-next-round" class="hidden">Next Round</button>
+      </div>
+    </div>
+
+    <!-- Patterns Game Screen -->
+    <div id="patterns-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Pattern Parade!</h2>
+      <div class="instructions">
+        <p id="patterns-instruction-text">Can you complete the pattern?</p>
+        <button id="patterns-start-game">Start Parade!</button>
+      </div>
+      <div class="game-area pattern-area">
+        <!-- Pattern elements and empty slots go here -->
+      </div>
+      <div class="choices-area">
+        <!-- Draggable choices go here -->
+      </div>
+      <div class="feedback">
+        <p id="patterns-feedback-message"></p>
+        <button id="patterns-next-round" class="hidden">Next Pattern!</button>
+      </div>
+    </div>
+
+    <!-- Number Recognition Game Screen -->
+    <div id="recognition-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Number Recognition!</h2>
+      <div class="instructions">
+        <p id="recognition-instruction-text">Click on the number <span id="recognition-target-number-text"></span>!</p>
+        <button id="recognition-start-game">Start Matching!</button>
+      </div>
+      <div class="game-area recognition-area">
+        <!-- Number choices will be placed here by JavaScript -->
+      </div>
+      <div class="feedback">
+        <p id="recognition-feedback-message"></p>
+        <button id="recognition-next-round" class="hidden">Next Number!</button>
+      </div>
+    </div>
+
+    <!-- Number Tracing/Match Game Screen (Simplified) -->
+    <div id="tracing-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Number Match!</h2>
+      <div class="instructions">
+        <p id="tracing-instruction-text">Match the number to its shape!</p>
+        <button id="tracing-start-game">Start Matching!</button>
+      </div>
+      <div class="game-area tracing-area">
+        <div class="target-number-shape">
+          <!-- Image of number shape will go here -->
+        </div>
+        <div class="tracing-choices">
+          <!-- Draggable number images will go here -->
+        </div>
+      </div>
+      <div class="feedback">
+        <p id="tracing-feedback-message"></p>
+        <button id="tracing-next-round" class="hidden">Next Match!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
