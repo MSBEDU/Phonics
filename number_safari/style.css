@@ -9,6 +9,30 @@ body {
     overflow: hidden;
 }
 
+/* At the top or bottom of your style.css: */
+#counting-instruction-text,
+#counting-feedback-message {
+  font-size: 2rem;
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #222;
+}
+
+.number-choice-button {
+  font-size: 2rem;
+  font-family: 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: bold;
+  padding: 0.75em 1.25em;
+  border-radius: 1em;
+  margin: 0.5em;
+  min-width: 56px;
+  min-height: 56px;
+}
+
+
+
+
 .app-container {
     background-color: #fcecd5; /* A warm, light background */
     border: 10px solid #a0522d; /* Wooden border effect */
