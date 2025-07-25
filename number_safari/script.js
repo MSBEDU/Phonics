@@ -368,165 +368,160 @@ const countingGame = {
     }
 };
 
-    // --- Patterns Game Logic ---
-    const patternsGame = {
-        currentPattern: [],
-        patternSolution: [],
-        emptySlots: [],
-        filledSlots: new Set(),
-        draggedItemData: null,
+  // --- Patterns Game Logic ---
+const patternsGame = {
+    currentPattern: [],
+    patternSolution: [],
+    emptySlots: [],
+    filledSlots: new Set(),
+    draggedItemData: null,
 
-        startGame() {
-            patternsStartGameButton.classList.add('hidden');
-            patternsNextRoundButton.classList.add('hidden');
-            patternsFeedbackMessage.textContent = '';
-            patternsPatternArea.innerHTML = '';
-            patternsChoicesArea.innerHTML = '';
-            this.emptySlots = [];
-            this.filledSlots.clear();
+    startGame() {
+        patternsStartGameButton.classList.add('hidden');
+        patternsNextRoundButton.classList.add('hidden');
+        patternsFeedbackMessage.textContent = '';
+        patternsPatternArea.innerHTML = '';
+        patternsChoicesArea.innerHTML = '';
+        this.emptySlots = [];
+        this.filledSlots.clear();
 
-            const { currentPattern: initialPattern, solution, uniqueItemsUsed } = this.generatePattern();
-            this.patternSolution = solution;
+        const { currentPattern: initialPattern, solution, uniqueItemsUsed } = this.generatePattern();
+        this.patternSolution = solution;
 
-            // Display initial pattern elements
-            initialPattern.forEach(item => {
-                const patternItemDiv = document.createElement('div');
-                patternItemDiv.classList.add('pattern-item');
-                const img = document.createElement('img');
-                img.src = item.src;
-                img.alt = item.name;
-                patternItemDiv.appendChild(img);
-                patternsPatternArea.appendChild(patternItemDiv);
-            });
-
-            // Create empty slots
-            for (let i = 0; i < this.patternSolution.length; i++) {
-                const emptySlotDiv = document.createElement('div');
-                emptySlotDiv.classList.add('pattern-item', 'empty');
-                emptySlotDiv.dataset.index = i;
-                emptySlotDiv.addEventListener('dragover', (e) => this.handleDragOver(e));
-                emptySlotDiv.addEventListener('drop', (e) => this.handleDrop(e));
-                patternsPatternArea.appendChild(emptySlotDiv);
-                this.emptySlots.push(emptySlotDiv);
-            }
-
-            // Populate choices area
-            let choicesPool = [...uniqueItemsUsed];
-            const allAvailableAssets = [...assets.images.patterns];
-            shuffleArray(allAvailableAssets);
-            const distractorsNeeded = Math.min(3, allAvailableAssets.length - uniqueItemsUsed.length);
-            for(let i = 0; i < distractorsNeeded; i++) {
-                const distractor = allAvailableAssets.find(a => !uniqueItemsUsed.includes(a) && !choicesPool.includes(a));
-                if (distractor) {
-                    choicesPool.push(distractor);
-                }
-            }
-            shuffleArray(choicesPool);
-
-            choicesPool.forEach(asset => {
-                patternsChoicesArea.appendChild(this.createDraggableItem(asset));
-            });
-        },
-
-        generatePattern() {
-            const patternTypes = ['ABAB', 'AABB', 'ABC'];
-            const chosenType = patternTypes[getRandomInt(0, patternTypes.length - 1)];
-            const availableImages = [...assets.images.patterns];
-            shuffleArray(availableImages);
-
-            const patternLength = 5; // e.g., 5 items in the pattern, with 2 missing
-
-            let pattern = [];
-            let solution = [];
-            let uniqueItemsUsed = [];
-
-            const numPatternElements = chosenType === 'ABC' ? 3 : 2;
-            for (let i = 0; i < numPatternElements; i++) {
-                uniqueItemsUsed.push(availableImages[i]);
-            }
-
-            for (let i = 0; i < patternLength; i++) {
-                let item;
-                if (chosenType === 'ABAB') {
-                    item = uniqueItemsUsed[i % 2];
-                } else if (chosenType === 'AABB') {
-                    item = uniqueItemsUsed[Math.floor(i / 2) % 2];
-                } else if (chosenType === 'ABC') {
-                    item = uniqueItemsUsed[i % 3];
-                }
-                pattern.push(item);
-            }
-
-            const numMissing = 2;
-            solution = pattern.slice(pattern.length - numMissing);
-            // NOTE: 'currentPattern' here refers to the initial sequence displayed, not the entire completed pattern.
-            // The global 'currentPattern' in the 'patternsGame' object is not directly used after being set here.
-            // It might be intended to hold the initial pattern for reference. If so, it should be assigned.
-            // For now, it's just a local variable being returned.
-            const currentPatternForDisplay = pattern.slice(0, pattern.length - numMissing);
-
-
-            return { currentPattern: currentPatternForDisplay, solution, uniqueItemsUsed };
-        },
-
-        createDraggableItem(asset) {
+        // Display initial pattern elements
+        initialPattern.forEach(item => {
+            const patternItemDiv = document.createElement('div');
+            patternItemDiv.classList.add('pattern-item');
             const img = document.createElement('img');
-            img.src = asset.src;
-            img.classList.add('draggable-choice');
-            img.setAttribute('draggable', 'true');
-            img.dataset.id = asset.id;
+            img.src = item.src;
+            img.alt = item.name;
+            patternItemDiv.appendChild(img);
+            patternsPatternArea.appendChild(patternItemDiv);
+        });
 
-            img.addEventListener('dragstart', (e) => {
-                this.draggedItemData = { id: asset.id, src: asset.src };
-                e.dataTransfer.setData('text/plain', asset.id);
-                e.dataTransfer.effectAllowed = 'copy';
-            });
-            return img;
-        },
+        // Create empty slots for the missing parts
+        for (let i = 0; i < this.patternSolution.length; i++) {
+            const emptySlotDiv = document.createElement('div');
+            emptySlotDiv.classList.add('pattern-item', 'empty');
+            emptySlotDiv.dataset.index = i;
+            emptySlotDiv.addEventListener('dragover', (e) => this.handleDragOver(e));
+            emptySlotDiv.addEventListener('drop', (e) => this.handleDrop(e));
+            patternsPatternArea.appendChild(emptySlotDiv);
+            this.emptySlots.push(emptySlotDiv);
+        }
 
-        handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'copy';
-        },
-
-        handleDrop(e) {
-            e.preventDefault();
-            const droppedElementId = e.dataTransfer.getData('text/plain') || this.draggedItemData.id;
-            const targetSlotIndex = parseInt(e.currentTarget.dataset.index);
-            const correctElementId = this.patternSolution[targetSlotIndex].id;
-
-            const droppedElementAsset = assets.images.patterns.find(img => img.id === droppedElementId);
-
-            if (droppedElementId === correctElementId) {
-                if (!this.filledSlots.has(targetSlotIndex)) {
-                    const img = document.createElement('img');
-                    img.src = droppedElementAsset.src;
-                    img.alt = droppedElementAsset.name;
-                    e.currentTarget.innerHTML = '';
-                    e.currentTarget.appendChild(img);
-                    e.currentTarget.classList.remove('empty');
-                    e.currentTarget.removeEventListener('drop', this.handleDrop); // Prevent dropping again in same slot
-
-                    this.filledSlots.add(targetSlotIndex);
-
-                    if (assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
-                    patternsFeedbackMessage.textContent = 'Great!';
-
-                    if (this.filledSlots.size === this.patternSolution.length) {
-                        setTimeout(() => {
-                            patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
-                            assets.audio.success.cloneNode(true).play();
-                            patternsNextRoundButton.classList.remove('hidden');
-                        }, 500);
-                    }
-                }
-            } else {
-                patternsFeedbackMessage.textContent = 'Oops! That doesn\'t fit there. Try again!';
-                if (assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
-                setTimeout(() => patternsFeedbackMessage.textContent = '', 1500);
+        // Populate choices area
+        let choicesPool = [...uniqueItemsUsed];
+        const allAvailableAssets = [...assets.images.patterns];
+        shuffleArray(allAvailableAssets);
+        const distractorsNeeded = Math.min(3, allAvailableAssets.length - uniqueItemsUsed.length);
+        for(let i = 0; i < distractorsNeeded; i++) {
+            const distractor = allAvailableAssets.find(a => !uniqueItemsUsed.includes(a) && !choicesPool.includes(a));
+            if (distractor) {
+                choicesPool.push(distractor);
             }
         }
-    };
+        shuffleArray(choicesPool);
+
+        choicesPool.forEach(asset => {
+            patternsChoicesArea.appendChild(this.createDraggableItem(asset));
+        });
+    },
+
+    generatePattern() {
+        const patternTypes = ['ABAB', 'AABB', 'ABC'];
+        const chosenType = patternTypes[getRandomInt(0, patternTypes.length - 1)];
+        const availableImages = [...assets.images.patterns];
+        shuffleArray(availableImages);
+
+        const patternLength = 6; // always six squares
+        const numFilled = 4;     // first 4 are filled
+        const numMissing = patternLength - numFilled; // = 2
+
+        let pattern = [];
+        let uniqueItemsUsed = [];
+        const numPatternElements = chosenType === 'ABC' ? 3 : 2;
+
+        for (let i = 0; i < numPatternElements; i++) {
+            uniqueItemsUsed.push(availableImages[i]);
+        }
+
+        for (let i = 0; i < patternLength; i++) {
+            let item;
+            if (chosenType === 'ABAB') {
+                item = uniqueItemsUsed[i % 2];
+            } else if (chosenType === 'AABB') {
+                item = uniqueItemsUsed[Math.floor(i / 2) % 2];
+            } else if (chosenType === 'ABC') {
+                item = uniqueItemsUsed[i % 3];
+            }
+            pattern.push(item);
+        }
+
+        const currentPatternForDisplay = pattern.slice(0, numFilled); // show first 4
+        const solution = pattern.slice(numFilled, patternLength);     // solve last 2
+
+        return { currentPattern: currentPatternForDisplay, solution, uniqueItemsUsed };
+    },
+
+    createDraggableItem(asset) {
+        const img = document.createElement('img');
+        img.src = asset.src;
+        img.classList.add('draggable-choice');
+        img.setAttribute('draggable', 'true');
+        img.dataset.id = asset.id;
+
+        img.addEventListener('dragstart', (e) => {
+            this.draggedItemData = { id: asset.id, src: asset.src };
+            e.dataTransfer.setData('text/plain', asset.id);
+            e.dataTransfer.effectAllowed = 'copy';
+        });
+        return img;
+    },
+
+    handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+    },
+
+    handleDrop(e) {
+        e.preventDefault();
+        const droppedElementId = e.dataTransfer.getData('text/plain') || this.draggedItemData.id;
+        const targetSlotIndex = parseInt(e.currentTarget.dataset.index);
+        const correctElementId = this.patternSolution[targetSlotIndex].id;
+
+        const droppedElementAsset = assets.images.patterns.find(img => img.id === droppedElementId);
+
+        if (droppedElementId === correctElementId) {
+            if (!this.filledSlots.has(targetSlotIndex)) {
+                const img = document.createElement('img');
+                img.src = droppedElementAsset.src;
+                img.alt = droppedElementAsset.name;
+                e.currentTarget.innerHTML = '';
+                e.currentTarget.appendChild(img);
+                e.currentTarget.classList.remove('empty');
+                e.currentTarget.removeEventListener('drop', this.handleDrop); // Prevent dropping again in same slot
+
+                this.filledSlots.add(targetSlotIndex);
+
+                if (assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
+                patternsFeedbackMessage.textContent = 'Great!';
+
+                if (this.filledSlots.size === this.patternSolution.length) {
+                    setTimeout(() => {
+                        patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
+                        assets.audio.success.cloneNode(true).play();
+                        patternsNextRoundButton.classList.remove('hidden');
+                    }, 500);
+                }
+            }
+        } else {
+            patternsFeedbackMessage.textContent = 'Oops! That doesn\'t fit there. Try again!';
+            if (assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
+            setTimeout(() => patternsFeedbackMessage.textContent = '', 1500);
+        }
+    }
+};
 
     // --- Number Recognition Game Logic ---
     const numberRecognitionGame = {
