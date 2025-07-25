@@ -104,54 +104,55 @@ countingStartGameButton.addEventListener('click', () => {
 
     // --- Game Manager ---
     const gameManager = {
-        currentScreen: activityHub,
-        showScreen(screenElement) {
-    // Hide current screen
-    this.currentScreen.classList.remove('active');
-    // Use a slight delay to allow transition to start before hiding
-    setTimeout(() => {
-        this.currentScreen.classList.add('hidden');
-        // Show new screen
-        screenElement.classList.remove('hidden');
-        // Force reflow to ensure transition plays
-        void screenElement.offsetWidth;
-        // Wait for the browser to finish the layout
-        requestAnimationFrame(() => {
-            screenElement.classList.add('active');
-            this.currentScreen = screenElement;
-        });
-    }, 500); // Match CSS transition duration
-},
-        initActivity(activityName) {
-            switch (activityName) {
-                case 'counting':
-                    this.showScreen(countingGameScreen);
-                    // Reset streak if starting new session
-                    countingGame.currentStreak = 0;
-                    countingGame.streakMessageElement.textContent = countingGame.currentStreak;
-                    break;
-                case 'patterns':
-                    this.showScreen(patternsGameScreen);
-                    patternsGame.startGame();
-                    break;
-                case 'recognition':
-                    this.showScreen(recognitionGameScreen);
-                    numberRecognitionGame.startGame();
-                    break;
-                case 'tracing':
-                    this.showScreen(tracingGameScreen);
-                    numberTracingGame.startGame();
-                    break;
-                default:
-                    console.error('Unknown activity:', activityName);
-                    break;
-            }
-        },
-        backToHub() {
-            this.showScreen(activityHub);
-            // Optionally reset game states here if needed, e.g., stop audio
+    currentScreen: activityHub,
+    showScreen(screenElement) {
+        // Hide current screen
+        this.currentScreen.classList.remove('active');
+        // Use a slight delay to allow transition to start before hiding
+        setTimeout(() => {
+            this.currentScreen.classList.add('hidden');
+            // Show new screen
+            screenElement.classList.remove('hidden');
+            // Force reflow to ensure transition plays
+            void screenElement.offsetWidth;
+            // Wait for the browser to finish the layout
+            requestAnimationFrame(() => {
+                screenElement.classList.add('active');
+                this.currentScreen = screenElement;
+            });
+        }, 500); // Match CSS transition duration
+    },
+    initActivity(activityName) {
+        switch (activityName) {
+            case 'counting':
+                this.showScreen(countingGameScreen);
+                // Reset streak if starting new session
+                countingGame.currentStreak = 0;
+                countingGame.streakMessageElement.textContent = countingGame.currentStreak;
+                break;
+            case 'patterns':
+                this.showScreen(patternsGameScreen);
+                patternsGame.startGame();
+                break;
+            case 'recognition':
+                this.showScreen(recognitionGameScreen);
+                numberRecognitionGame.startGame();
+                break;
+            case 'tracing':
+                this.showScreen(tracingGameScreen);
+                numberTracingGame.startGame();
+                break;
+            default:
+                console.error('Unknown activity:', activityName);
+                break;
         }
-    };
+    },
+    backToHub() {
+        this.showScreen(activityHub);
+        // Optionally reset game states here if needed, e.g., stop audio
+    }
+};
+
 
     // --- Counting Game Logic ---
 const countingGame = {
