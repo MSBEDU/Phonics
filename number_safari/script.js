@@ -105,31 +105,29 @@ countingStartGameButton.addEventListener('click', () => {
     // --- Game Manager ---
     const gameManager = {
     currentScreen: activityHub,
-    showScreen(screenElement) {
-        // Hide current screen
-        this.currentScreen.classList.remove('active');
-        // Use a slight delay to allow transition to start before hiding
-        setTimeout(() => {
-            this.currentScreen.classList.add('hidden');
-            // Show new screen
-            screenElement.classList.remove('hidden');
-            // Force reflow to ensure transition plays
-            void screenElement.offsetWidth;
-            // Wait for the browser to finish the layout
-            requestAnimationFrame(() => {
-                screenElement.classList.add('active');
-                this.currentScreen = screenElement;
-            });
-        }, 500); // Match CSS transition duration
-    },
-    initActivity(activityName) {
-        switch (activityName) {
-            case 'counting':
-                this.showScreen(countingGameScreen);
-                // Reset streak if starting new session
+    showScreen(screenElement, onShown) {
+    this.currentScreen.classList.remove('active');
+    setTimeout(() => {
+        this.currentScreen.classList.add('hidden');
+        screenElement.classList.remove('hidden');
+        void screenElement.offsetWidth;
+        requestAnimationFrame(() => {
+            screenElement.classList.add('active');
+            this.currentScreen = screenElement;
+            if (typeof onShown === "function") onShown();
+        });
+    }, 500);
+},
+
+   initActivity(activityName) {
+    switch (activityName) {
+        case 'counting':
+            this.showScreen(countingGameScreen, () => {
                 countingGame.currentStreak = 0;
                 countingGame.streakMessageElement.textContent = countingGame.currentStreak;
-                break;
+                countingGame.startGame();
+            });
+            break;
             case 'patterns':
                 this.showScreen(patternsGameScreen);
                 patternsGame.startGame();
