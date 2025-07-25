@@ -161,7 +161,7 @@ const countingGame = {
     targetStreak: 10, // NEW: Target streak for mastery
     streakMessageElement: countingStreakDisplay, // Reference to the streak display element
 
-    startGame() {
+     {
         countingStartGameButton.classList.add('hidden');
         countingNextRoundButton.classList.add('hidden');
         countingFeedbackMessage.textContent = '';
@@ -314,6 +314,18 @@ const countingGame = {
             this.handleIncorrectAnswer(); // NEW: Reset streak on overcount
             setTimeout(() => this.startGame(), 2000); // Restart the game after a short delay
         }
+        // NEW: Method to update streak display with stars
+updateStreakDisplay() {
+    let starsHtml = '';
+    for (let i = 0; i < this.targetStreak; i++) {
+        if (i < this.currentStreak) {
+            starsHtml += '⭐'; // Filled star for achieved streak
+        } else {
+            starsHtml += '✨'; // Empty star/sparkle for target (or use a different emoji for empty)
+        }
+    }
+    this.streakMessageElement.innerHTML = starsHtml;
+},
     },
 
     // NEW: Method to present number choices
@@ -372,31 +384,30 @@ const countingGame = {
         }, 1500); // Small delay before showing next round button
     },
 
-    // NEW: Handle streak increment
-    handleCorrectAnswer() {
-        this.currentStreak++;
-        this.streakMessageElement.textContent = this.currentStreak;
-        if (this.currentStreak >= this.targetStreak) {
-            countingFeedbackMessage.textContent = `Amazing! You got ${this.targetStreak} in a row!`;
-            // Play a special celebratory sound or animation for achieving streak
-            assets.audio.success.cloneNode(true).play(); // Play success again for streak completion
-            setTimeout(() => {
-                this.currentStreak = 0; // Reset for next mastery session
-                this.streakMessageElement.textContent = this.currentStreak;
-                countingStartGameButton.textContent = "Play Again!"; // Change button text
-                countingStartGameButton.classList.remove('hidden');
-                countingNextRoundButton.classList.add('hidden'); // Hide regular next round
-            }, 2000); // Longer delay for celebration
-        }
-    },
-
-    // NEW: Handle streak reset
-    handleIncorrectAnswer() {
-        this.currentStreak = 0; // Reset streak on incorrect answer
-        this.streakMessageElement.textContent = this.currentStreak;
+ // NEW: Handle streak increment
+handleCorrectAnswer() {
+    this.currentStreak++;
+    this.updateStreakDisplay(); // <--- This line is changed to call the new function
+    
+    if (this.currentStreak >= this.targetStreak) {
+        countingFeedbackMessage.textContent = `Amazing! You got ${this.targetStreak} in a row!`;
+        // Play a special celebratory sound or animation for achieving streak
+        assets.audio.success.cloneNode(true).play(); // Play success again for streak completion
+        setTimeout(() => {
+            this.currentStreak = 0; // Reset for next mastery session
+            this.updateStreakDisplay(); // <--- This line is also changed to call the new function
+            countingStartGameButton.textContent = "Play Again!"; // Change button text
+            countingStartGameButton.classList.remove('hidden');
+            countingNextRoundButton.classList.add('hidden'); // Hide regular next round
+        }, 2000); // Longer delay for celebration
     }
-};
+},
 
+// NEW: Handle streak reset
+handleIncorrectAnswer() {
+    this.currentStreak = 0; // Reset streak on incorrect answer
+    this.updateStreakDisplay(); // <--- This line now calls your star update function
+}
     // --- Patterns Game Logic ---
     const patternsGame = {
         currentPattern: [],
