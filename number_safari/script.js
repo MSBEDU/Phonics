@@ -45,10 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tracingFeedbackMessage = document.getElementById('tracing-feedback-message');
     const tracingNextRoundButton = document.getElementById('tracing-next-round');
 
-// Add this new listener somewhere within your document.addEventListener('DOMContentLoaded', () => { ... });
-countingStartGameButton.addEventListener('click', () => {
-    countingGame.startGame();
-});
+
     // --- Assets ---
     const assets = {
         images: {
