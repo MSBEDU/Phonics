@@ -417,3 +417,14 @@ button:active {
     text-align: center;
     margin-bottom: 10px;
 }
+.object-to-count.clicked {
+  animation: pop 0.35s cubic-bezier(.58,1.64,.34,1) both;
+}
+
+@keyframes pop {
+  0%   { transform: scale(1) rotate(0); }
+  40%  { transform: scale(1.25) rotate(-8deg);}
+  65%  { transform: scale(0.92) rotate(6deg);}
+  100% { transform: scale(1) rotate(0);}
+}
+
