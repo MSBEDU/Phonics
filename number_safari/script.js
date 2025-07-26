@@ -374,7 +374,8 @@ const patternsGame = {
     patternSolution: [],
     emptySlots: [],
     filledSlots: new Set(),
-    draggedItemData: null,
+    selectedAsset: null,   // NEW: Holds the selected asset for tap-to-place
+    patternCounter: 0,
 
     startGame() {
         patternsStartGameButton.classList.add('hidden');
@@ -382,8 +383,10 @@ const patternsGame = {
         patternsFeedbackMessage.textContent = '';
         patternsPatternArea.innerHTML = '';
         patternsChoicesArea.innerHTML = '';
+        document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
         this.emptySlots = [];
         this.filledSlots.clear();
+        this.selectedAsset = null;
 
         const { currentPattern: initialPattern, solution, uniqueItemsUsed } = this.generatePattern();
         this.patternSolution = solution;
@@ -404,8 +407,7 @@ const patternsGame = {
             const emptySlotDiv = document.createElement('div');
             emptySlotDiv.classList.add('pattern-item', 'empty');
             emptySlotDiv.dataset.index = i;
-            emptySlotDiv.addEventListener('dragover', (e) => this.handleDragOver(e));
-            emptySlotDiv.addEventListener('drop', (e) => this.handleDrop(e));
+            emptySlotDiv.addEventListener('click', (e) => this.handleTapDrop(e));
             patternsPatternArea.appendChild(emptySlotDiv);
             this.emptySlots.push(emptySlotDiv);
         }
@@ -424,7 +426,7 @@ const patternsGame = {
         shuffleArray(choicesPool);
 
         choicesPool.forEach(asset => {
-            patternsChoicesArea.appendChild(this.createDraggableItem(asset));
+            patternsChoicesArea.appendChild(this.createTapSelectableItem(asset));
         });
     },
 
@@ -464,61 +466,72 @@ const patternsGame = {
         return { currentPattern: currentPatternForDisplay, solution, uniqueItemsUsed };
     },
 
-    createDraggableItem(asset) {
+    // NEW: Create a tap-selectable item instead of a draggable
+    createTapSelectableItem(asset) {
         const img = document.createElement('img');
         img.src = asset.src;
-        img.classList.add('draggable-choice');
-        img.setAttribute('draggable', 'true');
+        img.classList.add('draggable-choice'); // You can rename to 'selectable-choice' if you prefer
         img.dataset.id = asset.id;
 
-        img.addEventListener('dragstart', (e) => {
-            this.draggedItemData = { id: asset.id, src: asset.src };
-            e.dataTransfer.setData('text/plain', asset.id);
-            e.dataTransfer.effectAllowed = 'copy';
+        img.addEventListener('click', () => {
+            // Deselect any other
+            document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
+            img.classList.add('selected');
+            this.selectedAsset = asset;
         });
+
         return img;
     },
 
-    handleDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'copy';
-    },
+    handleTapDrop(e) {
+        // If nothing is selected, do nothing
+        if (!this.selectedAsset) return;
 
-    handleDrop(e) {
-        e.preventDefault();
-        const droppedElementId = e.dataTransfer.getData('text/plain') || this.draggedItemData.id;
         const targetSlotIndex = parseInt(e.currentTarget.dataset.index);
         const correctElementId = this.patternSolution[targetSlotIndex].id;
+        const droppedElementId = this.selectedAsset.id;
 
-        const droppedElementAsset = assets.images.patterns.find(img => img.id === droppedElementId);
+        if (droppedElementId === correctElementId && !this.filledSlots.has(targetSlotIndex)) {
+            // Place image
+            const img = document.createElement('img');
+            img.src = this.selectedAsset.src;
+            img.alt = this.selectedAsset.name;
+            e.currentTarget.innerHTML = '';
+            e.currentTarget.appendChild(img);
+            e.currentTarget.classList.remove('empty');
+            e.currentTarget.removeEventListener('click', this.handleTapDrop); // Prevent double placing
 
-        if (droppedElementId === correctElementId) {
-            if (!this.filledSlots.has(targetSlotIndex)) {
-                const img = document.createElement('img');
-                img.src = droppedElementAsset.src;
-                img.alt = droppedElementAsset.name;
-                e.currentTarget.innerHTML = '';
-                e.currentTarget.appendChild(img);
-                e.currentTarget.classList.remove('empty');
-                e.currentTarget.removeEventListener('drop', this.handleDrop); // Prevent dropping again in same slot
+            this.filledSlots.add(targetSlotIndex);
 
-                this.filledSlots.add(targetSlotIndex);
+            if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
+            patternsFeedbackMessage.textContent = 'Great!';
+            // Deselect
+            document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
+            this.selectedAsset = null;
 
-                if (assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
-                patternsFeedbackMessage.textContent = 'Great!';
+            if (this.filledSlots.size === this.patternSolution.length) {
+                setTimeout(() => {
+                    patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
+                    if (assets.audio && assets.audio.success) assets.audio.success.cloneNode(true).play();
+                    patternsNextRoundButton.classList.remove('hidden');
 
-                if (this.filledSlots.size === this.patternSolution.length) {
-                    setTimeout(() => {
-                        patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
-                        assets.audio.success.cloneNode(true).play();
-                        patternsNextRoundButton.classList.remove('hidden');
-                    }, 500);
-                }
+                    // Increment pattern counter and update
+                    this.patternCounter++;
+                    document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
+                    if (this.patternCounter === 10) {
+                        setTimeout(() => {
+                            alert('Wow! You finished 10 patterns!');
+                        }, 600);
+                    }
+                }, 500);
             }
         } else {
             patternsFeedbackMessage.textContent = 'Oops! That doesn\'t fit there. Try again!';
-            if (assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
+            if (assets.audio && assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
             setTimeout(() => patternsFeedbackMessage.textContent = '', 1500);
+            // Deselect wrong choice
+            document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
+            this.selectedAsset = null;
         }
     }
 };
