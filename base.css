@@ -6,28 +6,23 @@
   --bg: #F9FAFB;
   --radius: 12px;
 }
-
-/* Universal body styling */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden;  /* Prevents sideways scrolling */
-  overflow-y: auto;    /* Allows vertical scrolling */
+  min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-
-/* Consistent container for all apps/pages */
-  .app-container {
+.app-container {
   width: 100%;
-  max-width: 520px;        /* Or 1000px if you want a wider look */
-  min-height: 80vh;
+  max-width: 520px;
   background: white;
-  border-radius: var(--radius);
+  border-radius: var(--radius, 12px);
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   padding: 32px 16px;
   margin: 40px auto;
-  position: relative;      /* Enables centered overlays */
   display: flex;
   flex-direction: column;
   align-items: center;
