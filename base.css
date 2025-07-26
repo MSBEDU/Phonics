@@ -1,0 +1,38 @@
+:root {
+  --blue: #5B8DEF;
+  --yellow: #F6A800;
+  --charcoal: #2F2F2F;
+  --muted: #4F4F4F;
+  --bg: #F9FAFB;
+  --radius: 12px;
+}
+
+/* Universal body styling */
+body {
+  margin: 0;
+  font-family: 'Inter', 'Open Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--charcoal);
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Consistent container for all apps/pages */
+.app-container {
+  width: 100%;
+  max-width: 1000px;
+  min-height: 80vh;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 16px;
+  margin: 40px auto;
+  position: relative; /* Enables centered overlays */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
