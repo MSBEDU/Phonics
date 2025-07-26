@@ -452,3 +452,8 @@ button:active {
   100% { transform: scale(1) rotate(0);}
 }
 
+.draggable-choice.selected {
+    outline: 3px solid #F6A800;
+    box-shadow: 0 0 10px #F6A800;
+}
+
