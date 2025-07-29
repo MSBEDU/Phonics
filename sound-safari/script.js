@@ -1,4 +1,3 @@
-// === GLOBAL VARIABLES & DATA ===
 let draggedTrickyWordElement = null;
 
 const letterSets = {
