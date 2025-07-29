@@ -4,13 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sound Safari Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
     <button id="homeBtn" class="home-button hidden">🏠 Home</button>
     <h1>🦁 Sound Safari</h1>
+    
+    <!-- Main Menu -->
     <div id="menu">
       <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
       <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
@@ -21,6 +24,7 @@
       <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button>
     </div>
 
+    <!-- Game Area -->
     <div id="gameArea" class="hidden">
       <div class="score" id="score">Score: 0</div>
       <div class="stars" id="stars"></div>
@@ -45,12 +49,9 @@
         <div id="flashcardProgress"></div>
       </div>
 
-      <!-- Blend Mode -->
+      <!-- Blend Words -->
       <div class="blend-box" id="blendBox"></div>
       <div class="blended-word" id="blendText"></div>
-      <div class="choices" id="wordChoices"></div>
-      <button class="reset-button" id="resetBtn">🔄 Reset</button>
-      <div class="feedback" id="feedback"></div>
 
       <!-- Build a Word -->
       <div id="buildWordTargetFlashcard" class="hidden"></div>
@@ -62,14 +63,15 @@
         <button id="checkBuildBtn">Check</button>
       </div>
 
-      <!-- Picture-Word Match -->
+      <!-- Picture Word Match -->
       <div id="pictureWordMatchingSection" class="hidden">
-        <img id="pictureWordImage" src="" alt="Image to match" class="hidden">
+        <img id="pictureWordImage" src="" alt="Image to match" class="hidden"
+          onerror="this.onerror=null; this.src='https://via.placeholder.com/150x150/FF0000/FFFFFF?text=Error'; console.error('Image failed to load:', this.src);">
         <div id="pictureWordChoices"></div>
         <button class="reset-button" id="pictureWordResetBtn">🔄 Reset Choices</button>
       </div>
 
-      <!-- Tricky Word Sort -->
+      <!-- Tricky Word Sorting -->
       <div id="trickyWordSortingSection" class="hidden">
         <div class="sort-zones-container">
           <div id="trickyZone" class="sort-zone">
@@ -90,7 +92,7 @@
         </div>
       </div>
 
-      <!-- Canvas Tracer -->
+      <!-- Canvas Tracing -->
       <div id="canvasDrawingTracerSection" class="hidden">
         <canvas id="letterCanvas"></canvas>
         <div class="canvas-actions">
@@ -98,6 +100,11 @@
           <button id="nextLetterBtn">➡️ Next Letter</button>
         </div>
       </div>
+
+      <!-- Word Choices -->
+      <div class="choices" id="wordChoices"></div>
+      <button class="reset-button" id="resetBtn">🔄 Reset</button>
+      <div class="feedback" id="feedback"></div>
     </div>
 
     <!-- Game Complete -->
@@ -108,7 +115,9 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Load the JS at the end so everything works -->
+  <script src="script.js" defer></script>
 </body>
 </html>
+
 
