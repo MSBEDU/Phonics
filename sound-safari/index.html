@@ -4,21 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sound Safari Game</title>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-  <!-- External Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
-
-    <!-- Home Button -->
     <button id="homeBtn" class="home-button hidden">🏠 Home</button>
-
-    <!-- App Title -->
     <h1>🦁 Sound Safari</h1>
-
-    <!-- ===== MAIN MENU ===== -->
     <div id="menu">
       <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
       <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
@@ -29,20 +21,19 @@
       <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button>
     </div>
 
-    <!-- ===== GAME AREA ===== -->
     <div id="gameArea" class="hidden">
       <div class="score" id="score">Score: 0</div>
       <div class="stars" id="stars"></div>
       <h2 id="prompt"></h2>
 
-      <!-- Flashcard selection -->
+      <!-- Flashcard Pack Selection -->
       <div id="flashcardPackSelection" class="hidden">
         <p id="packSelectionIntroText">Choose a Set:</p>
         <div id="packButtons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;"></div>
         <button class="menu-button" id="backToMainMenuBtn">Back to Main Menu</button>
       </div>
 
-      <!-- Flashcard container -->
+      <!-- Flashcards -->
       <div id="flashcardContainer" class="hidden" data-mastered-unique-letters="">
         <p id="flashcardLetter"></p>
         <p id="flashcardPhonemeDescription"></p>
@@ -54,11 +45,12 @@
         <div id="flashcardProgress"></div>
       </div>
 
-      <!-- Blend Words -->
+      <!-- Blend Mode -->
       <div class="blend-box" id="blendBox"></div>
       <div class="blended-word" id="blendText"></div>
       <div class="choices" id="wordChoices"></div>
       <button class="reset-button" id="resetBtn">🔄 Reset</button>
+      <div class="feedback" id="feedback"></div>
 
       <!-- Build a Word -->
       <div id="buildWordTargetFlashcard" class="hidden"></div>
@@ -72,13 +64,12 @@
 
       <!-- Picture-Word Match -->
       <div id="pictureWordMatchingSection" class="hidden">
-        <img id="pictureWordImage" src="" alt="Image to match" class="hidden"
-          onerror="this.onerror=null; this.src='https://via.placeholder.com/150x150/FF0000/FFFFFF?text=Error';">
+        <img id="pictureWordImage" src="" alt="Image to match" class="hidden">
         <div id="pictureWordChoices"></div>
         <button class="reset-button" id="pictureWordResetBtn">🔄 Reset Choices</button>
       </div>
 
-      <!-- Tricky Word Sorting -->
+      <!-- Tricky Word Sort -->
       <div id="trickyWordSortingSection" class="hidden">
         <div class="sort-zones-container">
           <div id="trickyZone" class="sort-zone">
@@ -99,7 +90,7 @@
         </div>
       </div>
 
-      <!-- Canvas Tracing -->
+      <!-- Canvas Tracer -->
       <div id="canvasDrawingTracerSection" class="hidden">
         <canvas id="letterCanvas"></canvas>
         <div class="canvas-actions">
@@ -107,8 +98,6 @@
           <button id="nextLetterBtn">➡️ Next Letter</button>
         </div>
       </div>
-
-      <div class="feedback" id="feedback"></div>
     </div>
 
     <!-- Game Complete -->
@@ -117,10 +106,9 @@
       <p id="finalMessage"></p>
       <button class="play-again" id="playAgainBtn">Play Again</button>
     </div>
+  </div>
 
-  </div> <!-- end .app-container -->
-
-  <!-- External Script -->
   <script src="script.js"></script>
 </body>
 </html>
+
