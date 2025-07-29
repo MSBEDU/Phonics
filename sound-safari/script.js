@@ -12,16 +12,16 @@ const allPhase2Letters = Object.values(letterSets).flat();
 const masterBuildLettersPool = [...letterSets['Set 1'], ...letterSets['Set 2']];
 
 const satpinWordsList = [
-  { word: 'sat', emoji: '🪑', image: 'https://via.placeholder.com/250x250/FFDAB9/000000?text=SAT' },
-  { word: 'pin', emoji: '📌', image: 'https://via.placeholder.com/250x250/ADD8E6/000000?text=PIN' },
-  { word: 'pat', emoji: '👏', image: 'https://via.placeholder.com/250x250/98FB98/000000?text=PAT' },
-  { word: 'tap', emoji: '🚰', image: 'https://via.placeholder.com/250x250/FFD700/000000?text=TAP' },
-  { word: 'nap', emoji: '😴', image: 'https://via.placeholder.com/250x250/DDA0DD/000000?text=NAP' },
-  { word: 'sip', emoji: '🥤', image: 'https://via.placeholder.com/250x250/87CEFA/000000?text=SIP' },
-  { word: 'tip', emoji: '💡', image: 'https://via.placeholder.com/250x250/F08080/000000?text=TIP' },
-  { word: 'tan', emoji: '🌞', image: 'https://via.placeholder.com/250x250/F4A460/000000?text=TAN' },
-  { word: 'pit', emoji: '🕳️', image: 'https://via.placeholder.com/250x250/B0E0E6/000000?text=PIT' },
-  { word: 'pan', emoji: '🍳', image: 'https://via.placeholder.com/250x250/FFB6C1/000000?text=PAN' }
+  { word: 'sat', emoji: '🪑', image: 'https://placehold.co/250x250/FFDAB9/000000?text=SAT' },
+  { word: 'pin', emoji: '📌', image: 'https://placehold.co/250x250/ADD8E6/000000?text=PIN' },
+  { word: 'pat', emoji: '👏', image: 'https://placehold.co/250x250/98FB98/000000?text=PAT' },
+  { word: 'tap', emoji: '🚰', image: 'https://placehold.co/250x250/FFD700/000000?text=TAP' },
+  { word: 'nap', emoji: '😴', image: 'https://placehold.co/250x250/DDA0DD/000000?text=NAP' },
+  { word: 'sip', emoji: '🥤', image: 'https://placehold.co/250x250/87CEFA/000000?text=SIP' },
+  { word: 'tip', emoji: '💡', image: 'https://placehold.co/250x250/F08080/000000?text=TIP' },
+  { word: 'tan', emoji: '🌞', image: 'https://placehold.co/250x250/F4A460/000000?text=TAN' },
+  { word: 'pit', emoji: '🕳️', image: 'https://placehold.co/250x250/B0E0E6/000000?text=PIT' },
+  { word: 'pan', emoji: '🍳', image: 'https://placehold.co/250x250/FFB6C1/000000?text=PAN' }
 ];
 
 const trickyWordsData = {
