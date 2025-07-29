@@ -1327,7 +1327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     blendWordsBtn: document.getElementById('blendWordsBtn'),
     buildWordBtn: document.getElementById('buildWordBtn'),
     trickyWordsBtn: document.getElementById('trickyWordsBtn'), 
-    pictureWordMatchBtn: document.getElementById('pictureWordMatchBtn'),
+    pictureWordMatchBtn: document.getElementById('pictureWordMatchBtn'), 
     trickyWordSortBtn: document.getElementById('trickyWordSortBtn'),
     canvasDrawingTracerBtn: document.getElementById('canvasDrawingTracerBtn'),
     scoreDisplay: document.getElementById('score'),
