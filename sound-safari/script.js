@@ -36,21 +36,20 @@ let gameState = {
   correctWord: '', correctEmoji: '',
   currentWords: [],
   mode: '',
-  // flashcards
-  flashcardMasterList: [], currentFlashcardIndex: 0,
-  currentFlashcardLetters: [], currentFlashcardSetName: '', flashcardsCompletedCount: 0, packSelectionType: '',
-  // picture-word
   pictureWordMatchWords: [], currentPictureWord: null,
-  // tricky sort
   trickySortWords: [],
-  // tracing
   currentTracingLetter: '', isDrawing: false, lastX: 0, lastY: 0, hasDrawnOnCanvas: false, canvasCtx: null, lettersToTrace: [],
-  // build
   userBuiltWord: [], usedLetterButtons: [], availableBuildWords: [], targetBuildWord: ''
 };
 
 // === UTILITIES ===
-function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 function updateScore() { elements.scoreDisplay.textContent = `Score: ${gameState.score}`; }
 function updateStars() { elements.starsDisplay.innerHTML = Array(gameState.stars).fill('⭐').map(s => `<span class="star">${s}</span>`).join(''); }
 function clearBoard() {
@@ -83,8 +82,8 @@ function setupBlendMode() {
     letterButton.addEventListener('click', () => { gameState.blended += l; elements.blendText.textContent = gameState.blended.split('').join(' '); letterButton.disabled = true; });
     elements.blendBox.appendChild(letterButton);
   });
-  const distractors = satpinWordsList.filter(w => w.word !== gameState.correctWord); const shuffledDistractors = shuffleArray(distractors).slice(0, 2);
-  const options = shuffleArray([chosenWordObject, ...shuffledDistractors]);
+  const distractors = shuffleArray(satpinWordsList.filter(w => w.word !== gameState.correctWord)).slice(0, 2);
+  const options = shuffleArray([chosenWordObject, ...distractors]);
   elements.wordChoices.innerHTML = '';
   options.forEach(opt => {
     const btn = document.createElement('button'); btn.className = 'word-choice'; btn.innerHTML = `${opt.word} <span class="emoji">${opt.emoji}</span>`;
@@ -154,10 +153,12 @@ function setupTrickyWordSorting() {
     el.addEventListener('dragstart', e => draggedTrickyWordElement = e.target); elements.trickyWordPool.appendChild(el);
   });
 }
-function handleDrop(e, type) {
+function handleDrop(e) {
   e.preventDefault(); if (!draggedTrickyWordElement) return;
-  const newEl = draggedTrickyWordElement.cloneNode(true); newEl.addEventListener('dragstart', ev => draggedTrickyWordElement = ev.target);
-  e.target.querySelector('.words-container').appendChild(newEl); draggedTrickyWordElement.remove();
+  const zone = e.currentTarget.querySelector('.words-container');
+  const newEl = draggedTrickyWordElement.cloneNode(true);
+  newEl.addEventListener('dragstart', ev => draggedTrickyWordElement = ev.target);
+  zone.appendChild(newEl); draggedTrickyWordElement.remove();
 }
 function checkTrickyWordSort() {
   const trickyWords = elements.trickyZone.querySelectorAll('.sortable-word'); const notTrickyWords = elements.notTrickyZone.querySelectorAll('.sortable-word');
@@ -197,8 +198,9 @@ function startGame(mode) {
 document.addEventListener('DOMContentLoaded', () => {
   elements = {
     menu: document.getElementById('menu'), gameArea: document.getElementById('gameArea'), homeBtn: document.getElementById('homeBtn'),
-    blendWordsBtn: document.getElementById('blendWordsBtn'), buildWordBtn: document.getElementById('buildWordBtn'), trickyWordsBtn: document.getElementById('trickyWordsBtn'),
-    pictureWordMatchBtn: document.getElementById('pictureWordMatchBtn'), trickyWordSortBtn: document.getElementById('trickyWordSortBtn'), canvasDrawingTracerBtn: document.getElementById('canvasDrawingTracerBtn'),
+    blendWordsBtn: document.getElementById('blendWordsBtn'), buildWordBtn: document.getElementById('buildWordBtn'),
+    pictureWordMatchBtn: document.getElementById('pictureWordMatchBtn'), trickyWordSortBtn: document.getElementById('trickyWordSortBtn'),
+    canvasDrawingTracerBtn: document.getElementById('canvasDrawingTracerBtn'),
     scoreDisplay: document.getElementById('score'), starsDisplay: document.getElementById('stars'), prompt: document.getElementById('prompt'),
     blendBox: document.getElementById('blendBox'), blendText: document.getElementById('blendText'), wordChoices: document.getElementById('wordChoices'),
     resetBtn: document.getElementById('resetBtn'), feedback: document.getElementById('feedback'), gameComplete: document.getElementById('gameComplete'),
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.trickyWordSortBtn.addEventListener('click', () => startGame('trickyWordSort'));
   elements.canvasDrawingTracerBtn.addEventListener('click', () => startGame('canvasDrawingTracer'));
   elements.homeBtn.addEventListener('click', goHome);
-  elements.trickyZone.addEventListener('dragover', e => e.preventDefault()); elements.trickyZone.addEventListener('drop', e => handleDrop(e, 'tricky'));
-  elements.notTrickyZone.addEventListener('dragover', e => e.preventDefault()); elements.notTrickyZone.addEventListener('drop', e => handleDrop(e, 'notTricky'));
+  elements.trickyZone.addEventListener('dragover', e => e.preventDefault()); elements.trickyZone.addEventListener('drop', handleDrop);
+  elements.notTrickyZone.addEventListener('dragover', e => e.preventDefault()); elements.notTrickyZone.addEventListener('drop', handleDrop);
   goHome();
 });
