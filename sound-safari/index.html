@@ -1,112 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sound Safari Game</title>
-  <!-- Google Fonts: Quicksand for a phonics-friendly, single-storey 'a' and clear 'l' -->
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-  <!-- Link to the external stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sound Safari Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <button id="homeBtn" class="home-button hidden">🏠 Home</button>
+  <button id="homeBtn" class="home-button hidden">🏠 Home</button>
 
-  <h1>🦁 Sound Safari</h1>
-  <div id="menu">
-    <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
-    <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
-    <button class="menu-button" id="buildWordBtn">🛠️ Build a Word</button>
-    <button class="menu-button" id="trickyWordsBtn">🤯 Tricky Words</button>
-    <button class="menu-button" id="pictureWordMatchBtn">🖼️ Picture-Word Match</button>
-    <button class="menu-button" id="trickyWordSortBtn">🧠 Tricky Word Sort</button>
-    <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button>
-  </div>
+  <h1>🦁 Sound Safari</h1>
+  <div id="menu">
+    <button class="menu-button" id="learnLettersBtn">🧩 Practice Phase 2 Sounds</button>
+    <button class="menu-button" id="blendWordsBtn">🔤 Blend SATPIN Words</button>
+    <button class="menu-button" id="buildWordBtn">🛠️ Build a Word</button>
+    <button class="menu-button" id="trickyWordsBtn">🤯 Tricky Words</button>
+    <button class="menu-button" id="pictureWordMatchBtn">🖼️ Picture-Word Match</button>
+    <button class="menu-button" id="trickyWordSortBtn">🧠 Tricky Word Sort</button>
+    <button class="menu-button" id="canvasDrawingTracerBtn">✍️ Trace Letters</button>
+  </div>
 
-  <div id="gameArea" class="hidden">
-    <div class="score" id="score">Score: 0</div>
-    <div class="stars" id="stars"></div>
-    <h2 id="prompt"></h2>
+  <div id="gameArea" class="hidden">
+    <div class="score" id="score">Score: 0</div>
+    <div class="stars" id="stars"></div>
+    <h2 id="prompt"></h2>
 
-    <div id="flashcardPackSelection" class="hidden">
-      <p id="packSelectionIntroText">Choose a Set:</p>
-      <div id="packButtons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
-      </div>
-      <button class="menu-button" id="backToMainMenuBtn">Back to Main Menu</button>
-    </div>
+    <div id="flashcardPackSelection" class="hidden">
+      <p id="packSelectionIntroText">Choose a Set:</p>
+      <div id="packButtons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+      </div>
+      <button class="menu-button" id="backToMainMenuBtn">Back to Main Menu</button>
+    </div>
 
-    <div id="flashcardContainer" class="hidden" data-mastered-unique-letters="">
-        <p id="flashcardLetter"></p>
-        <p id="flashcardPhonemeDescription"></p>
-        <div id="flashcardActions" class="flashcard-actions">
-            <button id="gotItBtn">✅ Got It!</button>
-            <button id="needPracticeBtn" class="need-practice">❌ Need Practice</button>
-        </div>
-        <div class="flashcard-nav-buttons hidden">
-        </div>
-        <div id="flashcardProgress"></div>
-    </div>
+    <div id="flashcardContainer" class="hidden" data-mastered-unique-letters="">
+        <p id="flashcardLetter"></p>
+        <p id="flashcardPhonemeDescription"></p>
+        <div id="flashcardAudioActions"></div>         <div id="flashcardActions" class="flashcard-actions">
+            <button id="gotItBtn">✅ Got It!</button>
+            <button id="needPracticeBtn" class="need-practice">❌ Need Practice</button>
+        </div>
+        <div class="flashcard-nav-buttons hidden">
+        </div>
+        <div id="flashcardProgress"></div>
+    </div>
 
-    <div class="blend-box" id="blendBox"></div>
-    <div class="blended-word" id="blendText"></div>
+    <div class="blend-box" id="blendBox"></div>
+    <div class="blended-word" id="blendText"></div>
 
-    <div id="buildWordTargetFlashcard" class="hidden"></div>
+    <div id="buildWordTargetFlashcard" class="hidden"></div>
 
-    <div id="buildWordDisplay" class="hidden"></div>
-    <div id="letterPool" class="hidden"></div>
-    <div class="build-actions hidden">
-        <button id="clearBuildBtn">Clear</button>
-        <button id="deleteBuildBtn">⬅️ Delete</button>
-        <button id="checkBuildBtn">Check</button>
-    </div>
+    <div id="buildWordDisplay" class="hidden"></div>
+    <div id="letterPool" class="hidden"></div>
+    <div class="build-actions hidden">
+        <button id="clearBuildBtn">Clear</button>
+        <button id="deleteBuildBtn">⬅️ Delete</button>
+        <button id="checkBuildBtn">Check</button>
+    </div>
 
-    <div id="pictureWordMatchingSection" class="hidden">
-        <!-- Removed initial empty src attribute. The src will be set dynamically by JavaScript. -->
-        <img id="pictureWordImage" alt="Image to match" class="hidden" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNGRjAwMDAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjIwIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbm5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+RXJyb3I8L3RleHQ+PC9zdmc+'; console.error('Primary image failed to load:', this.src);">
-        <div id="pictureWordChoices"></div>
-        <button class="reset-button" id="pictureWordResetBtn">🔄 Reset Choices</button>
-    </div>
+    <div id="pictureWordMatchingSection" class="hidden">
+                <img id="pictureWordImage" alt="Image to match" class="hidden" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNGRjAwMDAiLz48dGV4dCB4PSI1MCUiIHk9PSI1MCUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+RXJyb3I8L3RleHQ+PC9zdmc+'; console.error('Primary image failed to load:', this.src);">
+        <div id="pictureWordAudioActions"></div>         <div id="pictureWordChoices"></div>
+        <button class="reset-button" id="pictureWordResetBtn">🔄 Reset Choices</button>
+    </div>
 
-    <div id="trickyWordSortingSection" class="hidden">
-        <div class="sort-zones-container">
-            <div id="trickyZone" class="sort-zone">
-                <h3>Tricky Words 🤯</h3>
-                <div class="words-container"></div>
-            </div>
-            <div id="notTrickyZone" class="sort-zone">
-                <h3>Not Tricky Words ✅</h3>
-                <div class="words-container"></div>
-            </div>
-        </div>
-        <div id="trickyWordPool" class="word-pool-container"></div>
-        <p id="trickySortFeedback" class="sort-feedback"></p>
-        <div class="sort-actions">
-            <button class="action-buttons" id="trickySortResetBtn">🔄 Reset Sort</button>
-            <button class="action-buttons" id="trickySortCheckBtn">Check My Sort</button>
-            <button class="action-buttons" id="newTrickySortResetBtn">Reset Game</button>
-        </div>
-    </div>
+    <div id="trickyWordSortingSection" class="hidden">
+        <div class="sort-zones-container">
+            <div id="trickyZone" class="sort-zone">
+                <h3>Tricky Words 🤯</h3>
+                <div class="words-container"></div>
+            </div>
+            <div id="notTrickyZone" class="sort-zone">
+                <h3>Not Tricky Words ✅</h3>
+                <div class="words-container"></div>
+            </div>
+        </div>
+        <div id="trickyWordPool" class="word-pool-container"></div>
+        <p id="trickySortFeedback" class="sort-feedback"></p>
+        <div class="sort-actions">
+            <button class="action-buttons" id="trickySortResetBtn">🔄 Reset Sort</button>
+            <button class="action-buttons" id="trickySortCheckBtn">Check My Sort</button>
+            <button class="action-buttons" id="newTrickySortResetBtn">Reset Game</button>
+        </div>
+    </div>
 
-    <div id="canvasDrawingTracerSection" class="hidden">
-        <canvas id="letterCanvas"></canvas>
-        <div class="canvas-actions">
-            <button id="clearCanvasBtn">🗑️ Clear Drawing</button>
-            <button id="nextLetterBtn">➡️ Next Letter</button>
-        </div>
-    </div>
+    <div id="canvasDrawingTracerSection" class="hidden">
+        <canvas id="letterCanvas"></canvas>
+        <div class="canvas-actions">
+            <button id="clearCanvasBtn">🗑️ Clear Drawing</button>
+            <button id="nextLetterBtn">➡️ Next Letter</button>
+        </div>
+    </div>
 
-    <div class="choices" id="wordChoices"></div>
-    <button class="reset-button" id="resetBtn">🔄 Reset</button>
-    <div class="feedback" id="feedback"></div>
-  </div>
+    <div class="choices" id="wordChoices"></div>
+    <button class="reset-button" id="resetBtn">🔄 Reset</button>
+    <div class="feedback" id="feedback"></div>
+  </div>
 
-  <div id="gameComplete" class="hidden">
-    <h2>🏆 Well done!</h2>
-    <p id="finalMessage"></p>
-    <button class="play-again" id="playAgainBtn">Play Again</button>
-  </div>
+  <div id="gameComplete" class="hidden">
+    <h2>🏆 Well done!</h2>
+    <p id="finalMessage"></p>
+    <button class="play-again" id="playAgainBtn">Play Again</button>
+  </div>
 
-  <!-- Link to the external JavaScript file -->
-  <script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
