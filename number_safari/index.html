@@ -6,7 +6,6 @@
   <title>Number Safari: Math Adventures for Kids!</title>
   <!-- Google Fonts: Quicksand -->
   <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700&display=swap" rel="stylesheet">
-  <!-- Your main stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,8 +25,12 @@
     <!-- Counting Game Screen -->
     <div id="counting-game" class="screen hidden">
       <h2>Counting Critters!</h2>
-      <p id="counting-instruction-text">How many <span id="counting-object-name" style="color:#E91E63;"></span> can you find and count?</p>
-      <p class="game-status-message">Streak: <span id="counting-streak-display"></span></p>
+      <p id="counting-instruction-text">
+        How many <span id="counting-object-name" style="color:#E91E63;"></span> can you find and count?
+      </p>
+      <p class="game-status-message">
+        Streak: <span id="counting-streak-display"></span>
+      </p>
       <div id="counting-game-area" class="counting-area"></div>
       <div id="counting-number-choices" class="number-choices-area hidden"></div>
       <p id="counting-feedback-message" class="feedback-message"></p>
@@ -38,12 +41,13 @@
 
     <!-- Patterns Game Screen -->
     <div id="patterns-game" class="screen hidden">
-
       <button class="back-to-hub">Back to Safari Map</button>
       <h2>Pattern Parade!</h2>
       <div id="patternsCounter" style="margin-bottom: 8px; color: #5B8DEF; font-weight: 700;"></div>
       <div class="instructions">
-      <p id="patterns-instruction-text"><strong>Drag the correct shape into each empty box to complete the pattern!</strong></p>
+        <p id="patterns-instruction-text">
+          <strong>Drag the correct shape into each empty box to complete the pattern!</strong>
+        </p>
         <button id="patterns-start-game">Start Parade!</button>
       </div>
       <div class="game-area pattern-area">
@@ -63,19 +67,19 @@
       <button class="back-to-hub">Back to Safari Map</button>
       <h2>Number Recognition!</h2>
       <div class="instructions">
-        <p id="recognition-instruction-text">Click on the number <span id="recognition-target-number-text"></span>!</p>
+        <p id="recognition-instruction-text">
+          Click on the number <span id="recognition-target-number-text"></span>!
+        </p>
         <button id="recognition-start-game">Start Matching!</button>
       </div>
-      <div class="game-area recognition-area">
-        <!-- Number choices will be placed here by JavaScript -->
-      </div>
+      <div class="game-area recognition-area"></div>
       <div class="feedback">
         <p id="recognition-feedback-message"></p>
         <button id="recognition-next-round" class="hidden">Next Number!</button>
       </div>
     </div>
 
-    <!-- Number Tracing/Match Game Screen (Simplified) -->
+    <!-- Number Tracing/Match Game Screen -->
     <div id="tracing-game" class="screen hidden">
       <button class="back-to-hub">Back to Safari Map</button>
       <h2>Number Match!</h2>
@@ -84,12 +88,8 @@
         <button id="tracing-start-game">Start Matching!</button>
       </div>
       <div class="game-area tracing-area">
-        <div class="target-number-shape">
-          <!-- Image of number shape will go here -->
-        </div>
-        <div class="tracing-choices">
-          <!-- Draggable number images will go here -->
-        </div>
+        <div class="target-number-shape"></div>
+        <div class="tracing-choices"></div>
       </div>
       <div class="feedback">
         <p id="tracing-feedback-message"></p>
