@@ -1,71 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Number Safari</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Safari: Math Adventures for Kids!</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
-    <!-- Activity Hub -->
-    <div id="activity-hub" class="active">
-      <h1>🦁 Number Safari</h1>
+    <!-- Main Activity Selection Hub -->
+    <div id="activity-hub" class="screen active">
+      <h1>Welcome to Number Safari!</h1>
+      <p>Choose your math adventure:</p>
       <div class="activity-buttons">
-        <button data-activity="counting">🎲 Counting Game</button>
-        <button data-activity="patterns">🔄 Patterns</button>
-        <button data-activity="recognition">🔢 Number Recognition</button>
-        <button data-activity="tracing">✍️ Match & Trace</button>
+        <button id="btn-counting" data-activity="counting">Count the Critters!</button>
+        <button id="btn-patterns" data-activity="patterns">Pattern Parade!</button>
+        <button id="btn-recognition" data-activity="recognition">Number Recognition!</button>
+        <button id="btn-tracing" data-activity="tracing">Number Match! (Tracing)</button>
       </div>
     </div>
 
-    <!-- Counting Game -->
-    <div id="counting-game" class="hidden">
-      <button class="back-to-hub">⬅ Back</button>
-      <h2 id="counting-instruction-text">How many objects can you count?</h2>
-      <span id="counting-streak-display"></span>
-      <div class="counting-area"></div>
-      <div id="counting-number-choices" class="hidden"></div>
-      <p id="counting-feedback-message"></p>
-      <button id="counting-start-game">Start Game</button>
-      <button id="counting-next-round" class="hidden">Next Round</button>
-    </div>
+    <!-- Counting Game Screen -->
 
-    <!-- Patterns Game -->
-    <div id="patterns-game" class="hidden">
-      <button class="back-to-hub">⬅ Back</button>
-      <h2 id="patterns-instruction-text">Complete the pattern!</h2>
-      <p id="patternsCounter">Patterns completed: 0</p>
-      <div class="pattern-area"></div>
-      <div class="choices-area"></div>
-      <p id="patterns-feedback-message"></p>
-      <button id="patterns-start-game">Start Game</button>
-      <button id="patterns-next-round" class="hidden">Next Round</button>
-    </div>
+<div id="counting-game" class="screen hidden">
+    <h2>Counting Critters!</h2>
+    <p id="counting-instruction-text">How many <span id="counting-object-name" style="color:#E91E63;"></span> can you find and count?</p>
 
-    <!-- Number Recognition Game -->
-    <div id="recognition-game" class="hidden">
-      <button class="back-to-hub">⬅ Back</button>
-      <h2 id="recognition-instruction-text">Find the number!</h2>
-      <p>Find: <span id="recognition-target-number-text"></span></p>
-      <div class="recognition-area"></div>
-      <p id="recognition-feedback-message"></p>
-      <button id="recognition-start-game">Start Game</button>
-      <button id="recognition-next-round" class="hidden">Next Round</button>
-    </div>
+    <p class="game-status-message">Streak: <span id="counting-streak-display"></span></p>
 
-    <!-- Number Tracing Game -->
-    <div id="tracing-game" class="hidden">
-      <button class="back-to-hub">⬅ Back</button>
-      <h2 id="tracing-instruction-text">Match the shape!</h2>
-      <div class="tracing-area">
-        <div class="target-number-shape"></div>
-        <div class="tracing-choices"></div>
+    <div id="counting-game-area" class="counting-area">
+        </div>
+
+    <div id="counting-number-choices" class="number-choices-area hidden">
+        </div>
+
+    <p id="counting-feedback-message" class="feedback-message"></p>
+    <button id="counting-start-game" class="start-game-button">Start Counting!</button>
+    <button id="counting-next-round" class="next-round-button hidden">Next Round</button>
+    <button class="back-to-hub">Back to Safari Map</button>
+</div>
+
+
+    <!-- Patterns Game Screen -->
+    <div id="patternsCounter"></div>
+    <div id="patterns-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Pattern Parade!</h2>
+      <div class="instructions">
+        <p id="patterns-instruction-text">Can you complete the pattern?</p>
+        <button id="patterns-start-game">Start Parade!</button>
       </div>
-      <p id="tracing-feedback-message"></p>
-      <button id="tracing-start-game">Start Game</button>
-      <button id="tracing-next-round" class="hidden">Next Round</button>
+      <div class="game-area pattern-area">
+        <!-- Pattern elements and empty slots go here -->
+      </div>
+      <div class="choices-area">
+        <!-- Draggable choices go here -->
+      </div>
+      <div class="feedback">
+        <p id="patterns-feedback-message"></p>
+        <button id="patterns-next-round" class="hidden">Next Pattern!</button>
+      </div>
+    </div>
+
+    <!-- Number Recognition Game Screen -->
+    <div id="recognition-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Number Recognition!</h2>
+      <div class="instructions">
+        <p id="recognition-instruction-text">Click on the number <span id="recognition-target-number-text"></span>!</p>
+        <button id="recognition-start-game">Start Matching!</button>
+      </div>
+      <div class="game-area recognition-area">
+        <!-- Number choices will be placed here by JavaScript -->
+      </div>
+      <div class="feedback">
+        <p id="recognition-feedback-message"></p>
+        <button id="recognition-next-round" class="hidden">Next Number!</button>
+      </div>
+    </div>
+
+    <!-- Number Tracing/Match Game Screen (Simplified) -->
+    <div id="tracing-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <h2>Number Match!</h2>
+      <div class="instructions">
+        <p id="tracing-instruction-text">Match the number to its shape!</p>
+        <button id="tracing-start-game">Start Matching!</button>
+      </div>
+      <div class="game-area tracing-area">
+        <div class="target-number-shape">
+          <!-- Image of number shape will go here -->
+        </div>
+        <div class="tracing-choices">
+          <!-- Draggable number images will go here -->
+        </div>
+      </div>
+      <div class="feedback">
+        <p id="tracing-feedback-message"></p>
+        <button id="tracing-next-round" class="hidden">Next Match!</button>
+      </div>
     </div>
   </div>
 
