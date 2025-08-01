@@ -499,7 +499,6 @@ const countingGame = {
             e.currentTarget.innerHTML = '';
             e.currentTarget.appendChild(img);
             e.currentTarget.classList.add('filled');
-            draggedImg.style.visibility = 'hidden'; // Remove from choices visually
             patternsGame.filledSlots.add(slotIndex);
             if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
             patternsFeedbackMessage.textContent = 'Great!';
