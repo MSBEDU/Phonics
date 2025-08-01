@@ -368,13 +368,14 @@ const countingGame = {
     }
 };
 
-  // --- Patterns Game Logic ---
-const patternsGame = {
+        // --- pattern parade Game Logic ---
+
+  const patternsGame = {
     currentPattern: [],
     patternSolution: [],
     emptySlots: [],
     filledSlots: new Set(),
-    selectedAsset: null,   // NEW: Holds the selected asset for tap-to-place
+    selectedAsset: null,
     patternCounter: 0,
 
     startGame() {
@@ -388,6 +389,7 @@ const patternsGame = {
         this.filledSlots.clear();
         this.selectedAsset = null;
 
+        // Generate the pattern and solution
         const { currentPattern: initialPattern, solution, uniqueItemsUsed } = this.generatePattern();
         this.patternSolution = solution;
 
@@ -398,30 +400,33 @@ const patternsGame = {
             const img = document.createElement('img');
             img.src = item.src;
             img.alt = item.name;
+            img.style.width = "44px";   // Force consistent size!
+            img.style.height = "44px";
             patternItemDiv.appendChild(img);
             patternsPatternArea.appendChild(patternItemDiv);
         });
 
-        // Create empty slots for the missing parts
+        // Create empty slots for missing parts
         for (let i = 0; i < this.patternSolution.length; i++) {
             const emptySlotDiv = document.createElement('div');
             emptySlotDiv.classList.add('pattern-item', 'empty');
             emptySlotDiv.dataset.index = i;
+            emptySlotDiv.style.width = "60px";   // Style for slots too!
+            emptySlotDiv.style.height = "60px";
+            // Fix: use arrow function so "this" stays bound
             emptySlotDiv.addEventListener('click', (e) => this.handleTapDrop(e));
             patternsPatternArea.appendChild(emptySlotDiv);
             this.emptySlots.push(emptySlotDiv);
         }
 
-        // Populate choices area
+        // Choices pool (real + distractors)
         let choicesPool = [...uniqueItemsUsed];
         const allAvailableAssets = [...assets.images.patterns];
         shuffleArray(allAvailableAssets);
         const distractorsNeeded = Math.min(3, allAvailableAssets.length - uniqueItemsUsed.length);
-        for(let i = 0; i < distractorsNeeded; i++) {
+        for (let i = 0; i < distractorsNeeded; i++) {
             const distractor = allAvailableAssets.find(a => !uniqueItemsUsed.includes(a) && !choicesPool.includes(a));
-            if (distractor) {
-                choicesPool.push(distractor);
-            }
+            if (distractor) choicesPool.push(distractor);
         }
         shuffleArray(choicesPool);
 
@@ -436,10 +441,9 @@ const patternsGame = {
         const availableImages = [...assets.images.patterns];
         shuffleArray(availableImages);
 
-        const patternLength = 6; // always six squares
-        const numFilled = 4;     // first 4 are filled
-        const numMissing = patternLength - numFilled; // = 2
-
+        const patternLength = 6;
+        const numFilled = 4;
+        const numMissing = patternLength - numFilled;
         let pattern = [];
         let uniqueItemsUsed = [];
         const numPatternElements = chosenType === 'ABC' ? 3 : 2;
@@ -447,7 +451,6 @@ const patternsGame = {
         for (let i = 0; i < numPatternElements; i++) {
             uniqueItemsUsed.push(availableImages[i]);
         }
-
         for (let i = 0; i < patternLength; i++) {
             let item;
             if (chosenType === 'ABAB') {
@@ -459,32 +462,30 @@ const patternsGame = {
             }
             pattern.push(item);
         }
-
-        const currentPatternForDisplay = pattern.slice(0, numFilled); // show first 4
-        const solution = pattern.slice(numFilled, patternLength);     // solve last 2
-
+        const currentPatternForDisplay = pattern.slice(0, numFilled);
+        const solution = pattern.slice(numFilled, patternLength);
         return { currentPattern: currentPatternForDisplay, solution, uniqueItemsUsed };
     },
 
-    // NEW: Create a tap-selectable item instead of a draggable
     createTapSelectableItem(asset) {
         const img = document.createElement('img');
         img.src = asset.src;
-        img.classList.add('draggable-choice'); // You can rename to 'selectable-choice' if you prefer
+        img.classList.add('draggable-choice');
         img.dataset.id = asset.id;
+        img.style.width = "48px";   // Add explicit width!
+        img.style.height = "48px";
+        img.style.margin = "0 8px";
+        img.style.cursor = "pointer";
 
         img.addEventListener('click', () => {
-            // Deselect any other
             document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
             img.classList.add('selected');
             this.selectedAsset = asset;
         });
-
         return img;
     },
 
     handleTapDrop(e) {
-        // If nothing is selected, do nothing
         if (!this.selectedAsset) return;
 
         const targetSlotIndex = parseInt(e.currentTarget.dataset.index);
@@ -492,20 +493,24 @@ const patternsGame = {
         const droppedElementId = this.selectedAsset.id;
 
         if (droppedElementId === correctElementId && !this.filledSlots.has(targetSlotIndex)) {
-            // Place image
+            // Place image in slot
             const img = document.createElement('img');
             img.src = this.selectedAsset.src;
             img.alt = this.selectedAsset.name;
+            img.style.width = "44px";
+            img.style.height = "44px";
             e.currentTarget.innerHTML = '';
             e.currentTarget.appendChild(img);
             e.currentTarget.classList.remove('empty');
-            e.currentTarget.removeEventListener('click', this.handleTapDrop); // Prevent double placing
+            e.currentTarget.style.background = "#eaf7f7"; // Visual feedback
+
+            // Remove further clicks from this slot (prevents repeat drop)
+            e.currentTarget.replaceWith(e.currentTarget.cloneNode(true));
 
             this.filledSlots.add(targetSlotIndex);
 
             if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
             patternsFeedbackMessage.textContent = 'Great!';
-            // Deselect
             document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
             this.selectedAsset = null;
 
@@ -514,8 +519,6 @@ const patternsGame = {
                     patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
                     if (assets.audio && assets.audio.success) assets.audio.success.cloneNode(true).play();
                     patternsNextRoundButton.classList.remove('hidden');
-
-                    // Increment pattern counter and update
                     this.patternCounter++;
                     document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
                     if (this.patternCounter === 10) {
@@ -529,12 +532,12 @@ const patternsGame = {
             patternsFeedbackMessage.textContent = 'Oops! That doesn\'t fit there. Try again!';
             if (assets.audio && assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
             setTimeout(() => patternsFeedbackMessage.textContent = '', 1500);
-            // Deselect wrong choice
             document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
             this.selectedAsset = null;
         }
     }
 };
+
 
     // --- Number Recognition Game Logic ---
     const numberRecognitionGame = {
