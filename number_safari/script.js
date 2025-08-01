@@ -43,6 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const tracingFeedbackMessage = document.getElementById('tracing-feedback-message');
     const tracingNextRoundButton = document.getElementById('tracing-next-round');
 
+// Hide all screens except the hub
+document.querySelectorAll('.screen').forEach(el => {
+  if (el !== activityHub) el.classList.add('hidden');
+  else el.classList.add('active');
+});
+
+    
     // --- Assets ---
     const assets = {
         images: {
