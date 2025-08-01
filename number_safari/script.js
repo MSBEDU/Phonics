@@ -370,12 +370,11 @@ const countingGame = {
 
         // --- pattern parade Game Logic ---
 
-  const patternsGame = {
+ const patternsGame = {
     currentPattern: [],
     patternSolution: [],
     emptySlots: [],
     filledSlots: new Set(),
-    selectedAsset: null,
     patternCounter: 0,
 
     startGame() {
@@ -387,39 +386,33 @@ const countingGame = {
         document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
         this.emptySlots = [];
         this.filledSlots.clear();
-        this.selectedAsset = null;
 
-        // Generate the pattern and solution
         const { currentPattern: initialPattern, solution, uniqueItemsUsed } = this.generatePattern();
         this.patternSolution = solution;
 
-        // Display initial pattern elements
+        // Horizontal pattern row
         initialPattern.forEach(item => {
             const patternItemDiv = document.createElement('div');
             patternItemDiv.classList.add('pattern-item');
             const img = document.createElement('img');
             img.src = item.src;
             img.alt = item.name;
-            img.style.width = "44px";   // Force consistent size!
-            img.style.height = "44px";
             patternItemDiv.appendChild(img);
             patternsPatternArea.appendChild(patternItemDiv);
         });
 
-        // Create empty slots for missing parts
+        // Create empty slots for missing parts (as drop targets)
         for (let i = 0; i < this.patternSolution.length; i++) {
             const emptySlotDiv = document.createElement('div');
             emptySlotDiv.classList.add('pattern-item', 'empty');
             emptySlotDiv.dataset.index = i;
-            emptySlotDiv.style.width = "60px";   // Style for slots too!
-            emptySlotDiv.style.height = "60px";
-            // Fix: use arrow function so "this" stays bound
-            emptySlotDiv.addEventListener('click', (e) => this.handleTapDrop(e));
+            emptySlotDiv.addEventListener('dragover', this.handleDragOver);
+            emptySlotDiv.addEventListener('drop', (e) => this.handleDrop(e));
             patternsPatternArea.appendChild(emptySlotDiv);
             this.emptySlots.push(emptySlotDiv);
         }
 
-        // Choices pool (real + distractors)
+        // Create draggable choices
         let choicesPool = [...uniqueItemsUsed];
         const allAvailableAssets = [...assets.images.patterns];
         shuffleArray(allAvailableAssets);
@@ -431,7 +424,19 @@ const countingGame = {
         shuffleArray(choicesPool);
 
         choicesPool.forEach(asset => {
-            patternsChoicesArea.appendChild(this.createTapSelectableItem(asset));
+            const img = document.createElement('img');
+            img.src = asset.src;
+            img.classList.add('draggable-choice');
+            img.setAttribute('draggable', 'true');
+            img.dataset.id = asset.id;
+            img.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', asset.id);
+                setTimeout(() => img.classList.add('dragging'), 0);
+            });
+            img.addEventListener('dragend', () => {
+                img.classList.remove('dragging');
+            });
+            patternsChoicesArea.appendChild(img);
         });
     },
 
@@ -444,6 +449,7 @@ const countingGame = {
         const patternLength = 6;
         const numFilled = 4;
         const numMissing = patternLength - numFilled;
+
         let pattern = [];
         let uniqueItemsUsed = [];
         const numPatternElements = chosenType === 'ABC' ? 3 : 2;
@@ -451,77 +457,61 @@ const countingGame = {
         for (let i = 0; i < numPatternElements; i++) {
             uniqueItemsUsed.push(availableImages[i]);
         }
+
         for (let i = 0; i < patternLength; i++) {
             let item;
-            if (chosenType === 'ABAB') {
-                item = uniqueItemsUsed[i % 2];
-            } else if (chosenType === 'AABB') {
-                item = uniqueItemsUsed[Math.floor(i / 2) % 2];
-            } else if (chosenType === 'ABC') {
-                item = uniqueItemsUsed[i % 3];
-            }
+            if (chosenType === 'ABAB') item = uniqueItemsUsed[i % 2];
+            else if (chosenType === 'AABB') item = uniqueItemsUsed[Math.floor(i / 2) % 2];
+            else if (chosenType === 'ABC') item = uniqueItemsUsed[i % 3];
             pattern.push(item);
         }
-        const currentPatternForDisplay = pattern.slice(0, numFilled);
-        const solution = pattern.slice(numFilled, patternLength);
-        return { currentPattern: currentPatternForDisplay, solution, uniqueItemsUsed };
+
+        return {
+            currentPattern: pattern.slice(0, numFilled),
+            solution: pattern.slice(numFilled, patternLength),
+            uniqueItemsUsed
+        };
     },
 
-    createTapSelectableItem(asset) {
-        const img = document.createElement('img');
-        img.src = asset.src;
-        img.classList.add('draggable-choice');
-        img.dataset.id = asset.id;
-        img.style.width = "48px";   // Add explicit width!
-        img.style.height = "48px";
-        img.style.margin = "0 8px";
-        img.style.cursor = "pointer";
-
-        img.addEventListener('click', () => {
-            document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
-            img.classList.add('selected');
-            this.selectedAsset = asset;
-        });
-        return img;
+    handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drop-hover');
     },
 
-    handleTapDrop(e) {
-        if (!this.selectedAsset) return;
+    handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drop-hover');
+        if (e.currentTarget.querySelector('img')) return; // Already filled
 
-        const targetSlotIndex = parseInt(e.currentTarget.dataset.index);
-        const correctElementId = this.patternSolution[targetSlotIndex].id;
-        const droppedElementId = this.selectedAsset.id;
+        const droppedId = e.dataTransfer.getData('text/plain');
+        const slotIndex = parseInt(e.currentTarget.dataset.index);
+        const correctId = patternsGame.patternSolution[slotIndex].id;
 
-        if (droppedElementId === correctElementId && !this.filledSlots.has(targetSlotIndex)) {
-            // Place image in slot
+        // Find dragged element in choices area
+        const draggedImg = patternsChoicesArea.querySelector(`[data-id="${droppedId}"]`);
+        if (!draggedImg) return;
+
+        if (droppedId === correctId) {
+            // Correct!
             const img = document.createElement('img');
-            img.src = this.selectedAsset.src;
-            img.alt = this.selectedAsset.name;
-            img.style.width = "44px";
-            img.style.height = "44px";
+            img.src = draggedImg.src;
+            img.alt = draggedImg.alt;
             e.currentTarget.innerHTML = '';
             e.currentTarget.appendChild(img);
-            e.currentTarget.classList.remove('empty');
-            e.currentTarget.style.background = "#eaf7f7"; // Visual feedback
-
-            // Remove further clicks from this slot (prevents repeat drop)
-            e.currentTarget.replaceWith(e.currentTarget.cloneNode(true));
-
-            this.filledSlots.add(targetSlotIndex);
-
+            e.currentTarget.classList.add('filled');
+            draggedImg.style.visibility = 'hidden'; // Remove from choices visually
+            patternsGame.filledSlots.add(slotIndex);
             if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
             patternsFeedbackMessage.textContent = 'Great!';
-            document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
-            this.selectedAsset = null;
-
-            if (this.filledSlots.size === this.patternSolution.length) {
+            // Check for completion
+            if (patternsGame.filledSlots.size === patternsGame.patternSolution.length) {
                 setTimeout(() => {
                     patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
                     if (assets.audio && assets.audio.success) assets.audio.success.cloneNode(true).play();
                     patternsNextRoundButton.classList.remove('hidden');
-                    this.patternCounter++;
-                    document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
-                    if (this.patternCounter === 10) {
+                    patternsGame.patternCounter++;
+                    document.getElementById('patternsCounter').textContent = `Patterns completed: ${patternsGame.patternCounter}`;
+                    if (patternsGame.patternCounter === 10) {
                         setTimeout(() => {
                             alert('Wow! You finished 10 patterns!');
                         }, 600);
@@ -529,11 +519,14 @@ const countingGame = {
                 }, 500);
             }
         } else {
-            patternsFeedbackMessage.textContent = 'Oops! That doesn\'t fit there. Try again!';
+            // Incorrect!
+            patternsFeedbackMessage.textContent = 'Oops! Try again!';
             if (assets.audio && assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
-            setTimeout(() => patternsFeedbackMessage.textContent = '', 1500);
-            document.querySelectorAll('.draggable-choice.selected').forEach(el => el.classList.remove('selected'));
-            this.selectedAsset = null;
+            e.currentTarget.classList.add('shake');
+            setTimeout(() => {
+                e.currentTarget.classList.remove('shake');
+                patternsFeedbackMessage.textContent = '';
+            }, 800);
         }
     }
 };
