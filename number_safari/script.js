@@ -3,15 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const appContainer = document.querySelector('.app-container');
     const screens = document.querySelectorAll('.screen');
     const activityHub = document.getElementById('activity-hub');
-    const activityButtons = document.querySelectorAll('.activity-buttons button');
     const backToHubButtons = document.querySelectorAll('.back-to-hub');
+    const activityButtons = document.querySelectorAll('.activity-buttons button');
 
     // Counting Game Elements
     const countingGameScreen = document.getElementById('counting-game');
     const countingInstructionText = document.getElementById('counting-instruction-text');
     const countingObjectNameSpan = document.getElementById('counting-object-name');
     const countingStartGameButton = document.getElementById('counting-start-game');
-    const countingGameArea = document.querySelector('.counting-area');
+    const countingGameArea = document.getElementById('counting-game-area');
     const countingFeedbackMessage = document.getElementById('counting-feedback-message');
     const countingNextRoundButton = document.getElementById('counting-next-round');
     const countingNumberChoices = document.getElementById('counting-number-choices');
@@ -24,25 +24,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const patternsChoicesArea = document.querySelector('.choices-area');
     const patternsFeedbackMessage = document.getElementById('patterns-feedback-message');
     const patternsNextRoundButton = document.getElementById('patterns-next-round');
+    const patternsCounter = document.getElementById('patternsCounter');
 
     // Number Recognition Game Elements
     const recognitionGameScreen = document.getElementById('recognition-game');
+    const recognitionInstructionText = document.getElementById('recognition-instruction-text');
+    const recognitionTargetNumberText = document.getElementById('recognition-target-number-text');
     const recognitionStartGameButton = document.getElementById('recognition-start-game');
     const recognitionGameArea = document.querySelector('.recognition-area');
-    const recognitionTargetNumberText = document.getElementById('recognition-target-number-text');
     const recognitionFeedbackMessage = document.getElementById('recognition-feedback-message');
     const recognitionNextRoundButton = document.getElementById('recognition-next-round');
-    const recognitionInstructionText = document.getElementById('recognition-instruction-text');
 
     // Number Tracing/Match Game Elements
     const tracingGameScreen = document.getElementById('tracing-game');
     const tracingStartGameButton = document.getElementById('tracing-start-game');
-    const tracingGameArea = document.querySelector('.tracing-area');
     const tracingTargetNumberShape = document.querySelector('.target-number-shape');
     const tracingChoicesArea = document.querySelector('.tracing-choices');
     const tracingFeedbackMessage = document.getElementById('tracing-feedback-message');
     const tracingNextRoundButton = document.getElementById('tracing-next-round');
-    const tracingInstructionText = document.getElementById('tracing-instruction-text');
 
     // --- Assets ---
     const assets = {
@@ -100,14 +99,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Game Manager ---
+ // --- Utility Functions ---
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // --- Screen Management ---
+    function hideAllScreens() {
+        screens.forEach(screen => {
+            screen.classList.add('hidden');
+            screen.classList.remove('active');
+        });
+    }
     const gameManager = {
-        currentScreen: activityHub,
         showScreen(screenElement, onShown) {
             hideAllScreens();
             screenElement.classList.remove('hidden');
             screenElement.classList.add('active');
-            this.currentScreen = screenElement;
             if (typeof onShown === "function") onShown();
         },
         initActivity(activityName) {
@@ -135,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     break;
                 default:
-                    console.error('Unknown activity:', activityName);
+                    this.showScreen(activityHub);
                     break;
             }
         },
@@ -143,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.showScreen(activityHub);
         }
     };
-
     // --- Counting Game Logic ---
     const countingGame = {
         currentCount: 0,
