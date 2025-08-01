@@ -3,86 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Number Safari Game</title>
-  <!-- Google Fonts: Quicksand for kid-friendly numerals -->
+  <title>Number Safari</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <button id="homeBtn" class="home-button hidden">🏠 Home</button>
-
-  <h1>🦁 Number Safari</h1>
-  <div id="menu">
-    <button class="menu-button" id="learnNumbersBtn">🔢 Learn Numbers</button>
-    <button class="menu-button" id="countingGameBtn">🎲 Counting Game</button>
-    <button class="menu-button" id="matchNumbersBtn">🖼️ Number Match</button>
-    <button class="menu-button" id="orderNumbersBtn">📈 Order the Numbers</button>
-    <button class="menu-button" id="traceNumbersBtn">✍️ Trace Numbers</button>
-  </div>
-
-  <div id="gameArea" class="hidden">
-    <div class="score" id="score">Score: 0</div>
-    <div class="stars" id="stars"></div>
-    <h2 id="prompt"></h2>
-
-    <!-- Learn Numbers Flashcards -->
-    <div id="flashcardPackSelection" class="hidden">
-      <p id="packSelectionIntroText">Choose a Number Set:</p>
-      <div id="packButtons" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+  <div class="app-container">
+    <!-- Activity Hub -->
+    <div id="activity-hub" class="active">
+      <h1>🦁 Number Safari</h1>
+      <div class="activity-buttons">
+        <button data-activity="counting">🎲 Counting Game</button>
+        <button data-activity="patterns">🔄 Patterns</button>
+        <button data-activity="recognition">🔢 Number Recognition</button>
+        <button data-activity="tracing">✍️ Match & Trace</button>
       </div>
-      <button class="menu-button" id="backToMainMenuBtn">Back to Main Menu</button>
-    </div>
-
-    <div id="flashcardContainer" class="hidden">
-        <p id="flashcardNumber"></p>
-        <p id="flashcardDescription"></p>
-        <div class="flashcard-actions">
-            <button id="gotItBtn">✅ Got It!</button>
-            <button id="needPracticeBtn" class="need-practice">❌ Need Practice</button>
-        </div>
-        <div id="flashcardProgress"></div>
     </div>
 
     <!-- Counting Game -->
-    <div id="countingGameSection" class="hidden">
-      <p id="countingPrompt"></p>
-      <div id="countingObjects"></div>
-      <div id="countingChoices" class="choices"></div>
+    <div id="counting-game" class="hidden">
+      <button class="back-to-hub">⬅ Back</button>
+      <h2 id="counting-instruction-text">How many objects can you count?</h2>
+      <span id="counting-streak-display"></span>
+      <div class="counting-area"></div>
+      <div id="counting-number-choices" class="hidden"></div>
+      <p id="counting-feedback-message"></p>
+      <button id="counting-start-game">Start Game</button>
+      <button id="counting-next-round" class="hidden">Next Round</button>
     </div>
 
-    <!-- Number Match -->
-    <div id="numberMatchSection" class="hidden">
-      <img id="numberMatchImage" alt="Image to match">
-      <div id="numberMatchChoices"></div>
-      <button class="reset-button" id="numberMatchResetBtn">🔄 Reset Choices</button>
+    <!-- Patterns Game -->
+    <div id="patterns-game" class="hidden">
+      <button class="back-to-hub">⬅ Back</button>
+      <h2 id="patterns-instruction-text">Complete the pattern!</h2>
+      <p id="patternsCounter">Patterns completed: 0</p>
+      <div class="pattern-area"></div>
+      <div class="choices-area"></div>
+      <p id="patterns-feedback-message"></p>
+      <button id="patterns-start-game">Start Game</button>
+      <button id="patterns-next-round" class="hidden">Next Round</button>
     </div>
 
-    <!-- Order Numbers -->
-    <div id="orderNumbersSection" class="hidden">
-      <p>Drag the numbers to order them from smallest to largest:</p>
-      <div id="numberOrderPool" class="word-pool-container"></div>
-      <div id="numberOrderZone" class="sort-zone"></div>
-      <button class="action-buttons" id="checkOrderBtn">Check Order</button>
+    <!-- Number Recognition Game -->
+    <div id="recognition-game" class="hidden">
+      <button class="back-to-hub">⬅ Back</button>
+      <h2 id="recognition-instruction-text">Find the number!</h2>
+      <p>Find: <span id="recognition-target-number-text"></span></p>
+      <div class="recognition-area"></div>
+      <p id="recognition-feedback-message"></p>
+      <button id="recognition-start-game">Start Game</button>
+      <button id="recognition-next-round" class="hidden">Next Round</button>
     </div>
 
-    <!-- Trace Numbers -->
-    <div id="canvasDrawingTracerSection" class="hidden">
-      <canvas id="numberCanvas"></canvas>
-      <div class="canvas-actions">
-          <button id="clearCanvasBtn">🗑️ Clear Drawing</button>
-          <button id="nextNumberBtn">➡️ Next Number</button>
+    <!-- Number Tracing Game -->
+    <div id="tracing-game" class="hidden">
+      <button class="back-to-hub">⬅ Back</button>
+      <h2 id="tracing-instruction-text">Match the shape!</h2>
+      <div class="tracing-area">
+        <div class="target-number-shape"></div>
+        <div class="tracing-choices"></div>
       </div>
+      <p id="tracing-feedback-message"></p>
+      <button id="tracing-start-game">Start Game</button>
+      <button id="tracing-next-round" class="hidden">Next Round</button>
     </div>
-
-    <div class="feedback" id="feedback"></div>
   </div>
 
-  <div id="gameComplete" class="hidden">
-    <h2>🏆 Well done!</h2>
-    <p id="finalMessage"></p>
-    <button class="play-again" id="playAgainBtn">Play Again</button>
-  </div>
-
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
