@@ -601,6 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Event Listeners for Activity Hub ---
+     // --- Event Listeners ---
     activityButtons.forEach(button => {
         button.addEventListener('click', () => {
             const activity = button.dataset.activity;
@@ -613,16 +614,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Game Start/Next Buttons ---
+    // --- Start/Next buttons for each game ---
     countingStartGameButton.addEventListener('click', () => countingGame.startGame());
     countingNextRoundButton.addEventListener('click', () => countingGame.startGame());
+
     patternsStartGameButton.addEventListener('click', () => patternsGame.startGame());
     patternsNextRoundButton.addEventListener('click', () => patternsGame.startGame());
+
     recognitionStartGameButton.addEventListener('click', () => numberRecognitionGame.startGame());
     recognitionNextRoundButton.addEventListener('click', () => numberRecognitionGame.startGame());
+
     tracingStartGameButton.addEventListener('click', () => numberTracingGame.startGame());
     tracingNextRoundButton.addEventListener('click', () => numberTracingGame.startGame());
 
-    // --- On page load, only show the hub ---
-    gameManager.showScreen(activityHub);
+    // --- Initial state: SHOW ONLY THE HUB ---
+    hideAllScreens();
+    activityHub.classList.remove('hidden');
+    activityHub.classList.add('active');
 });
