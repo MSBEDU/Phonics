@@ -7,6 +7,10 @@ body {
   text-align: center;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .app-container {
   padding: 32px 10px;
   max-width: 650px;
