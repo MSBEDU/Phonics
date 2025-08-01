@@ -166,3 +166,5 @@ button.back-to-hub:hover {
     padding: 10px 0;
   }
 }
+
+.hidden {   display: none !important; }
