@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Patterns Game Elements
     const patternsGameScreen = document.getElementById('patterns-game');
+    console.log('patternsGameScreen:', patternsGameScreen);
     const patternsStartGameButton = document.getElementById('patterns-start-game');
     const patternsPatternArea = document.querySelector('.pattern-area');
     const patternsChoicesArea = document.querySelector('.choices-area');
