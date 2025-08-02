@@ -382,3 +382,81 @@ button.back-to-hub:hover {
   border-color: #5B8DEF;
   transform: scale(1.07);
 }
+/* Mascot styling */
+.counting-mascot {
+  margin-bottom: 10px;
+}
+.counting-mascot img {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 2px 10px #5B8DEF33);
+}
+
+/* Fun action button styling */
+.action-btn {
+  background: #5B8DEF;
+  color: #fff;
+  font-size: 1.3em;
+  border: none;
+  border-radius: 24px;
+  padding: 14px 36px;
+  margin: 12px 7px 0 7px;
+  font-family: inherit;
+  font-weight: 700;
+  box-shadow: 0 3px 16px #5B8DEF25;
+  cursor: pointer;
+  transition: background 0.14s, transform 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.action-btn:hover, .action-btn:focus {
+  background: #3DB060;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Feedback animation and style */
+#counting-feedback-message {
+  color: #22b573;
+  font-weight: 900;
+  font-size: 1.4em;
+  animation: pop-in 0.4s;
+  margin-top: 12px;
+}
+@keyframes pop-in {
+  0% { transform: scale(0.7); opacity: 0; }
+  80% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* Playful streak counter */
+#counting-streak-display {
+  font-size: 1.3em;
+  color: #FFD600;
+  letter-spacing: 2px;
+}
+
+/* Soft counting area styling */
+.counting-area {
+  background: #f7faff;
+  border: 2.5px dashed #5B8DEF;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px #aac9e833;
+  margin: 28px auto 18px auto;
+  min-height: 120px;
+  display: block;
+  position: relative;
+  width: 420px;
+  height: 240px;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .counting-area {
+    width: 96vw;
+    min-width: 0;
+    height: 38vw;
+    min-height: 70px;
+  }
+}
