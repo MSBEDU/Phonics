@@ -342,7 +342,7 @@ document.querySelectorAll('.screen').forEach(el => {
         updateStreakDisplay() {
             let starsHtml = '';
             for (let i = 0; i < this.targetStreak; i++) {
-                starsHtml += (i < this.currentStreak) ? '⭐' : '✨';
+                starsHtml += (i < this.currentStreak) ? '⭐' : '🐾';
             }
             this.streakMessageElement.innerHTML = starsHtml;
         }
