@@ -348,155 +348,161 @@ document.querySelectorAll('.screen').forEach(el => {
             this.streakMessageElement.innerHTML = starsHtml;
         }
     };
+// --- Pattern Parade Game Logic ---
+const patternsGame = {
+    patternSolution: [],
+    filledSlots: new Set(),
+    patternCounter: 0,
 
-    // --- Pattern Parade Game Logic ---
-    const patternsGame = {
-        patternSolution: [],
-        filledSlots: new Set(),
-        patternCounter: 0,
+    startGame() {
+        patternsStartGameButton.classList.add('hidden');
+        patternsNextRoundButton.classList.add('hidden');
+        patternsFeedbackMessage.textContent = '';
+        patternsPatternArea.innerHTML = '';
+        patternsChoicesArea.innerHTML = '';
+        document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
+        this.filledSlots.clear();
 
-        startGame() {
-            patternsStartGameButton.classList.add('hidden');
-            patternsNextRoundButton.classList.add('hidden');
-            patternsFeedbackMessage.textContent = '';
-            patternsPatternArea.innerHTML = '';
-            patternsChoicesArea.innerHTML = '';
-            document.getElementById('patternsCounter').textContent = `Patterns completed: ${this.patternCounter}`;
-            this.filledSlots.clear();
+        const { currentPattern, solution, uniqueItemsUsed } = this.generatePattern();
+        this.patternSolution = solution;
 
-            const { currentPattern, solution, uniqueItemsUsed } = this.generatePattern();
-            this.patternSolution = solution;
+        // Show initial pattern
+        currentPattern.forEach(item => {
+            const patternItemDiv = document.createElement('div');
+            patternItemDiv.classList.add('pattern-item');
+            const img = document.createElement('img');
+            img.src = item.src;
+            img.alt = item.name;
+            patternItemDiv.appendChild(img);
+            patternsPatternArea.appendChild(patternItemDiv);
+        });
 
-            // Show initial pattern
-            currentPattern.forEach(item => {
-                const patternItemDiv = document.createElement('div');
-                patternItemDiv.classList.add('pattern-item');
-                const img = document.createElement('img');
-                img.src = item.src;
-                img.alt = item.name;
-                patternItemDiv.appendChild(img);
-                patternsPatternArea.appendChild(patternItemDiv);
-            });
-
-            // Create empty slots
-            for (let i = 0; i < this.patternSolution.length; i++) {
-                const emptySlotDiv = document.createElement('div');
-                emptySlotDiv.classList.add('pattern-item', 'empty');
-                emptySlotDiv.dataset.index = i;
-                emptySlotDiv.addEventListener('dragover', this.handleDragOver);
-                emptySlotDiv.addEventListener('dragleave', e => e.currentTarget.classList.remove('drop-hover'));
-                emptySlotDiv.addEventListener('drop', (e) => this.handleDrop(e));
-                patternsPatternArea.appendChild(emptySlotDiv);
-            }
-
-            // Create draggable choices (UNLIMITED for each type)
-            let needed = {};
-            this.patternSolution.forEach(item => {
-                needed[item.id] = (needed[item.id] || 0) + 1;
-            });
-            // Always show all possible types for fun
-            let choicesList = [...assets.images.patterns];
-
-            choicesList.forEach(asset => {
-                // Make enough draggable clones for the max needed in the pattern
-                const count = Math.max(needed[asset.id] || 1, 1);
-                for (let i = 0; i < count; i++) {
-                    const img = document.createElement('img');
-                    img.src = asset.src;
-                    img.classList.add('draggable-choice');
-                    img.setAttribute('draggable', 'true');
-                    img.dataset.id = asset.id;
-                    img.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.setData('text/plain', asset.id);
-                        setTimeout(() => img.classList.add('dragging'), 0);
-                    });
-                    img.addEventListener('dragend', () => {
-                        img.classList.remove('dragging');
-                    });
-                    patternsChoicesArea.appendChild(img);
-                }
-            });
-        },
-
-        generatePattern() {
-            const patternTypes = ['ABAB', 'AABB', 'ABC'];
-            const chosenType = patternTypes[getRandomInt(0, patternTypes.length - 1)];
-            const availableImages = [...assets.images.patterns];
-            shuffleArray(availableImages);
-
-            const patternLength = 6, numFilled = 4;
-            let pattern = [], uniqueItemsUsed = [];
-            const numPatternElements = (chosenType === 'ABC') ? 3 : 2;
-            for (let i = 0; i < numPatternElements; i++) {
-                uniqueItemsUsed.push(availableImages[i]);
-            }
-            for (let i = 0; i < patternLength; i++) {
-                let item;
-                if (chosenType === 'ABAB') item = uniqueItemsUsed[i % 2];
-                else if (chosenType === 'AABB') item = uniqueItemsUsed[Math.floor(i / 2) % 2];
-                else item = uniqueItemsUsed[i % 3];
-                pattern.push(item);
-            }
-            return {
-                currentPattern: pattern.slice(0, numFilled),
-                solution: pattern.slice(numFilled, patternLength),
-                uniqueItemsUsed
-            };
-        },
-
-        handleDragOver(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drop-hover');
-        },
-
-        handleDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drop-hover');
-            if (e.currentTarget.querySelector('img')) return; // Already filled
-            const droppedId = e.dataTransfer.getData('text/plain');
-            const slotIndex = parseInt(e.currentTarget.dataset.index);
-            const correctId = patternsGame.patternSolution[slotIndex].id;
-            // Find *any* dragged element in choices area with that id
-            const draggedImg = patternsChoicesArea.querySelector(`.draggable-choice[data-id="${droppedId}"]:not(.dragging)`);
-            if (!draggedImg) return;
-            if (droppedId === correctId) {
-                // Correct
-                const img = document.createElement('img');
-                img.src = draggedImg.src;
-                img.alt = draggedImg.alt;
-                e.currentTarget.innerHTML = '';
-                e.currentTarget.appendChild(img);
-                e.currentTarget.classList.add('filled');
-                // Remove only that dragged element from choices
-                draggedImg.parentNode.removeChild(draggedImg);
-                patternsGame.filledSlots.add(slotIndex);
-                if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
-                patternsFeedbackMessage.textContent = 'Great!';
-                if (patternsGame.filledSlots.size === patternsGame.patternSolution.length) {
-                    setTimeout(() => {
-                        patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
-                        if (assets.audio && assets.audio.success) assets.audio.success.cloneNode(true).play();
-                        patternsNextRoundButton.classList.remove('hidden');
-                        patternsGame.patternCounter++;
-                        document.getElementById('patternsCounter').textContent = `Patterns completed: ${patternsGame.patternCounter}`;
-                        if (patternsGame.patternCounter === 10) {
-                            setTimeout(() => {
-                                alert('Wow! You finished 10 patterns!');
-                            }, 600);
-                        }
-                    }, 500);
-                }
-            } else {
-                patternsFeedbackMessage.textContent = 'Oops! Try again!';
-                if (assets.audio && assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
-                e.currentTarget.classList.add('shake');
-                setTimeout(() => {
-                    e.currentTarget.classList.remove('shake');
-                    patternsFeedbackMessage.textContent = '';
-                }, 800);
-            }
+        // Create empty slots for solution
+        for (let i = 0; i < this.patternSolution.length; i++) {
+            const emptySlotDiv = document.createElement('div');
+            emptySlotDiv.classList.add('pattern-item', 'empty');
+            emptySlotDiv.dataset.index = i;
+            emptySlotDiv.addEventListener('dragover', this.handleDragOver);
+            emptySlotDiv.addEventListener('dragleave', e => e.currentTarget.classList.remove('drop-hover'));
+            emptySlotDiv.addEventListener('drop', (e) => this.handleDrop(e));
+            patternsPatternArea.appendChild(emptySlotDiv);
         }
-    };
+
+        // Count how many of each item are needed
+        let needed = {};
+        this.patternSolution.forEach(item => {
+            needed[item.id] = (needed[item.id] || 0) + 1;
+        });
+
+        // Make sure you have *at least* as many as needed for each, and show all types (for fun)
+        let choicesList = [...assets.images.patterns];
+        choicesList.forEach(asset => {
+            // Always add *max needed* for each asset, or at least one for extra challenge/fun
+            const count = Math.max(needed[asset.id] || 1, 2); // '2' is the min number of each type, so you always get some options!
+            for (let i = 0; i < count; i++) {
+                const img = document.createElement('img');
+                img.src = asset.src;
+                img.classList.add('draggable-choice');
+                img.setAttribute('draggable', 'true');
+                img.dataset.id = asset.id;
+                img.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', asset.id);
+                    setTimeout(() => img.classList.add('dragging'), 0);
+                });
+                img.addEventListener('dragend', () => {
+                    img.classList.remove('dragging');
+                });
+                patternsChoicesArea.appendChild(img);
+            }
+        });
+    },
+
+    generatePattern() {
+        const patternTypes = ['ABAB', 'AABB', 'ABC'];
+        const chosenType = patternTypes[getRandomInt(0, patternTypes.length - 1)];
+        const availableImages = [...assets.images.patterns];
+        shuffleArray(availableImages);
+
+        const patternLength = 6, numFilled = 4;
+        let pattern = [], uniqueItemsUsed = [];
+        const numPatternElements = (chosenType === 'ABC') ? 3 : 2;
+        for (let i = 0; i < numPatternElements; i++) {
+            uniqueItemsUsed.push(availableImages[i]);
+        }
+        for (let i = 0; i < patternLength; i++) {
+            let item;
+            if (chosenType === 'ABAB') item = uniqueItemsUsed[i % 2];
+            else if (chosenType === 'AABB') item = uniqueItemsUsed[Math.floor(i / 2) % 2];
+            else item = uniqueItemsUsed[i % 3];
+            pattern.push(item);
+        }
+        return {
+            currentPattern: pattern.slice(0, numFilled),
+            solution: pattern.slice(numFilled, patternLength),
+            uniqueItemsUsed
+        };
+    },
+
+    handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drop-hover');
+    },
+
+    handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drop-hover');
+        if (e.currentTarget.querySelector('img')) return; // Already filled
+
+        const droppedId = e.dataTransfer.getData('text/plain');
+        const slotIndex = parseInt(e.currentTarget.dataset.index);
+        const correctId = patternsGame.patternSolution[slotIndex].id;
+
+        // Find ANY dragged element in choices area with that id (except currently dragging)
+        const draggedImg = patternsChoicesArea.querySelector(`.draggable-choice[data-id="${droppedId}"]`);
+        if (!draggedImg) return;
+
+        if (droppedId === correctId) {
+            // Correct!
+            const img = document.createElement('img');
+            img.src = draggedImg.src;
+            img.alt = draggedImg.alt;
+            e.currentTarget.innerHTML = '';
+            e.currentTarget.appendChild(img);
+            e.currentTarget.classList.add('filled');
+
+            // Remove only that dragged element from choices
+            draggedImg.parentNode.removeChild(draggedImg);
+
+            patternsGame.filledSlots.add(slotIndex);
+
+            if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
+            patternsFeedbackMessage.textContent = 'Great!';
+            // Completion check
+            if (patternsGame.filledSlots.size === patternsGame.patternSolution.length) {
+                setTimeout(() => {
+                    patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
+                    if (assets.audio && assets.audio.success) assets.audio.success.cloneNode(true).play();
+                    patternsNextRoundButton.classList.remove('hidden');
+                    patternsGame.patternCounter++;
+                    document.getElementById('patternsCounter').textContent = `Patterns completed: ${patternsGame.patternCounter}`;
+                    if (patternsGame.patternCounter === 10) {
+                        setTimeout(() => {
+                            alert('Wow! You finished 10 patterns!');
+                        }, 600);
+                    }
+                }, 500);
+            }
+        } else {
+            patternsFeedbackMessage.textContent = 'Oops! Try again!';
+            if (assets.audio && assets.audio.incorrectBuzz) assets.audio.incorrectBuzz.cloneNode(true).play();
+            e.currentTarget.classList.add('shake');
+            setTimeout(() => {
+                e.currentTarget.classList.remove('shake');
+                patternsFeedbackMessage.textContent = '';
+            }, 800);
+        }
+    }
+};
 
     // --- Number Recognition Game Logic ---
     const numberRecognitionGame = {
