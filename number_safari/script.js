@@ -354,6 +354,7 @@ const patternsGame = {
     patternSolution: [],
     filledSlots: new Set(),
     patternCounter: 0,
+    uniqueItemsUsed: [],
 
     startGame() {
         patternsStartGameButton.classList.add('hidden');
@@ -366,6 +367,7 @@ const patternsGame = {
 
         const { currentPattern, solution, uniqueItemsUsed } = this.generatePattern();
         this.patternSolution = solution;
+        this.uniqueItemsUsed = uniqueItemsUsed;
 
         // Show initial pattern
         currentPattern.forEach(item => {
@@ -389,23 +391,21 @@ const patternsGame = {
             patternsPatternArea.appendChild(emptySlotDiv);
         }
 
-        // Count how many of each item are needed
+        // Only show the unique items used in this pattern (less busy)
         let needed = {};
         this.patternSolution.forEach(item => {
             needed[item.id] = (needed[item.id] || 0) + 1;
         });
 
-        // Make sure you have *at least* as many as needed for each, and show all types (for fun)
-        let choicesList = [...assets.images.patterns];
-        choicesList.forEach(asset => {
-            // Always add *max needed* for each asset, or at least one for extra challenge/fun
-            const count = Math.max(needed[asset.id] || 1, 2); // '2' is the min number of each type, so you always get some options!
+        this.uniqueItemsUsed.forEach(asset => {
+            const count = needed[asset.id] || 1;
             for (let i = 0; i < count; i++) {
                 const img = document.createElement('img');
                 img.src = asset.src;
                 img.classList.add('draggable-choice');
                 img.setAttribute('draggable', 'true');
                 img.dataset.id = asset.id;
+                img.alt = asset.name;
                 img.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('text/plain', asset.id);
                     setTimeout(() => img.classList.add('dragging'), 0);
@@ -458,8 +458,7 @@ const patternsGame = {
         const slotIndex = parseInt(e.currentTarget.dataset.index);
         const correctId = patternsGame.patternSolution[slotIndex].id;
 
-        // Find ANY dragged element in choices area with that id (except currently dragging)
-        const draggedImg = patternsChoicesArea.querySelector(`.draggable-choice[data-id="${droppedId}"]`);
+        const draggedImg = patternsChoicesArea.querySelector(`.draggable-choice[data-id="${droppedId}"]:not(.dragging)`);
         if (!draggedImg) return;
 
         if (droppedId === correctId) {
@@ -470,15 +469,11 @@ const patternsGame = {
             e.currentTarget.innerHTML = '';
             e.currentTarget.appendChild(img);
             e.currentTarget.classList.add('filled');
-
-            // Remove only that dragged element from choices
             draggedImg.parentNode.removeChild(draggedImg);
-
             patternsGame.filledSlots.add(slotIndex);
 
             if (assets.audio && assets.audio.correctDing) assets.audio.correctDing.cloneNode(true).play();
             patternsFeedbackMessage.textContent = 'Great!';
-            // Completion check
             if (patternsGame.filledSlots.size === patternsGame.patternSolution.length) {
                 setTimeout(() => {
                     patternsFeedbackMessage.textContent = 'Fantastic! You completed the pattern!';
@@ -504,54 +499,6 @@ const patternsGame = {
         }
     }
 };
-
-    // --- Number Recognition Game Logic ---
-    const numberRecognitionGame = {
-        targetNumber: 0,
-        MAX_RECOGNITION_NUMBER: 5,
-        startGame() {
-            recognitionStartGameButton.classList.add('hidden');
-            recognitionNextRoundButton.classList.add('hidden');
-            recognitionFeedbackMessage.textContent = '';
-            recognitionGameArea.innerHTML = '';
-            this.targetNumber = getRandomInt(1, this.MAX_RECOGNITION_NUMBER);
-            recognitionTargetNumberText.textContent = assets.audio.numbers[this.targetNumber] ? assets.images.numbers[this.targetNumber].name : this.targetNumber;
-            recognitionInstructionText.innerHTML = `Click on the number <span id="recognition-target-number-text" style="color:#E91E63;">${recognitionTargetNumberText.textContent}</span>!`;
-            let choices = new Set();
-            choices.add(this.targetNumber);
-            while (choices.size < 5) {
-                let randomNum = getRandomInt(1, this.MAX_RECOGNITION_NUMBER);
-                if (randomNum !== this.targetNumber) choices.add(randomNum);
-            }
-            let choicesArray = Array.from(choices);
-            shuffleArray(choicesArray);
-            choicesArray.forEach(num => {
-                const numDiv = document.createElement('div');
-                numDiv.classList.add('number-choice');
-                numDiv.textContent = num;
-                numDiv.dataset.number = num;
-                numDiv.addEventListener('click', (e) => this.handleChoiceClick(e));
-                recognitionGameArea.appendChild(numDiv);
-            });
-        },
-        handleChoiceClick(event) {
-            const clickedNumber = parseInt(event.target.dataset.number);
-            if (clickedNumber === this.targetNumber) {
-                event.target.classList.add('correct');
-                recognitionFeedbackMessage.textContent = 'You got it! Great job!';
-                assets.audio.success.cloneNode(true).play();
-                setTimeout(() => recognitionNextRoundButton.classList.remove('hidden'), 1000);
-            } else {
-                event.target.classList.add('incorrect');
-                recognitionFeedbackMessage.textContent = 'Oops! Try again!';
-                assets.audio.tryAgain.cloneNode(true).play();
-                setTimeout(() => {
-                    event.target.classList.remove('incorrect');
-                    recognitionFeedbackMessage.textContent = '';
-                }, 1000);
-            }
-        }
-    };
 
     // --- Number Tracing/Match Game Logic ---
     const numberTracingGame = {
