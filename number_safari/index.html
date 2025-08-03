@@ -11,62 +11,56 @@
 <body>
   <div class="app-container">
     <!-- Main Activity Selection Hub -->
-    
-<div id="activity-hub" class="screen active">
-  <h1 class="landing-title">Welcome to Number Safari!</h1>
-  <p class="subtitle">Choose your math adventure:</p>
-  <div class="activity-buttons-grid">
-    <button id="btn-counting" class="activity-btn yellow" data-activity="counting">
-      <span class="emoji">🦋</span>
-      <span>Count the Critters!</span>
-    </button>
-    <button id="btn-patterns" class="activity-btn mint" data-activity="patterns">
-      <span class="emoji">🌟</span>
-      <span>Pattern Parade!</span>
-    </button>
-    <button id="btn-recognition" class="activity-btn blue" data-activity="recognition">
-      <span class="emoji">🔢</span>
-      <span>Number Recognition!</span>
-    </button>
-    <button id="btn-tracing" class="activity-btn peach" data-activity="tracing">
-      <span class="emoji">✏️</span>
-      <span>Number Match!</span>
-    </button>
-  </div>
-</div>
-
-
+    <div id="activity-hub" class="screen active">
+      <h1 class="landing-title">Welcome to Number Safari!</h1>
+      <p class="subtitle">Choose your math adventure:</p>
+      <div class="activity-buttons-grid">
+        <button id="btn-counting" class="activity-btn yellow" data-activity="counting">
+          <span class="emoji">🦋</span>
+          <span>Count the Critters!</span>
+        </button>
+        <button id="btn-patterns" class="activity-btn mint" data-activity="patterns">
+          <span class="emoji">🌟</span>
+          <span>Pattern Parade!</span>
+        </button>
+        <button id="btn-recognition" class="activity-btn blue" data-activity="recognition">
+          <span class="emoji">🔢</span>
+          <span>Number Recognition!</span>
+        </button>
+        <button id="btn-tracing" class="activity-btn peach" data-activity="tracing">
+          <span class="emoji">✏️</span>
+          <span>Number Match!</span>
+        </button>
+      </div>
+    </div>
 
     <!-- Counting Game Screen -->
-<!-- Counting Game Screen --> "patterns-game"
-<div id="counting-game" class="screen hidden">
-  <button class="back-to-hub">Back to Safari Map</button>
-  <!-- Mascot or Big Critter Icon -->
-  <div class="counting-mascot">
-    <img src="assets/images/counting/star.png" alt="Friendly Critter" />
-  </div>
-  <h2>Counting Critters!</h2>
-  <p id="counting-instruction-text">
-    How many <span id="counting-object-name" style="color:#E91E63;"></span> can you find and count?
-  </p>
-  <p class="game-status-message">
-    <span>Streak:</span>
-    <span id="counting-streak-display"></span>
-  </p>
-  <div id="counting-game-area" class="counting-area"></div>
-  <div id="counting-number-choices" class="number-choices-area hidden"></div>
-  <p id="counting-feedback-message" class="feedback-message"></p>
-  <button id="counting-start-game" class="start-game-button action-btn">
-    <span>Start Counting!</span> <span aria-hidden="true">🔎</span>
-  </button>
-  <button id="counting-next-round" class="next-round-button action-btn hidden">
-    <span>Next Round</span> <span aria-hidden="true">➡️</span>
-  </button>
-</div>
-
+    <div id="counting-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
+      <div class="counting-mascot">
+        <img src="assets/images/counting/star.png" alt="Friendly Critter" />
+      </div>
+      <h2>Counting Critters!</h2>
+      <p id="counting-instruction-text">
+        How many <span id="counting-object-name" style="color:#E91E63;"></span> can you find and count?
+      </p>
+      <p class="game-status-message">
+        <span>Streak:</span>
+        <span id="counting-streak-display"></span>
+      </p>
+      <div id="counting-game-area" class="counting-area"></div>
+      <div id="counting-number-choices" class="number-choices-area hidden"></div>
+      <p id="counting-feedback-message" class="feedback-message"></p>
+      <button id="counting-start-game" class="start-game-button action-btn">
+        <span>Start Counting!</span> <span aria-hidden="true">🔎</span>
+      </button>
+      <button id="counting-next-round" class="next-round-button action-btn hidden">
+        <span>Next Round</span> <span aria-hidden="true">➡️</span>
+      </button>
+    </div>
 
     <!-- Patterns Game Screen -->
-<div id="patterns-game" class="screen hidden">
+    <div id="patterns-game" class="screen hidden">
       <button class="back-to-hub">Back to Safari Map</button>
       <h2>Pattern Parade!</h2>
       <div id="patternsCounter" style="margin-bottom: 8px; color: #5B8DEF; font-weight: 700;"></div>
@@ -76,12 +70,8 @@
         </p>
         <button id="patterns-start-game">Start Parade!</button>
       </div>
-      <div class="game-area pattern-area">
-        <!-- Pattern elements and empty slots go here -->
-      </div>
-      <div class="choices-area">
-        <!-- Draggable choices go here -->
-      </div>
+      <div class="game-area pattern-area"></div>
+      <div class="choices-area"></div>
       <div class="feedback">
         <p id="patterns-feedback-message"></p>
         <button id="patterns-next-round" class="hidden">Next Pattern!</button>
@@ -89,8 +79,7 @@
     </div>
 
     <!-- Number Recognition Game Screen -->
-<div id="recognition-game" class="screen hidden">
-  
+    <div id="recognition-game" class="screen hidden">
       <button class="back-to-hub">Back to Safari Map</button>
       <h2>Number Recognition!</h2>
       <div class="instructions">
@@ -107,8 +96,8 @@
     </div>
 
     <!-- Number Tracing/Match Game Screen -->
-<div id="tracing-game" class="screen hidden">
-  <button class="back-to-hub">Back to Safari Map</button>
+    <div id="tracing-game" class="screen hidden">
+      <button class="back-to-hub">Back to Safari Map</button>
       <h2>Number Match!</h2>
       <div class="instructions">
         <p id="tracing-instruction-text">Match the number to its shape!</p>
@@ -127,3 +116,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
