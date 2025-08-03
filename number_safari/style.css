@@ -25,12 +25,12 @@ body {
   letter-spacing: 0.01em;
   margin-bottom: 6px;
   margin-top: 32px;
-  text-shadow: 0 2px 8px #99c6ff60;
+  text-shadow: 0 2px 12px #8eb2ea40; /* SOFTER */
 }
 
 .subtitle {
   font-size: 1.3em;
-  color: #374151;
+  color: #6B7AA1; /* SOFTER, was #374151 */
   font-weight: 500;
   margin-bottom: 14px;
   margin-top: 10px;
@@ -63,7 +63,11 @@ body {
   outline: none;
   margin: 0 8px;
   position: relative;
-  background: #fff; /* fallback for older browsers */
+  background: #fff;
+}
+.activity-btn:focus-visible {
+  outline: 3px solid #5B8DEF;
+  outline-offset: 2px;
 }
 
 .activity-btn.yellow { background: #FFF9C4; }
@@ -110,10 +114,7 @@ h1, h2 {
   margin-bottom: 12px;
   text-shadow: 0 2px 6px #dbedff44;
 }
-
-h2 {
-  color: #3DB060;
-}
+h2 { color: #3DB060; }
 
 #counting-instruction-text {
   font-size: 1.3em;
@@ -147,7 +148,6 @@ h2 {
   cursor: pointer;
   transition: filter 0.15s, transform 0.13s;
 }
-
 .object-to-count.clicked {
   filter: brightness(1.14) drop-shadow(0 0 9px #F6A80088);
   transform: scale(1.1) rotate(-8deg);
@@ -215,7 +215,6 @@ h2 {
   font-size: 1.2em;
 }
 
-/* Playful streak counter */
 #counting-streak-display {
   font-size: 1.3em;
   color: #FFD600;
@@ -239,7 +238,6 @@ button.back-to-hub {
   left: 16px;
   transition: background 0.13s, color 0.13s;
 }
-
 button.back-to-hub:hover {
   background: #5B8DEF;
   color: #fff;
@@ -279,7 +277,6 @@ button.back-to-hub:hover {
   margin: 24px 0;
   min-height: 80px;
 }
-
 .pattern-item {
   width: 60px;
   height: 60px;
@@ -293,7 +290,6 @@ button.back-to-hub:hover {
   transition: border-color 0.2s, box-shadow 0.2s;
   position: relative;
 }
-
 .pattern-item.empty {
   background: #fffbe6;
   border: 2.5px dashed #f6a800;
@@ -302,7 +298,6 @@ button.back-to-hub:hover {
   font-size: 2em;
   font-weight: bold;
 }
-
 .pattern-item.empty:not(.filled)::after {
   content: "?";
   color: #f6a800;
@@ -314,12 +309,10 @@ button.back-to-hub:hover {
   transform: translate(-50%,-50%);
   pointer-events: none;
 }
-
 .pattern-item.drop-hover {
   box-shadow: 0 0 18px #5b8def55;
   border-color: #5B8DEF;
 }
-
 .pattern-item img {
   width: 48px;
   height: 48px;
@@ -329,7 +322,6 @@ button.back-to-hub:hover {
   display: block;
   margin: auto;
 }
-
 .choices-area {
   display: flex;
   gap: 20px;
@@ -341,7 +333,6 @@ button.back-to-hub:hover {
   min-height: 80px;
   box-shadow: 0 2px 12px #a8dadc22;
 }
-
 .draggable-choice {
   width: 54px;
   height: 54px;
@@ -354,22 +345,18 @@ button.back-to-hub:hover {
   transition: border-color 0.17s, box-shadow 0.17s;
   opacity: 1;
 }
-
 .draggable-choice.dragging {
   opacity: 0.3;
 }
-
 .draggable-choice.selected,
 .draggable-choice:hover {
   border-color: #5B8DEF;
   box-shadow: 0 0 10px #5b8def55;
   background: #fffbe6;
 }
-
 .pattern-item.shake {
   animation: shake 0.3s;
 }
-
 @keyframes shake {
   0% { transform: translateX(0);}
   20% { transform: translateX(-5px);}
@@ -378,7 +365,6 @@ button.back-to-hub:hover {
   80% { transform: translateX(5px);}
   100% { transform: translateX(0);}
 }
-
 .pattern-item.drop-hover {
   box-shadow: 0 0 18px #5b8def55;
   border-color: #5B8DEF;
@@ -408,3 +394,4 @@ button.back-to-hub:hover {
   color: #fff;
   transform: scale(1.05);
 }
+
