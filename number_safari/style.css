@@ -35,6 +35,70 @@ h2 {
   margin-bottom: 10px;
 }
 
+.activity-buttons-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 28px 24px;
+  margin: 40px 0;
+}
+
+.activity-btn {
+  width: 260px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  border: none;
+  font-size: 1.25em;
+  font-weight: 700;
+  color: #263250;
+  cursor: pointer;
+  box-shadow: 0 6px 24px #bdd5ff26;
+  transition: background 0.14s, transform 0.13s;
+  outline: none;
+  margin: 0 8px;
+  position: relative;
+}
+
+.activity-btn .emoji {
+  font-size: 2.6em;
+  margin-bottom: 0.2em;
+  user-select: none;
+}
+
+.activity-btn.yellow { background: #FFF9C4; }
+.activity-btn.mint   { background: #D0F9EA; }
+.activity-btn.blue   { background: #D7E9FF; }
+.activity-btn.peach  { background: #FFE0BA; }
+
+.activity-btn.yellow:hover { background: #FFEE58; }
+.activity-btn.mint:hover   { background: #9CEEC9; }
+.activity-btn.blue:hover   { background: #A2C6FF; }
+.activity-btn.peach:hover  { background: #FFD39F; }
+
+.activity-btn:active { transform: scale(0.96); }
+
+@media (max-width: 900px) {
+  .activity-buttons-grid {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .activity-btn {
+    width: 88vw;
+    max-width: 340px;
+    height: 75px;
+    font-size: 1em;
+  }
+  .activity-btn .emoji {
+    font-size: 2em;
+  }
+}
+
+
 .landing-title {
   font-size: 2.8em;
   font-weight: 800;
