@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const screens = document.querySelectorAll('.screen');
     const activityHub = document.getElementById('activity-hub');
     const backToHubButtons = document.querySelectorAll('.back-to-hub');
-    const activityButtons = document.querySelectorAll('.activity-buttons button');
+    const activityButtons = document.querySelectorAll('.activity-btn');
+
 
     // Counting Game Elements
     const countingGameScreen = document.getElementById('counting-game');
